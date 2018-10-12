@@ -1,0 +1,83 @@
+package bear_Bleed
+import TimerUtils
+import bear_Main
+
+public class Bleed
+
+// Settings
+    static  constant        boolean     ENABLED     = true
+
+    private static constant real        DMG         = 16    // per stack
+    private static constant real        DMG_FREQ    = 2.0
+    private static constant real        DURATION    = 6.01 
+
+    private static constant boolean     RESETFREQONSTACK    = false
+
+    private static constant string      EFFECT = "Objects\\Spawnmodels\\Human\\HumanBlood\\HeroBloodElfBlood.mdl"
+
+// Other Variables
+    private static int stacks = 0
+    private static timer timer_UpdateText
+    private static timer timer_Damage
+    private static timer timer_Duration
+    private static texttag text
+        
+// -------------------------------------------------------------------------
+    
+
+// ADD STACK _______________________________________________________________
+    static function addStack()
+        if ENABLED
+            if(stacks == 0)
+                // Start the effect and visuals
+                text.setVisibility(true)
+                timer_UpdateText.startPeriodic(0.03, function updateText)
+                timer_Damage.startPeriodic(DMG_FREQ, function dealDamage)
+
+            stacks++
+            text.setText(I2S(stacks), 16)
+            timer_Duration.start(DURATION, function removeStacks)
+            if RESETFREQONSTACK
+                timer_Damage.startPeriodic(DMG_FREQ, function dealDamage)
+
+
+// REMOVE STACKS ____________________________________________________________
+    /**Removes all stacks*/
+    static function removeStacks()
+        if ENABLED
+            stacks = 0
+            text.setVisibility(false)
+            timer_Duration.pause()
+            timer_UpdateText.pause()
+            timer_Damage.pause()
+        
+
+// ACTIVATE MECH _______________________________________________________________
+    static function activate()
+        if ENABLED
+            text = createTTEx( vec3(0,0,0), "", 30, colorA(200,25,25, 255))
+            ..setVisibility(false)
+            stacks = 0
+            timer_Damage = getTimer()
+            timer_UpdateText = getTimer()
+            timer_Duration = getTimer()
+
+
+// DEACTIVATE MECH _______________________________________________________________
+    static function deactivate()
+        if ENABLED
+            text.destr()
+            timer_Damage.release()
+            timer_UpdateText.release()
+            timer_Duration = getTimer()            
+
+
+// OTHER FUNCTIONS
+    private static function dealDamage()
+        hunter.addEffect(EFFECT, "origin")
+        .destr()
+
+        UnitDamageTarget(TheBear.theBear, hunter, DMG*stacks*(1+TheBear.damageInc), false, false, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL, WEAPON_TYPE_WHOKNOWS)
+
+    private static function updateText()
+        text.setPos(hunter.getX()-85, hunter.getY(), hunter.getLocalZ()+200)

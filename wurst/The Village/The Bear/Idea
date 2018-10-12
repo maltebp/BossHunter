@@ -1,0 +1,43 @@
+
+A simple and rather easy fight
+
+The bear is a melee unit - it hits really hard and have a lot of health.
+
+The idea: Switch between dealing damage to him, and kiting him, once your shred stacks too high. If you kite him, you
+should barely be able to deal damage to him.
+
+
+Shred: Every time the bear attacks, he'll cause the Hunter to bleed over x seconds. This stacks indefinitely, meaning that you
+have to run away from the bear once in a while
+
+Frenzy: Once in a while he'll use this, to catch up the increases it's movement speed and attack speed
+
+Shockwave: deals damage in a wide line towards the Hunter. Only used if the hunter is outside of melee range.
+
+Enrage: For each 1% hp he takes, he deals 2% more damage (and grows in size)
+
+Charge: First the bear roars at the hunter, causing him to be slowed, Then he Charge the Hunter, 
+dealing a ton of damage and stuns him for 2 seconds if he is hit. If the bear however, hit a stone instead,
+the stone will break and the bear will get stunned for 6 seconds, taking increased damage for the duration.
+The Charge is not in a line, but will follow the Hunter, if he moves, meaning you have to kite him to a rock
+He'll use this at at 75%, 50%, 25% hp - there are 4 piles of rock to kite him to
+
+Hard Mode:
+- Activated by killing bear cubs
+
+- Shockwave becomes Aoe on the entire field and it slows (can perhaps be dodged by rocks),
+
+- Slow effect before charge
+
+- Much more hp. but increased damage taken when hits a rock, so you need to rely more on him hitting a rock
+
+- Charge one shots
+
+Lore:
+The villagers want the hunter to take care of a bear in the forest. It's aggressive and a threat to the inhabitants - it must be terminated.
+It inhabits a vale in the forest, that the village uses for cutting down trees.
+
+The Truth: The bear has never hurt anyone, or even come close to hurting anyone in the village. The villagers have never used the vale for
+treecutting, but they've realized it's good place to do it, but they need to get rid of the bear first.
+The bear actually have cubs, hence the aggressiveness when the villagers approach the vale - these cubs appear after the bear is killed.
+The hunter can kill them too if he wish.

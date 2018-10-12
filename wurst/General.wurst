@@ -1,0 +1,169 @@
+package General
+
+import public Music
+import Camera
+import Stats
+import SoundUtils
+import UnitIndexer
+import TimerUtils
+import DayCycle
+
+// SETTINGS
+
+constant boolean    PRESETHERO      =   true
+constant boolean    LOCKCAMONINIT   =   true 
+
+
+//_________________________________________________________________
+
+public unit     hero
+public unit     hunter
+
+public boolean bossRunning = false
+
+public boolean doCheckCoordinates = false
+
+public constant SoundDefinition SOUND_QUESTACTIVATE = new SoundDefinition(Sounds.questActivateWhat1, false)
+
+public boolean hunterIsDead = false
+
+
+init
+
+// 
+    Player(0).setAbilityAvailable('A00P', false)
+    CreateFogModifierRect(Player(0), FOG_OF_WAR_VISIBLE, GetPlayableMapRect(), false, false).start()
+    Player(1)
+    ..setName("Allies")
+    ..setColor(PLAYER_COLOR_LIGHT_BLUE)
+    Player(11).setName("Bosses")
+    SetPlayerAllianceStateBJ( Player(0), Player(1), bj_ALLIANCE_ALLIED )
+    SetPlayerAllianceStateBJ( Player(1), Player(0), bj_ALLIANCE_ALLIED )
+
+
+
+
+// Creating Hero
+    hunter = createUnit( Player(0), 'H000', gg_rct_HunterStart.getCenter(), angle(Deg2Rad(200) ))
+    ..addAbility('A00P')
+    ..setAbilityLevel('A00J', 10)
+    ..suspendXp(true)
+    Player(0).select(hunter)
+
+    if PRESETHERO
+        hunter
+        ..addAbility('A000')
+        ..addAbility('A00F')
+        ..addAbility('A01Q')
+        ..addAbility('A00K')
+        
+        ..addItemById('I00C')
+        ..addItemById('I00C')
+        ..addItemById('I00A')
+        ..addItemById('I009')
+        ..addItemById('I00B')
+        ..addItemById('I008')
+
+        Stats.preTrain(hunter, 30, 0, 10)
+
+
+    DayCycle.setNormal()
+    playMusic(Sounds.comradeship)
+    Player(0).setCameraField(CAMERA_FIELD_TARGET_DISTANCE, 2000, 0.0)
+    if LOCKCAMONINIT
+        Player(0).setCameraBoundsToRect(gg_rct_VisionZone_Hunters_Lair) 
+
+
+
+    hero = hunter
+    udg_RedHero = hunter
+
+
+
+
+// Triggers
+
+    CreateTrigger()
+    ..addAction(function checkCoordinates)
+    ..registerPlayerChatEvent(Player(0), "-coordinates", true)
+
+    CreateTrigger()
+    ..registerPlayerEvent(Player(0), EVENT_PLAYER_MOUSE_MOVE)
+    ..addAction( function checkCoordinates2 )
+
+    CreateTrigger()
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_PICKUP_ITEM)
+    ..addCondition( Condition(function pickup))
+
+    CreateTrigger()
+    ..registerPlayerChatEvent( Player(0), "-getindex", true )
+    ..addCondition( Condition(function getUnitIndex ))
+
+    getTimer().start(0.1, function delayedInit )
+
+
+function delayedInit()
+    GetExpiredTimer().release()
+
+    // Opening Gates
+    gg_dest_DTc2_2577.setAnimation("death alternate")
+    
+        
+
+function checkCoordinates2()
+    if doCheckCoordinates
+        real x = GetLocationX(BlzGetTriggerPlayerMousePosition())
+        real y = GetLocationY(BlzGetTriggerPlayerMousePosition())
+
+        print("X = "+R2S(x))
+        print("Y = "+R2S(y))
+
+        doCheckCoordinates = false
+
+public function moveHunter(vec2 pos, rect cameraBounds, vec2 camPan)
+    Player(0).setCameraBoundsToRect(cameraBounds)
+    Player(0).setCameraPosition(camPan)
+    hero.setPos(pos)
+    
+
+public function checkCoordinates()
+    print("Checking coordinates; move the mouse")
+    doCheckCoordinates = true
+    
+public function getRandomAngle() returns angle
+    return angle(Deg2Rad(GetRandomReal(0, 360)))
+    
+    
+function pickup() returns boolean
+
+    item theItem = GetManipulatedItem()
+    integer itemId = GetItemTypeId(theItem)
+
+    if itemId == 'I00R'
+        createItem(itemId, theItem.getPos())
+
+
+    return false
+
+
+// Get Unit Index
+function selectionFilter() returns boolean
+    return true
+
+function getUnitIndex() returns boolean
+    group selectedUnits = CreateGroup()
+    ..enumUnitsSelected( Player(0), Condition(function selectionFilter) )
+    integer n = selectedUnits.size()
+    print("Getting index for "+n.toString() + (n==1 ? " unit" : " units")+" selected...")
+
+    for unit u from selectedUnits
+        print(" - "+u.getName()+": "+I2S(u.getIndex()))
+    selectedUnits.destr()
+    return false
+
+
+
+    
+
+    
+

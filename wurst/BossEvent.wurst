@@ -1,0 +1,119 @@
+package BossEvent
+
+import TimerUtils
+import General
+import SoundUtils
+import FadeAndFilters
+    
+public boolean canLeave = false
+
+public class BossEvent
+
+    private static constant timer miscTimer = getTimer() 
+    private static code codeOnFade 
+    private static constant SoundDefinition sound_Fail = new SoundDefinition( Sounds.questFailed, false)
+    private static constant SoundDefinition sound_Win = new SoundDefinition( Sounds.questCompleted, false)
+    private static constant SoundDefinition sound_Leave = new SoundDefinition( Sounds.mouseClick1, false) 
+
+    private static code  codeOnInit
+    private static code codeOnFight
+    private static code codeAfterSound
+
+    private static boolean isRunning = false
+
+    private static function inShop()
+        
+        if not hunter.isAliveTrick() or hunterIsDead
+            hunter.revive(gg_rct_HunterStart.getCenter(), true)
+        
+        hunter.setPos(gg_rct_HunterStart.getCenter())
+        hunter.setInvulnerable(false)
+        
+        refreshHero()
+
+        Player(0).select(hunter)
+        hunterIsDead = false
+        isRunning = false
+
+
+    private static function toShop()
+        moveHunter(gg_rct_HunterStart.getCenter(), gg_rct_VisionZone_Hunters_Lair, gg_rct_HunterStart.getCenter())
+        playMusic(Sounds.comradeship)
+        miscTimer.start( 0, codeOnFade )
+        SetWaterBaseColor(255, 255, 255, 255)
+    
+    private static function startFade()
+        new Fade
+        ..setStartDelay(0)
+        ..onFadeOut(function toShop )
+        ..onFadeIn(function inShop )
+        ..start(FADEOUTIN)
+
+// Fail -------
+    static function failed( code onFade )
+        codeOnFade = onFade
+        miscTimer.start(2.0, function failed_soundDelay )
+
+    private static function failed_soundDelay()
+        sound_Fail.play()
+        miscTimer.start(3, function startFade )
+    
+
+        
+// Win ----------
+    private static function win_soundDelay()
+        sound_Win.play()
+        miscTimer.start(3, function startFade )
+
+    static function win( code afterSoundCode )
+        codeAfterSound = afterSoundCode
+        miscTimer.start(2.0, function win_soundDelay )
+
+
+    static function leave( code onFade )
+        codeOnFade = onFade
+        sound_Leave.play()
+        miscTimer.start(0.5, function startFade )
+
+
+    private static function onFade()
+
+            refreshHero()
+            miscTimer.start(0, codeOnInit )
+
+
+
+    static function initiate( code onInit, code onFight )
+
+        if not isRunning
+            isRunning = true
+            hunter.pause()
+
+            codeOnInit = onInit
+
+            stopMusic()
+            PlaySound(Sounds.questNew)
+
+            new Fade
+            ..onFadeOut(function onFade)
+            ..onFadeIn(onFight)
+            ..setEndDelay(2)
+            ..setStartDelay(3)
+            ..start(FADEOUTIN)
+
+
+    private static function refreshHero()
+        hunter.setHP(hunter.getMaxHP())
+        hunter.setMana(hunter.getMaxMana())
+        if hunter.getLevel() < 2
+            hunter.suspendXp(false)
+            hunter.setLevel(2, false)
+            UnitStripHeroLevel(hunter, 1)
+            hunter.suspendXp(true)
+        else
+            hunter.suspendXp(false)
+            UnitStripHeroLevel(hunter, 1)
+            hunter.suspendXp(true)
+        
+
+    

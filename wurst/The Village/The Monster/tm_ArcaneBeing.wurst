@@ -1,0 +1,178 @@
+package tm_ArcaneBeing
+
+import TimerUtils
+import tm_Main
+import SoundUtils
+
+init
+    getTimer().start( 0.1, function ArcaneBeing.createBossInfo )
+
+public class ArcaneBeing
+
+    private static group allMobs = CreateGroup()
+
+    private static constant rect SPAWNAREA = gg_rct_TM_ArcaneBeingSpawn
+
+    private static constant integer UNITID = 'n00F'
+    
+    private static constant integer HP = 500
+
+    private static constant real ARMOR = 0
+
+    private static constant real MOVESPEED = 270
+    private static constant real    ATTACKSPEED = 2.0
+
+    private static constant real STARTDMG = 50
+    
+    
+
+    private static constant real    GROWTH_DURATION = 20.0
+
+    private static constant real    GROWTH_SCALE = 1.5                  // Final scale increase in flat points
+    private static constant real    GROWTH_DMG = 6.0                    // Final DMG increase in %, 1.0 being no increase
+
+    private static constant real    GROWTH_FREQ = 0.25
+    private static constant integer GROWTH_MAXCOUNT = R2I(GROWTH_DURATION/GROWTH_FREQ)
+    
+    //Other variables to make iterations faster
+    private static constant real    GROWTH_DMG_PER_GROWTH   = (STARTDMG*(GROWTH_DMG-1)) / GROWTH_MAXCOUNT
+    private static constant real    GROWTH_SCALE_PER_GROWTH = GROWTH_SCALE / GROWTH_MAXCOUNT
+
+
+    private static constant real STARTSCALE = 1.2
+
+    private static constant real COOLDOWN = 20.0
+    
+    private static constant SoundDefinition sound_Spawn = new SoundDefinition(Sounds.obsidianAvengerWhat2, false)
+
+    static boolean ready = false
+
+    private integer growthCounter = 1 
+    private unit mob = null
+    private real dmg = 0
+    private timer miscTimer
+    private effect spawnSFX
+    private real scale = 1.0
+    private var pos =  vec2(0, 0)
+
+    private static timer cooldownTimer = getTimer()
+
+    ondestroy
+        allMobs.removeUnit(mob)
+        mob.remove()
+        miscTimer.release()
+
+    
+    static function clear()
+        //Stops the entire mechanic
+        
+        cooldownTimer.pause()
+
+        for u from allMobs
+            u.kill()
+        
+        allMobs.clear()
+
+    private static function onDeathDelay()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+
+        destroy instance
+
+    private static function grow()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        
+        if( instance.mob.isAlive() )
+    
+        
+            if( instance.growthCounter <= GROWTH_MAXCOUNT )
+                instance.growthCounter = instance.growthCounter + 1
+
+                instance.scale += GROWTH_SCALE_PER_GROWTH
+                instance.mob.setScale(instance.scale)
+
+                instance.dmg += GROWTH_DMG_PER_GROWTH
+                instance.mob.setBaseDamage(R2I(instance.dmg*bossDmgInc), 1)
+
+        else
+            instance.miscTimer.pause()
+            instance.miscTimer.start(1.0, function ArcaneBeing.onDeathDelay )
+
+    
+    private static function orderAttack()
+        let instance = GetExpiredTimer().getData() castTo thistype
+        instance.mob.unpause()
+        instance.mob.issueTargetOrder("attack", hunter )
+        
+        instance.miscTimer.startPeriodic( GROWTH_FREQ, function ArcaneBeing.grow )
+
+    static function stopSpawn()
+        cooldownTimer.pause()
+
+    private static function spawn()
+        runCooldown()
+        new ArcaneBeing
+
+    static function runCooldown()
+        cooldownTimer.start( COOLDOWN, function spawn )
+
+    construct()
+        pos = SPAWNAREA.randomPoint()
+
+        scale = STARTSCALE
+        dmg = STARTDMG 
+
+        mob = createUnit( Player(11), UNITID, pos, GetRandomReal(0,360).fromDeg() )
+        ..pause()
+        ..setVertexColor(255, 100, 150, 75)
+        ..setScale(scale)
+        ..setBaseDamage(R2I(dmg*bossDmgInc), 1)
+        ..setMaxHP( HP, true)
+        ..setArmor( ARMOR )
+        ..setAttackCooldown(ATTACKSPEED, 1)
+        ..setMoveSpeed(MOVESPEED)
+        
+        allMobs.addUnit(mob)
+
+        spawnSFX = addEffect("Abilities\\Spells\\Undead\\OrbOfDeath\\OrbOfDeathMissile.mdl", pos)
+        ..setScale(1.5)
+        ..destr()
+
+        sound_Spawn.play().snd.setVolume(100)
+
+        miscTimer = getTimer()
+        miscTimer.setData(this castTo int)
+        miscTimer.start(0.5, function ArcaneBeing.orderAttack )
+
+    static function createBossInfo()
+        GetExpiredTimer().release()
+        
+        UnitObject obj = new UnitObject("Arcane Being", ArcaneBeing.UNITID, vec2(11690,14590), 20)
+        ..setSoundOnClick(Sounds.obsidianAvengerWhat2)
+        ..setAttackDmg(R2I(STARTDMG))
+        ..setAttackSpeed(ATTACKSPEED)
+        ..setHP(HP)
+        ..setMoveSpeed(MOVESPEED)    
+        ..setDescription(""+     
+        "One Arcane Being spawns at a random location every "+R2I(COOLDOWN).toString()+"\n"+
+        "seconds. The Arcane Being will grow, increasing its damage gradually\n"+
+        "to "+R2I(((GROWTH_DMG)*100)).toString()+"% over "+R2I(GROWTH_DURATION).toString()+" seconds.")
+
+        
+
+        obj.objectAnimation = "attack"
+        obj.objType = "Add"
+        obj.object.setScale(STARTSCALE)
+        obj.object.setVertexColor(255, 100, 150, 75)
+
+
+    
+
+
+
+
+
+        
+        
+    
+    
+    

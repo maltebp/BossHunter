@@ -1,0 +1,210 @@
+package bear_Main
+
+import BossEvent
+import DayCycle
+import public General
+import Music
+import TimerUtils
+import Orders
+import initlater bear_Attack
+import initlater bear_Bleed
+import initlater bear_Shockwave
+import initlater bear_Enrage
+import initlater bear_Frenzy
+import initlater bear_Charge
+
+
+init
+    TheBear.gameInit()
+
+class TheBear
+
+    static constant int BOSSID = 'n00H'
+    static constant real MAINLOOP_FREQ = 0.25
+
+
+    // BOSS STATS   
+    static constant int     HP             = 14000
+    static constant real    ARMOR          = 50
+    static constant real    MOVESPEED      = 250
+    static constant real    ATTACKSPEED    = 2
+    static constant int     ATTACKDMG      = 225
+
+    static real currentAttackSpeed = ATTACKSPEED
+    static constant int startRed = 150
+    static constant int startGreen = 150
+    static constant int startBlue = 150
+    static constant real startScale = 1.3
+
+    static real damageInc = 0 // In percent
+
+    static trigger trg_Death
+    static boolean isIdle   = false
+    static boolean canAttack = false
+
+    static unit theBear
+    private static timer mainLoopTimer = getTimer()
+    private static timer idleDelayTimer = getTimer()
+
+
+    static rect camBounds = gg_rct_TheBear_CamBounds
+
+
+    private static function idle()
+        idleDelayTimer.pause()
+        isIdle = true
+    
+
+    static function setIdle(real delay)
+        idleDelayTimer.start( delay, function idle )
+
+
+    static function mainLoop()
+        
+        Enrage.adjust()
+
+        if isIdle
+            print("Is Idle")
+
+            if Charge.isReady and not Frenzy.isActive
+                Charge.start()
+
+            else if Frenzy.isReady
+                Frenzy.start()
+
+            else if Shockwave.ENABLED and not Frenzy.isActive and Shockwave.isReady and not Shockwave.delayIsRunning and theBear.getPos().distanceTo(hunter.getPos()) > Shockwave.MIN_DIST
+                if Shockwave.delayHasRun
+                    Shockwave.start()    
+                else if not Shockwave.delayIsRunning
+                    Shockwave.startDelay()
+            
+            else if canAttack
+                Attack.start()
+                print("Is Idle")
+
+            if Charge.isReady and not Frenzy.isActive
+                Charge.start()
+
+            else if Frenzy.isReady
+                Frenzy.start()
+
+            else if Shockwave.ENABLED and not Frenzy.isActive and Shockwave.isReady and not Shockwave.delayIsRunning and theBear.getPos().distanceTo(hunter.getPos()) > Shockwave.MIN_DIST
+                if Shockwave.delayHasRun
+                    Shockwave.start()    
+                else if not Shockwave.delayIsRunning
+                    Shockwave.startDelay()
+            
+            else if canAttack
+                Attack.start()
+
+        else if canAttack
+            Attack.start()
+        
+
+
+    static function clearEvent()
+        theBear.remove()
+        trg_Death.disable()
+        Attack.deactivate()
+        Bleed.deactivate()
+        Shockwave.deactivate()
+        Frenzy.deactivate()
+        Charge.deactivate()
+        
+        
+
+    static function gameInit()
+        CreateTrigger()
+        ..registerPlayerChatEvent(Player(0), "-thebear", true)
+        ..addCondition(Condition(function TheBear.initEvent ))
+
+        trg_Death = CreateTrigger()
+        ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+        ..addCondition( Condition( function TheBear.someoneDies ))
+        ..disable()
+
+
+    static function someoneDies() returns boolean
+        unit dyingUnit = GetDyingUnit()
+
+        if dyingUnit == theBear
+
+            theBear.setAnimation("death")
+            theBear.queueAnimation("decay flesh")
+
+            stopMusic()
+            mainLoopTimer.pause()
+        
+            hunter.setInvulnerable(true)
+            Bleed.removeStacks()
+
+            BossEvent.win(function clearEvent )
+
+            //Do stuff
+        
+
+        else if dyingUnit == hunter
+
+            hunterIsDead = true
+
+            Bleed.removeStacks()
+
+            stopMusic()
+            theBear.pause()
+
+            //Do stuff
+            theBear.setInvulnerable(true) 
+            mainLoopTimer.pause()
+
+            BossEvent.failed( function clearEvent )
+
+        return false
+
+
+    
+    static function initFight()
+        isIdle = true
+        canAttack = true
+        hunter.unpause()
+        theBear.unpause()
+        theBear.issueTargetOrder("attack", hunter)
+        playMusic(Sounds.orcVictory)
+        mainLoopTimer.startPeriodic(MAINLOOP_FREQ, function mainLoop )
+
+        
+
+    static function onEventInit()
+
+
+        moveHunter(vec2(-9900,12710), camBounds, vec2(-9900,12710.0+300))
+
+        // Create The Boss
+        theBear = createUnit(Player(11), BOSSID, vec2(-9938,13489), angle(PI*PIHALF))
+        ..setMaxHP(HP, true)
+        ..setArmor(ARMOR)
+        ..setBaseDamage(400, 1)
+        ..setMoveSpeed(MOVESPEED)
+        ..setAttackCooldown(ATTACKSPEED, 1)
+        ..pause()
+        ..setVertexColor(startRed, startGreen, startBlue, 255)
+        ..setScale(startScale)
+
+
+        DayCycle.setAlwaysDay()
+        trg_Death.enable()
+
+        Attack.activate()
+        Bleed.activate()
+        Shockwave.activate()
+        Frenzy.activate()
+        Charge.activate()
+
+
+    static function initEvent() returns boolean
+
+        BossEvent.initiate( function onEventInit, function initFight )
+
+        return false
+        
+
+

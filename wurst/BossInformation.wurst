@@ -1,0 +1,269 @@
+package BossInformation
+
+import UnitIndexer
+import public SoundUtils
+import public ExecutableEffect
+import ErrorHandling
+
+
+init
+    ClickableObject.clickTrg = CreateTrigger()
+    ..addCondition(Condition(function ClickableObject.registerClick ))
+    ClickableObject.attackTrg = CreateTrigger()
+    ..addCondition(Condition(function ClickableObject.stopAttack ))
+
+
+//_____________________________________________________________________________________________
+// CLICKABLE OBJECT
+
+public class ClickableObject
+
+    static constant integer placeholderId = 'u00F'
+    static trigger clickTrg
+    static trigger attackTrg
+
+    private static integer array classIds
+    
+    unit object
+    string objectAnimation
+    unit unitSfx
+    string unitSfxAnimation 
+    string name
+    string description
+    string objType
+    vec2 pos
+    SoundDefinition soundOnClick
+    effect array[3] sfx
+    ExecutableEffect array[3] sfxOnClick
+
+
+//  Construct   -------------------------------------------------
+    construct( string whichName, unit whichObject, vec2 whichPos, integer classId )
+        object = whichObject
+        print(object.toUnitIndex().getIndex().toString())
+        classIds[object.getIndex()] = classId
+        
+        object.pause()
+
+        name = whichName
+        pos = whichPos
+
+        clickTrg.registerUnitEvent(object, EVENT_UNIT_SELECTED)
+        attackTrg.registerUnitEvent(object, EVENT_UNIT_ATTACKED)
+
+        object.setName(name)
+
+//  ----------------------------------------------------
+
+    function onClickGeneric()
+        if soundOnClick != null
+            soundOnClick.play()
+
+        for i=0 to 2
+            if sfxOnClick[i] != null
+                sfxOnClick[i].start()
+
+        if objectAnimation != ""
+            object.setAnimation(objectAnimation)
+            object.queueAnimation("stand")
+        
+
+    static function registerClick() returns boolean
+        
+        integer unitIndex = GetTriggerUnit().getIndex()
+        integer classId = classIds[unitIndex]
+
+        if classId == Mechanic.classId
+            Mechanic.onClick(unitIndex)
+        else if classId == UnitObject.classId
+            UnitObject.onClick(unitIndex)
+        else if classId == 3 
+
+        return false
+    
+    static function stopAttack() returns boolean
+        GetAttacker().issueImmediateOrder("stop")
+        return false
+
+    function setSoundOnClick( string whichSound ) returns SoundDefinition
+        soundOnClick = new SoundDefinition( whichSound, false )
+        return soundOnClick
+
+    /** set MAX 3 effects */
+    function setSfx( string whichEffect, real zoffset ) returns effect
+        boolean foundEmptySlot = false
+        integer i = 0
+        
+        while not foundEmptySlot and i<3
+            if sfx[i] == null
+                foundEmptySlot = true
+            else
+                i++
+
+        if foundEmptySlot
+            sfx[i] = addEffect(whichEffect, pos.withTerrainZ(zoffset))
+            return sfx[i]
+        else
+            error("Too sfxs assigned")
+            return null
+
+    /** set MAX 3 effects */
+    function setSfxOnClick( string whichEffect) returns ExecutableEffect
+        boolean foundEmptySlot = false
+        integer i = 0
+        while not foundEmptySlot and i < 3
+            if sfxOnClick[i] == null
+                foundEmptySlot = true
+            else
+                i++
+
+        if foundEmptySlot
+            sfxOnClick[i] = new ExecutableEffect(whichEffect, pos.withTerrainZ() )
+            return sfxOnClick[i]
+        else
+            error("Too many Executable SFXs assigned")
+            return null
+
+    function setDescription(string text) returns string
+        description = text
+        return description
+
+    function setUnitSfx( integer unitType, real facing ) returns unit
+        unitSfx = createUnit( Player(PLAYER_NEUTRAL_PASSIVE), unitType, pos, angle(Deg2Rad(facing)))
+        return unitSfx
+        
+        
+
+
+//_______________________________________________  
+// Mechanic
+
+public class Mechanic extends ClickableObject
+
+    static constant integer classId = 1
+    private static thistype array instances
+
+
+    private integer index = -1
+
+    private real    duration    = -1
+    private real    frequency   = -1
+    private string  castBy      = ""
+    
+    
+    
+    construct( string name, vec2 pos)
+        super( name, createUnit(Player(PLAYER_NEUTRAL_PASSIVE), ClickableObject.placeholderId, pos, angle(0)), pos, 1 )
+        
+        object.setInvulnerable(true)
+        object.setVertexColor( 0, 0, 0, 0)
+
+        index = object.getIndex()
+        instances[index] = this
+
+    static function onClick( integer unitIndex )
+        thistype instance = instances[unitIndex]    
+
+        print("onClick Mech runs")
+
+        ClearTextMessages()
+
+        instance..onClickGeneric()
+
+        print("|cff009999"+instance.name+"|r")
+        print("Spell")
+        if instance.castBy != ""
+            print(instance.castBy)
+        print(instance.description)
+
+            
+        if instance.objectAnimation != ""
+            instance.object.setAnimation(instance.objectAnimation)
+            instance.object.queueAnimation("stand")
+
+        if instance.unitSfxAnimation != ""
+            instance.unitSfx.setAnimation(instance.unitSfxAnimation)
+            instance.unitSfx.queueAnimation("stand")
+        
+        
+    function setCastBy(string text) returns string
+        castBy = text
+        return castBy
+        
+
+
+//_______________________________________________________________________________________________________________________________  
+// UNIT 
+
+public class UnitObject extends ClickableObject
+
+    static constant integer classId = 2
+    private static thistype array instances
+
+    real movespeed = -1
+    real attackspeed = -1
+    real armor
+    real attackDmg
+    string abilities = ""
+
+//  Construct ---------------------------------------------
+    construct( string whichName, integer unitTypeId, vec2 pos, real facing)
+        super( whichName, createUnit(Player(PLAYER_NEUTRAL_PASSIVE), unitTypeId, pos, angle(Deg2Rad(facing))), pos, classId )
+        instances[object.getIndex()] = this
+
+//  On Click ------------------------------------------
+    static function onClick( integer unitIndex )
+        thistype inst = instances[unitIndex]     
+
+        inst.onClickGeneric()
+
+        ClearTextMessages()
+
+        print("|cff009999"+inst.name+"|r")
+
+        if inst.objType != ""
+            print("|cffAFEEEE"+inst.objType+"|r")
+        if inst.attackspeed > -1
+            print("|cffAFEEEEAttack speed:|r " + inst.attackspeed.toString(1) )
+        if inst.movespeed > -1
+            print("|cffAFEEEEMovement speed:|r "+R2I(inst.movespeed).toString())
+        print( "\n"+inst.description )
+
+// Settings --------------------------------------------
+
+    function setHP(integer hp)
+        object.setMaxHP(hp, true)
+    
+    function setAttackDmg(integer dmg)
+        object.setBaseDamage(dmg, 1)
+
+    function setMoveSpeed( real speed)
+        movespeed = speed
+
+    function setAttackSpeed( real speed)
+        attackspeed = speed
+
+            
+        
+
+
+
+//_______________________________________________  
+// LORE AND OBJECTIVE
+
+public class LoreAndObjective
+    static constant integer classId = 3
+    private static thistype array instances
+
+    static function onClick( integer unitIndex )
+        // Do Stuff
+
+//_______________________________________________  
+// OVERALL MECHANIC
+
+public class OverallMechanic
+
+
+public class Boss
+
+    // Lore and objective

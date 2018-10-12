@@ -1,0 +1,31 @@
+package TimedEffect
+import TimerUtils
+
+public function addEffectDuration(effect sfx, real duration) returns effect
+    new EffectDuration(sfx, duration)
+    return sfx
+
+class EffectDuration
+    
+    private effect SFX
+
+    private timer t
+
+    ondestroy
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        instance.SFX.destr()
+        instance.t.release()
+
+    private static function destr()
+        destroy GetExpiredTimer().getData() castTo thistype
+
+    construct(effect sfx, real duration)
+        
+        SFX = sfx
+
+        t = getTimer()
+        ..setData(this castTo int)
+        ..start(duration, function destr)
+
+
+

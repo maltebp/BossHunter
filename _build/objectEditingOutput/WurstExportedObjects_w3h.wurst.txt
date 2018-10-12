@@ -1,0 +1,226 @@
+package WurstExportedObjects_w3h
+import ObjEditingNatives
+
+// Modified Table (contains all custom objects)
+
+@compiletime function create_w3h_B001()
+	let def = createObjectDefinition("w3h", 'B001', 'Bssd')
+	..setString("frac", "undead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNGhoulFrenzy.blp")
+	..setString("ftip", "Cripple")
+	..setString("ftat", "Abilities\\Spells\\Orc\\StasisTrap\\StasisTotemTarget.mdl")
+	..setString("fta0", "overhead")
+
+
+@compiletime function create_w3h_B002()
+	let def = createObjectDefinition("w3h", 'B002', 'Bspo')
+	..setString("frac", "undead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNGhoulFrenzy.blp")
+	..setString("ftip", "Cripple")
+	..setString("ftat", "Abilities\\Spells\\Orc\\StasisTrap\\StasisTotemTarget.mdl")
+	..setString("fta0", "overhead")
+
+
+@compiletime function create_w3h_B000()
+	let def = createObjectDefinition("w3h", 'B000', 'Bspo')
+	..setString("ftip", "Frozen")
+	..setString("fube", "This unit was attacked by a Withering Soul; its movement speed has been reduced.")
+	..setString("fnsf", " (NS Withering Soul)")
+	..setString("ftat", "Abilities\\Spells\\Other\\FrostDamage\\FrostDamage.mdl")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFrost.blp")
+	..setString("fta0", "chest")
+	..setString("fta1", "chest")
+
+
+@compiletime function create_w3h_B003()
+	let def = createObjectDefinition("w3h", 'B003', 'Bssd')
+	..setString("ftip", "Frozen")
+	..setString("fnsf", " (S Withering Soul)")
+	..setString("fube", "This unit was attacked by a Withering Soul; its movement speed has been reduced.")
+	..setString("ftat", "Abilities\\Spells\\Other\\FrostDamage\\FrostDamage.mdl")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFrost.blp")
+
+
+@compiletime function create_w3h_B004()
+	let def = createObjectDefinition("w3h", 'B004', 'BNrd')
+	..setString("ftip", "Starfall")
+	..setString("fnam", "Starfall")
+	..setString("frac", "human")
+	..setString("fnsf", "(Custom)")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNStarfall.blp")
+	..setString("ftat", "")
+
+
+@compiletime function create_w3h_B005()
+	let def = createObjectDefinition("w3h", 'B005', 'Boar')
+	..setString("ftat", "")
+	..setString("ftip", "Unholy Aura")
+	..setString("frac", "undead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNUnholyAura.blp")
+	..setString("fnsf", "(Risen Acolyte)")
+
+
+@compiletime function create_w3h_B006()
+	let def = createObjectDefinition("w3h", 'B006', 'BCbf')
+	..setString("fube", "This unit has been hit by a Wave of Knives; it will take damage over time.")
+	..setString("ftip", "Bleeding")
+	..setString("ftat", "Abilities\\Spells\\Other\\Stampede\\StampedeMissileDeath.mdl")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFanOfKnives.blp")
+
+
+@compiletime function create_w3h_B007()
+	let def = createObjectDefinition("w3h", 'B007', 'Bpig')
+	..setString("ftat", "Environment\\LargeBuildingFire\\LargeBuildingFire1.mdl")
+	..setString("fsat", "Abilities\\Spells\\Human\\FlameStrike\\FlameStrikeEmbers.mdl")
+	..setString("fnam", "Flame Enhancement ")
+	..setString("fnsf", " (Kar'ga, Feral Spirit)")
+	..setString("frac", "undead")
+
+
+@compiletime function create_w3h_B008()
+	let def = createObjectDefinition("w3h", 'B008', 'Bspo')
+	..setString("fube", "This unit was hit by a flaming attack from Kar'ga; it will take damage over time.")
+	..setString("ftip", "Burning")
+	..setString("frac", "undead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFire.blp")
+	..setString("ftat", "Abilities\\Spells\\Other\\BreathOfFire\\BreathOfFireDamage.mdl")
+	..setString("fnsf", " (Kar'ga, Non-tacking)")
+	..setString("fta0", "chest")
+
+
+@compiletime function create_w3h_B009()
+	let def = createObjectDefinition("w3h", 'B009', 'Bssd')
+	..setString("fube", "This unit was hit by a flaming attack from Kar'ga; it will take damage over time.")
+	..setString("ftip", "Burning")
+	..setString("fnsf", " (Kar'ga, Stacking)")
+	..setString("frac", "undead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFire.blp")
+	..setString("ftat", "Abilities\\Spells\\Other\\BreathOfFire\\BreathOfFireDamage.mdl")
+	..setString("fta0", "chest")
+
+
+@compiletime function create_w3h_B00A()
+	let def = createObjectDefinition("w3h", 'B00A', 'BPSE')
+	..setString("ftip", "Paralyzed")
+	..setString("fube", "This unit has been paralyzed; it is stunned and unable to perform any actions.")
+	..setString("fnsf", "(Kar'ga)")
+	..setString("ftat", "Abilities\\Weapons\\Bolt\\BoltImpact.mdl")
+	..setString("fta0", "chest")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNOrbOfLightning.blp")
+	..setString("frac", "undead")
+
+
+@compiletime function create_w3h_B00B()
+	let def = createObjectDefinition("w3h", 'B00B', 'Binf')
+	..setString("ftat", "Abilities\\Spells\\Orc\\Purge\\PurgeBuffTarget.mdl")
+	..setString("fta0", "origin")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNPurge.blp")
+	..setString("ftip", "Storm Enhancement")
+	..setString("fube", "This unit has been enhanced with lightning; it will deal damage to nearby enemies.")
+	..setString("frac", "undead")
+
+
+@compiletime function create_w3h_B00D()
+	let def = createObjectDefinition("w3h", 'B00D', 'BCbf')
+	..setString("ftip", "Flame Burst")
+	..setString("fube", "This unit is burning; it will take damage over time.")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNWallOfFire.blp")
+	..setString("ftat", "Abilities\\Spells\\Other\\BreathOfFire\\BreathOfFireDamage.mdl")
+	..setString("frac", "human")
+	..setString("fta0", "chest")
+
+
+@compiletime function create_w3h_B00C()
+	let def = createObjectDefinition("w3h", 'B00C', 'Broa')
+	..setString("ftip", "Unstable Magic")
+	..setString("ftat", "Abilities\\Spells\\Other\\Drain\\ManaDrainCaster.mdl")
+	..setString("fta0", "origin")
+	..setString("frac", "human")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNManaFlare.blp")
+	..setString("fube", "The Hunter is empowered with unstable magic; dealing damage to nearby units randomly.")
+
+
+@compiletime function create_w3h_B00E()
+	let def = createObjectDefinition("w3h", 'B00E', 'Bpxf')
+	..setString("ftip", "Unstable Magic")
+	..setString("fube", "This unit has been hit by unstable magic and is safe - for now.")
+	..setString("ftat", "")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNManaFlare.blp")
+	..setString("fnsf", "(Target)")
+
+
+@compiletime function create_w3h_B00F()
+	let def = createObjectDefinition("w3h", 'B00F', 'BNab')
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFire.blp")
+	..setString("ftat", "Environment\\LargeBuildingFire\\LargeBuildingFire1.mdl")
+	..setString("frac", "human")
+	..setString("ftip", "Burn")
+	..setString("fube", "This unit is burning, and is taking damage over time.")
+
+
+@compiletime function create_w3h_B00G()
+	let def = createObjectDefinition("w3h", 'B00G', 'Buhf')
+	..setString("ftip", "Burn (Placeholder)")
+	..setString("fube", "")
+	..setString("frac", "human")
+	..setString("ftat", "")
+	..setString("fta0", "")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNFire.blp")
+
+
+@compiletime function create_w3h_B00H()
+	let def = createObjectDefinition("w3h", 'B00H', 'Buhf')
+	..setString("ftip", "Arcane Barrage")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNStarfall.blp")
+	..setString("ftat", "")
+	..setString("frac", "human")
+	..setString("fube", "This unit is under a barrage of arcane magic; it will take damage 2 times.")
+	..setString("fta0", "")
+
+
+@compiletime function create_w3h_B00I()
+	let def = createObjectDefinition("w3h", 'B00I', 'BNms')
+	..setString("ftat", "")
+	..setString("ftip", "Magic Ward")
+	..setString("fta0", "overhead")
+	..setString("fube", "This unit is warded by magic; it takes reduced damage.")
+
+
+@compiletime function create_w3h_B00J()
+	let def = createObjectDefinition("w3h", 'B00J', 'Bbsk')
+	..setString("ftip", "Frenzy")
+	..setString("fube", "Has increased movement and attack speed.")
+	..setString("fta0", "hand,left")
+	..setString("fta1", "hand,right")
+	..setString("ftat", "Abilities\\Spells\\Orc\\Bloodlust\\BloodlustTarget.mdl")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNBattleRoar.blp")
+
+
+@compiletime function create_w3h_B00K()
+	let def = createObjectDefinition("w3h", 'B00K', 'Bslo')
+	..setString("ftip", "Dazed")
+	..setString("fube", "Movement speed is reduced.")
+	..setString("frac", "undead")
+	..setString("fnsf", "Frenzy - Slow (The Bear)")
+	..setString("ftat", "Abilities\\Spells\\Orc\\StasisTrap\\StasisTotemTarget.mdl")
+	..setString("fta0", "overhead")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNStun.blp")
+
+
+@compiletime function create_w3h_B00L()
+	let def = createObjectDefinition("w3h", 'B00L', 'Bslo')
+	..setString("ftat", "Abilities\\Spells\\Orc\\StasisTrap\\StasisTotemTarget.mdl")
+	..setString("ftip", "Dizzy")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNStun.blp")
+	..setString("fta0", "overhead")
+
+
+// Original Table (contains all modified default objects)
+// Wurst does not support modifying default objects
+// but you can copy these functions and replace 'xxxx' with a new, custom id.
+
+@compiletime function create_w3h_    ()
+	let def = createObjectDefinition("w3h", '    ', 'BIrl')
+	..setString("ftat", "Abilities\\Spells\\NightElf\\Tranquility\\TranquilityTarget.mdl")
+
+

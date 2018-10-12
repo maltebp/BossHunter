@@ -1,0 +1,75 @@
+package tm_IceBlast
+
+import RegisterEvents
+import TimerUtils
+
+import tm_Main
+import Orders
+
+
+init
+    registerSpellEffectEvent('A022', function IceBlast.onCast )
+    
+    getTimer().start(0.1, function IceBlast.setupBossInfo )
+
+    
+    
+
+    
+
+
+class IceBlast
+    
+    private static real COOLDOWN = 8.0
+    static constant real DAMAGE = 150
+    private static SoundDefinition sound_Hit = new SoundDefinition( Sounds.frostArrowHit1, false)
+
+
+    static boolean isReady = false
+
+    private static timer cooldownTimer = getTimer()
+
+    static function onCast()
+        
+        theMonster.damageTarget( hunter, DAMAGE*bossDmgInc )
+        hunter.addEffect("Abilities\\Weapons\\FrostWyrmMissile\\FrostWyrmMissile.mdl", "chest")
+        ..destr()
+
+        sound_Hit.playOnPoint( hunter.getPos3Fly(), 3)
+    
+        setIdle(1)
+        runCooldown()
+
+    static function start()
+        print("Ice Blast started...")
+        isReady = false
+        theMonster.issueTargetOrderById( Orders.frostnova, hunter )
+
+    private static function setReady()
+        isReady = true
+
+    static function runCooldown()
+        cooldownTimer.start( COOLDOWN, function setReady )
+
+    static function setupBossInfo()
+        GetExpiredTimer().release()
+
+        Mechanic mech = new Mechanic("Ice Blast", vec2(11720,14950))
+        ..setSoundOnClick(Sounds.frostArrowHit1)
+        ..setDescription(""+
+        "A blast of ice instantly dealing "+I2S(R2I(IceBlast.DAMAGE))+"\n"+
+        " damage, and slowing the targets movement speed by 70%.")
+        ..setCastBy("The Monster")
+        
+        mech.setSfx( "Abilities\\Weapons\\ZigguratFrostMissile\\ZigguratFrostMissile.mdl", 150)
+        ..setScale(2)
+
+        mech.setSfx("units\\nightelf\\Wisp\\Wisp.mdl", 0)
+        ..setColor(150, 150, 255)
+        ..setAlpha(150)
+        ..setColorByPlayer(Player(21))
+
+        mech.setSfxOnClick("Abilities\\Weapons\\FrostWyrmMissile\\FrostWyrmMissile.mdl")
+        ..setZ(100)
+        ..destroyOnStart(true)
+

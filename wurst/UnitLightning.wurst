@@ -1,0 +1,64 @@
+package UnitLightning
+import TimerUtils
+
+public class UnitLightning
+
+    private static constant real UPDATE_FREQ = 0.01
+
+    private lightning sfx 
+
+    private unit source
+    private unit target
+
+    real sourceZ
+    real targetZ
+
+    private timer updateTimer
+    private timer durationTimer
+
+    function setColor(integer red, integer green, integer blue)
+        sfx.setColor( colorA(red, green, blue, R2I(sfx.getColorA()*255)  ))
+
+    function setAlpha(integer alpha)
+        sfx.setColor(colorA(R2I(sfx.getColorR()*255), R2I(sfx.getColorG()*255), R2I(sfx.getColorB()*255), alpha))
+
+    ondestroy
+        updateTimer.release()
+        durationTimer.release()
+        sfx.destr()
+
+    private static function update()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+
+        if instance.source.isAlive() and instance.target.isAlive()
+            instance.sfx.move(false, vec3(instance.source.getX(), instance.source.getY(), instance.source.getLocalZ()+instance.sourceZ), vec3(instance.target.getX(), instance.target.getY(), instance.target.getLocalZ()+instance.targetZ) )
+        else
+            instance.updateTimer.pause()
+            destroy instance
+
+
+    private static function kill()
+        destroy GetExpiredTimer().getData() castTo thistype
+
+    construct( unit sourceUnit, unit targetUnit, real duration, string lightningtype)
+        
+        
+
+        source = sourceUnit
+        target = targetUnit
+
+        sourceZ = 300
+        targetZ = 300
+
+        sfx = AddLightningEx( lightningtype, false, source.getX(), source.getY(), source.getLocalZ()+sourceZ, target.getX(), target.getY(), target.getLocalZ()+targetZ)
+
+        updateTimer = getTimer()
+        ..setData(this castTo int)
+        ..startPeriodic(UPDATE_FREQ, function update)
+
+        durationTimer = getTimer()
+        ..setData(this castTo int)
+        ..start(duration, function kill)
+
+        
+    

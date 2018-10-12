@@ -1,0 +1,77 @@
+package ExecutableEffect
+
+// --------------------------------------
+
+import TimerUtils
+
+// -------------------------------------- 
+
+
+
+public class ExecutableEffect
+
+// Adjustable Constants
+    private static constant real DURATION = 5.0
+
+// Instance Management
+    private static thistype array instances
+    private static integer instanceCount = -1
+    private integer index = -1
+
+// Class Variables
+    effect  sfx
+    string  sfxModel
+    vec3    pos
+    timer   t
+    boolean destroyOnStart = false
+    integer array[4] color = [255,255,255,255]
+
+// Construct -------------------------------------------
+    construct( string whichEffect, vec3 whichPos )
+        instanceCount++
+        instances[instanceCount] = this
+        index = instanceCount
+
+        sfxModel = whichEffect
+        pos = whichPos
+
+// Start Effect ---------------------------------------------------------
+    private static function stop()
+        thistype inst = instances[GetExpiredTimer().getData()]        
+        inst.sfx.destr()
+        inst.t.release()
+
+    function start()
+        // Stops current effect, if it's running
+        if sfx != null
+            sfx.destr()
+        
+        sfx = addEffect( sfxModel, pos )
+        ..setColor(color[0], color[1], color[2])
+        ..setAlpha(color[3])
+
+        if destroyOnStart
+            sfx.destr()
+        else
+            if t != null
+                t.pause()
+            else
+                t = getTimer()
+                t.setData(index)
+            t.start( DURATION, function stop )
+
+// Settings ------------------------------------------------------------
+
+//  Set Color
+    function setColor(integer r, integer g, integer b, integer a)
+        color[0] = r
+        color[1] = g
+        color[2] = b
+        color[3] = a
+    
+    function setZ( real zoffset ) returns vec3
+        pos = pos.toVec2().withTerrainZ(zoffset)
+        return pos
+
+    function destroyOnStart( boolean flag )
+        destroyOnStart = flag

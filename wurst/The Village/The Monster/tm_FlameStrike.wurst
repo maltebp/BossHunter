@@ -1,0 +1,213 @@
+package tm_FlameStrike
+
+import TimerUtils
+import RegisterEvents
+import tm_Main
+import Orders
+
+init
+    getTimer().start(0.1, function FlameStrike.onGameInit )
+
+public class FlameStrike
+
+    static boolean isReady = false
+
+    static private constant integer INITDMG_REPEATS = 3
+    static private constant real INITDMG_FREQ = 0.5 
+    static private constant real INITDMG_AMOUNT = 150
+    static private constant real INITDMG_DELAY = 1.5
+
+    static private constant real COOLDOWN = 12.0
+
+    static private constant real AOERANGE = 200
+
+    static private constant real BURN_DMG = 150
+    static private constant real BURN_CHECK_FREQ = 0.25
+    static private constant real BURN_FREQ = 0.5-BURN_CHECK_FREQ
+
+    static private thistype array instances
+    static private integer instanceCounter = 0
+
+    private boolean readyToBurn = false
+
+    private var pos = vec2(0, 0)
+
+    private integer initDmgCount = 0
+
+    private timer miscTimer
+    private static timer cooldownTimer = getTimer()
+
+    private effect array[16] sfx
+
+    private static timer burnTimer = getTimer()
+    private static boolean burnIsActive = false
+
+    static function onGameInit()
+        GetExpiredTimer().release()
+        registerSpellEffectEvent('A024', function onCast )
+
+        Mechanic mech = new Mechanic("Flame Strike", vec2(11937,14909))
+        ..setDescription(""+
+        "A blast of ice instantly dealing "+"\n"+
+        " damage, and slowing the targets movement speed by 70%.")
+        ..setCastBy("The Monster")
+        ..setSfx( "Environment\\LargeBuildingFire\\LargeBuildingFire1.mdl", 100)
+
+        mech.setSfx("units\\nightelf\\Wisp\\Wisp.mdl", 0)
+        ..setColorByPlayer(Player(5))
+
+        mech.setSfxOnClick("Abilities\\Spells\\Human\\FlameStrike\\FlameStrike1.mdl")
+        //TO DO: SET SCALE 
+        //..setZ(100)
+        //..destroyOnStart(false)
+
+    private static function onCast() returns boolean
+        setIdle(1)
+        runCooldown()
+        new FlameStrike
+        return false
+
+
+    static function clear()
+        
+        burnTimer.pause()
+        cooldownTimer.pause()
+        burnIsActive = false
+
+        // Clearing All instances
+        thistype instance
+        if instanceCounter > -1
+        for i=0 to instanceCounter-1
+            instance = instances[i]
+            if instance != null
+                destroy instance
+                instances[i] = null
+            instanceCounter = 0
+            
+
+    ondestroy
+        
+        miscTimer.release()
+
+        for i=0 to 15
+            sfx[i].destr()
+
+
+
+    private static function burnStackPrevent()
+        burnTimer.startPeriodic(BURN_CHECK_FREQ, function burnDmg)
+        
+        
+
+    private static function burnDmg()
+
+        if instanceCounter > 0
+            thistype instance
+            var hunterPos = hunter.getPos()
+            boolean burnHunter = false
+
+            for i=0 to instanceCounter-1
+                instance = instances[i]
+                if hunterPos.distanceTo(instance.pos) < AOERANGE and instance.readyToBurn and hunter.isAlive()
+                    burnHunter = true
+              
+
+            if burnHunter
+            
+                theMonster.damageTarget(hunter, BURN_DMG*bossDmgInc)
+                    
+                hunter.addEffect("Abilities\\Spells\\Items\\AIfb\\AIfbSpecialArt.mdl","chest")
+                burnTimer.pause()
+                burnTimer.start(BURN_FREQ, function burnStackPrevent)
+
+
+
+    private static function initialDamage()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+
+        if instance.initDmgCount < INITDMG_REPEATS
+            instance.initDmgCount += 1
+            if hunter.getPos().distanceTo(instance.pos) <= AOERANGE
+                print("damage")
+                theMonster.damageTarget(hero, INITDMG_AMOUNT*bossDmgInc)
+                hunter.addEffect("Abilities\\Spells\\Items\\AIfb\\AIfbSpecialArt.mdl","chest")
+            
+
+        else
+            instance.miscTimer.pause()  
+            print("making effects")
+
+            instance.sfx[2] = addEffect("Abilities\\Spells\\Human\\FlameStrike\\FlameStrikeEmbers.mdl", instance.pos)
+            ..setScale(GetRandomReal(3,3.5))
+
+            
+            
+            for i=0 to 8
+                real randomAngleOffset = GetRandomReal(0, 40)
+                instance.sfx[i+3] = addEffect("Abilities\\Spells\\Human\\FlameStrike\\FlameStrikeEmbers.mdl", instance.pos.polarOffset( ((randomAngleOffset+40*i)+GetRandomReal(-4,4)).fromDeg(), GetRandomReal(AOERANGE*0.75, AOERANGE*0.75) ))
+                ..setScale(GetRandomReal(2.5,3.5))
+
+            for i=0 to 3
+                real randomAngleOffset = GetRandomReal(0, 90)
+                instance.sfx[i+12] = addEffect("Abilities\\Spells\\Human\\FlameStrike\\FlameStrikeEmbers.mdl", instance.pos.polarOffset( ((randomAngleOffset+90*i)+GetRandomReal(-8.0,8.0)).fromDeg(), GetRandomReal(AOERANGE*0.50, AOERANGE*0.55) ))
+                ..setScale(GetRandomReal(2.5,3.5))
+                
+            
+            instance.readyToBurn = true
+
+            if not burnIsActive
+                burnIsActive = true
+                burnTimer.startPeriodic(BURN_CHECK_FREQ, function burnDmg )
+                
+
+
+
+    private static function initialEffect ()
+        
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+
+        instance.sfx[0].destr()
+        instance.sfx[1] = addEffect("Abilities\\Spells\\Human\\FlameStrike\\FlameStrike1.mdl", instance.pos)
+        ..setScale(1*(AOERANGE/100))
+
+        instance.miscTimer.startPeriodic(INITDMG_FREQ, function initialDamage )
+
+        // Order the damage (over X periods)
+
+        // Create SFX
+    
+
+    static function start()
+        print("Flame Strike started...")
+        isReady = false
+        theMonster.issueTargetOrderById(Orders.fingerofdeath, hunter )
+
+    private static function setReady()
+        isReady = true
+
+    static function runCooldown()
+        cooldownTimer.start( COOLDOWN, function setReady )
+        
+
+    construct()
+
+        instances[instanceCounter] = this
+        instanceCounter += 1
+
+        pos = GetSpellTargetUnit().getPos()
+        initDmgCount = 0
+
+        sfx[0] = addEffect("Abilities\\Spells\\Human\\FlameStrike\\FlameStrikeTarget.mdl", pos)
+        ..setScale(0.5)
+
+        miscTimer = getTimer()
+        miscTimer.setData(this castTo integer)
+        miscTimer.start(INITDMG_DELAY, function initialEffect )
+
+        // Initiated by boss casting a specific spell
+    
+        // Add instance to the list of instances (just do an array and a counter - you'll never have to remove middle ones)
+
+        // Free the boss
+
+        // Initiate the build effect 

@@ -1,0 +1,99 @@
+
+
+TO DO LIST
+-----------------------------------------------
+
+Priority
+
+    2.3     The Bear - make
+    2.5     The Necromancer - Update
+
+    5       Missile System
+    3       Update Spells
+    4       Create Items
+
+    2.2.a   The Monster: remove quest items
+
+    2.7     Boss Selection System
+    6       Hints
+    1.2     Target Dummies
+
+    1.3     Make intro fade
+    2.6     Polish Boss Intros
+
+    ---- RELEASE DEMO ----
+
+    2.1     The Bandit
+
+Tasks 
+_________________________________________________________________________________
+    1) Other    
+        1 Update Hunter's Lair to new concept
+        2 Create target dummy in the shop
+        3 Create intro fade (make it a bit prettier)
+
+    2) Bosses
+        1. Make Boss class (or some other boss generalisations)
+        2. The Monster
+            a. Remove quest items
+            b. Make boss info
+        3. The Bear
+        4. The bandit
+        5. The necromancer (update)
+        6. Polish intro on all bosses
+        7. Boss Selection (including info etc.)
+        8. Make Boss Mechanic class (Cooldowns, isReady, start, stop, deactivate etc.)
+
+    3) Spells and Abilities
+        1. Update spell designs
+            - Spells to consider making:
+                - Stun
+                - Cooldown spell (offensive / defensive)
+                - Instant AoE, and remove Unstable Magic
+                - Blink spell (probably too difficult to make)
+            - Update all spells to Wurst script
+            - Make it so that spell tooltips easily follow the constants and stats
+            - Update to Missile system
+        4. Fix Spell Book information
+
+    4) Items
+        1. Create items / update them to statssystem 
+
+    5) Missile System
+        1. Make it
+
+    6) Hints
+        1. Make Hint System
+        2. Make Hints
+
+    7) Stats
+        1. Create a stats system. Stats to include:
+            - Power (instead of attack damage)
+            - Health
+            - Mana
+            - Armor
+            - Magic Defense
+            - Damage reduction (perhaps not this one)
+            - Movement Speed
+            - Mana Regen   (Flat and percent)
+        2. Create a damage system (reduce certain damages) (only if we get damage reduction)
+
+    8) Buff System
+        1. Make a Buff / Debuff system with text
+        2. Update all spells with buffs
+
+
+__________________________________________________________________________________________________________
+
+Extras (These are absolute not necessary, and therefor not prioritized)
+    - Make an Arcane Power indicator over health bar
+    - Make a difficult setting (Normal + Challenging)
+    - Update resources (Gold -> Achievements Completed, Lumber -> Deaths, Food -> Training Points, Upkeep -> Difficulty)
+    - Make hero unable to drop in boss areas, and remove dropped items in other areas (so that you can't fill the map with items)
+    - 
+    - Create armory system (pages)
+    - Boss System
+        - Make boss reward system (items) + item pages in Armory 
+        -   Make achievement system + make achievements
+        -  Create Boss Items
+

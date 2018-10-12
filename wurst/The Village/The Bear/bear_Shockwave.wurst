@@ -1,0 +1,190 @@
+package bear_Shockwave
+import RegisterEvents
+import TimerUtils
+import bear_Main
+import Orders
+
+init
+    registerSpellEffectEvent( 'A02B', function Shockwave.onCast )
+public class Shockwave
+
+// Settings
+    static constant boolean ENABLED     = true
+
+    private static constant boolean ONLYWHENOUTOFRANGE = true // Needs to be implemented
+
+
+    private static constant real    DAMAGE      = 800
+    private static constant real    COOLDOWN    = 5
+
+    private static constant real    WIDTH       = 200   //On each side
+    private static constant real    SPEED       = 1500  //Per Second
+    static constant         real    MIN_DIST    = 300
+
+    private static constant real    DISTANCE    = 2000
+
+    private static constant real    STARTDELAY  = 3
+    private static constant real    DELAYRESETTIME = 5 // Seconds
+
+    private static constant real    IDLE_DELAY  = 2.0
+
+
+// Other Variables
+    static boolean isReady = false 
+    static boolean delayHasRun = false
+    static boolean delayIsRunning = false  
+
+    private static group targetsHit 
+    private static group tempGroup
+    private static real dist 
+    private static angle direction
+    private static vec3 pos
+    private static timer timer_DmgTimer
+    private static timer timer_Cooldown
+    private static timer timer_Status
+    private static unit caster
+
+
+// -------------------------------------------------------------------------
+
+
+// START SHOCKWAVE __________________________________________________________
+    static function start()
+        if ENABLED
+            TheBear.isIdle = false
+            TheBear.canAttack = false
+            isReady = false
+            delayHasRun = false
+            delayIsRunning = false
+            TheBear.theBear.issuePointOrderById(Orders.carrionswarm, hunter.getPos())
+            timer_Status.startPeriodic(0.5, function checkStatus)
+
+    private static function checkStatus()
+        if TheBear.theBear.getCurrentOrder() != Orders.carrionswarm
+            TheBear.theBear.issuePointOrderById(Orders.carrionswarm, hunter.getPos())
+
+    private static function finishCooldown()
+        isReady = true
+
+    static function stop()
+        // Stops the effect of Shockwave entirely (can in the middle
+        // of one as well)
+        if ENABLED
+            timer_DmgTimer.pause()
+            targetsHit.clear()
+            dist = 0
+            CameraClearNoiseForPlayer(Player(0))
+
+
+// DELAY FUNCTIONS _________________________________________________________
+//      In order to make sure, he doesn't cast Shockwave as soon, as he
+//      out of range (so the Hunter has a chance to dodge), a delay has
+//      been Implemented. It runs as soon as Shockwave is supposed to, and
+//      once it has run it "lasts" for DELAYRESETTIME seconds.
+
+    static function startDelay()
+        if ENABLED 
+            timer_Status.start( STARTDELAY, function endDelay )
+            delayIsRunning = true
+
+    private static function endDelay()
+        delayHasRun = true
+        delayIsRunning = false
+        timer_Status.startPeriodic( DELAYRESETTIME, function resetDelay )
+
+    private static function resetDelay()
+        delayHasRun = false   
+
+
+// EFFECT FUNCTIONS____________________________________________________________
+
+    static function onCast()
+        resetDelay()
+        timer_Status.pause()
+        TheBear.canAttack = true
+        TheBear.setIdle(IDLE_DELAY)
+        caster = GetSpellAbilityUnit()
+        pos = GetSpellAbilityUnit().getPos3Real()
+        
+        direction = pos.angleTo2d(vec2(GetSpellTargetX(), GetSpellTargetY()))
+
+        addEffect("Abilities\\Spells\\Orc\\WarStomp\\WarStompCaster.mdl", pos.offset2d(direction, 200))
+        ..setScale(0.75)
+        ..destr()
+        timer_DmgTimer.startPeriodic( WIDTH/SPEED, function move )
+        timer_Cooldown.start( COOLDOWN, function finishCooldown )
+
+        CameraSetEQNoiseForPlayer(Player(0), 2)
+    
+
+    private static function move()
+        pos = pos.offset2d(direction, WIDTH)
+        pos.z = pos.getTerrainZ()
+        dist += WIDTH
+        real roll = GetRandomReal(0,PI2)
+        real sizeFactor = 1+GetRandomReal(0,0.2)
+
+        addEffect("Abilities\\Weapons\\AncientProtectorMissile\\AncientProtectorMissile.mdl", pos)
+        ..setOrientation(0,0, roll)
+        ..setScale(1.2*sizeFactor)
+        ..destr()
+        addEffect("Objects\\Spawnmodels\\Undead\\ImpaleTargetDust\\ImpaleTargetDust.mdl", pos)
+        ..setOrientation(0,0, roll)
+        ..setScale(1.2*sizeFactor)
+        ..destr()
+        addEffect("Abilities\\Spells\\Orc\\EarthQuake\\EarthQuakeTarget.mdl", pos)
+        ..setOrientation(0, 0, roll)
+        ..setScale(0.5*sizeFactor)
+        ..destr()
+
+        Filter( function dmgFilter)
+        group tempGroup = CreateGroup()..enumUnitsInRange(pos.toVec2(), WIDTH, Filter(function dmgFilter))
+        for u from tempGroup
+            UnitDamageTarget(TheBear.theBear, hunter, DAMAGE*(1+TheBear.damageInc), false, false, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL, WEAPON_TYPE_WHOKNOWS)
+            targetsHit.addUnit(u)
+        tempGroup.clear()
+        
+        if dist >= DISTANCE
+            stop()
+
+    private static function dmgFilter() returns boolean
+        if GetFilterUnit().getOwner().isEnemyOf(caster.getOwner()) and not targetsHit.contains(GetFilterUnit())
+            return true
+        return false  
+
+
+// ACTIVATE FUNCTION___________________________________________________________
+    static function activate()
+        if ENABLED
+            timer_DmgTimer = getTimer()
+            timer_Status = getTimer()
+            timer_Cooldown = getTimer()
+            targetsHit = CreateGroup()
+            tempGroup = CreateGroup()
+            isReady = true
+            delayHasRun = false
+        
+// DEACTIVATE FUNCTION___________________________________________________________
+    static function deactivate()
+        if ENABLED
+            timer_DmgTimer.release()
+            timer_Status.release()
+            timer_Cooldown.release()
+            targetsHit.destr()
+            tempGroup.destr()
+        
+
+    
+    
+    
+        
+
+    
+
+    
+
+
+
+
+
+

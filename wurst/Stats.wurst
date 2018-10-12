@@ -1,0 +1,98 @@
+package Stats
+
+public class Stats
+
+    static constant integer SHOP_ID = 'n009'
+
+    static constant integer START_STATPOINTS = 40
+
+    static constant integer TRAININGID_INT1 = 'I00I'
+    static constant integer TRAININGID_INT5 = 'I006'
+    static constant integer TRAININGID_STR1 = 'I00J'
+    static constant integer TRAININGID_STR5 = 'I005'
+    static constant integer TRAININGID_AGI1 = 'I007'
+    static constant integer TRAININGID_AGI5 = 'I00H'
+
+    static constant integer TRAININGID_RESET = 'I00Q'
+
+
+
+    static constant integer INT = 1
+    static constant integer STR = 2
+    static constant integer AGI = 3
+
+    static          integer startInt = 0
+    static          integer startStr = 0
+    static          integer startAgi = 0
+
+    
+    
+    static          boolean firstTime = true
+
+    static function reset( unit whichUnit )
+        if not firstTime
+            whichUnit.setInt(startInt)
+            whichUnit.setStr(startStr)
+            whichUnit.setAgi(startAgi)
+            Player(0).setLumber(START_STATPOINTS)
+
+    static function adjust( unit whichUnit, integer stat, integer adjustment )
+
+        if firstTime
+            firstTime = false
+            startInt = whichUnit.getInt(false)
+            startStr = whichUnit.getStr(false)
+            startAgi = whichUnit.getAgi(false)
+
+        if stat == INT
+            whichUnit.addInt(adjustment)
+        else if stat == STR
+            whichUnit.addStr(adjustment)
+        else if stat == AGI
+            whichUnit.addAgi(adjustment)
+        else
+            print("ERROR: A STAT HAS BEEN GIVEN TO Stats.Adjust(), that doesn't exist!")  
+
+    static function preTrain( unit whichUnit, integer intel, integer agi, integer str )
+        
+        if (intel+agi+str) > START_STATPOINTS
+            print("Woopsies, someone want to preTrain too much - not preTraining anything now.")
+        else
+            adjust( whichUnit, INT, intel)
+            adjust( whichUnit, AGI, agi)
+            adjust( whichUnit, STR, str)
+            Player(0).setLumber(0)
+
+    static function train() returns boolean
+
+        if GetSellingUnit().getTypeId() == SHOP_ID
+            integer trainingID = GetSoldItem().getTypeId()
+
+            if TRAININGID_INT1 == trainingID
+                adjust(GetBuyingUnit(), INT, 1)
+
+            else if TRAININGID_INT5 == trainingID
+                adjust(GetBuyingUnit(), INT, 5)
+            
+            else if TRAININGID_STR1 == trainingID
+                adjust(GetBuyingUnit(), STR, 1)
+
+            else if TRAININGID_STR5 == trainingID
+                adjust(GetBuyingUnit(), STR, 5)
+
+            else if TRAININGID_AGI1 == trainingID
+                adjust(GetBuyingUnit(), AGI, 1)
+
+            else if TRAININGID_AGI5 == trainingID
+                adjust(GetBuyingUnit(), AGI, 5)
+
+            else if TRAININGID_RESET == trainingID
+                reset( GetBuyingUnit() )
+            
+        return false
+
+init
+    Player(0).setLumber(Stats.START_STATPOINTS)
+    CreateTrigger()
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_SELL_ITEM)
+    ..addCondition(Condition(function Stats.train))

@@ -1,0 +1,31 @@
+
+1) System Functions
+    1.  Initializer      DONE
+    2.  Clear            DONE
+    3.  Hunter Death     DONE
+    4.  Boss Death       DONE
+    5.  Main Loop        DONE
+    6.  Zone             DONE
+    7.  Mobs (only boss) DONE
+
+2) Shred / Auto Attack  DONE
+
+3) Charge DONE
+
+5) Shockwave DONE
+
+6) Enrage   DONE
+
+7) Frenzy   DONE
+
+8) Pathing in zone
+
+
+TESTING:
+    [ ] Increase damage from Enrage
+    [ ] Increase frequency of Shockwave (either by decreasing cooldown, increase cases where it might be used, or disable minimum distance)
+    [ ] Increase frequency of Charge
+
+OTHER:
+    [ ] Fix facing when charging Charge
+    [ ] Don't decay when it dies

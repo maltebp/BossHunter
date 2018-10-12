@@ -1,0 +1,36 @@
+package DayCycle
+
+// A system which allow you to switch between a permanant night/day time,
+// and regular day / night cycle easily. It stores the current time in the
+// regular day/night cycle, and continues it whenever the cycle is re-enabled.else
+// The main purpose is to easily enable the gloomy atmosphere of night for caves.
+
+public class DayCycle
+
+    private static real time = 12
+    private constant static real timeScale = 2
+    private static boolean enabled = false
+
+    static function setAlwaysNight( )
+        if enabled
+            time = GetTimeOfDay()
+            enabled = false
+        //EnableDawnDusk(false)
+        SetTimeOfDay(0)
+        SetTimeOfDayScalePercentBJ(0)
+
+    static function setAlwaysDay( )
+        if enabled
+            time = GetTimeOfDay()
+            enabled = false
+        EnableDawnDusk(false)
+        SetTimeOfDay(12)
+        SetTimeOfDayScale(0)
+
+    static function setNormal( )
+        if not enabled
+            enabled = true
+            SetTimeOfDay(time)
+            SetTimeOfDayScale(timeScale)
+            EnableDawnDusk(true)
+

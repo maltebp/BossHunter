@@ -1,0 +1,277 @@
+
+package bear_Charge
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+import bear_Main
+import TimerUtils
+import SoundUtils
+import InstantDummyCaster
+import Orders
+import Preloader
+
+init
+    preloadAbility('A02E')
+
+public class Charge
+//____________________________________________________________________________________________________________________________________________________
+
+
+// Settings_____________________________________________________________________________
+    
+    constant private static boolean ENABLED = true
+    
+    // Mechanics
+    constant private static boolean     STARTWITHCOOLDOWN       = true
+    constant private static real        COOLDOWN                = 30
+    constant private static real        DAMAGE                  = 2000
+    constant private static real        STUN_DURATION_BEAR      = 8
+    constant private static int         STUN_DURATION_HUNTER    = 8 // MAX IS 30
+    constant private static real        SPEED                   = 700 // RANGE PR. Sec
+    constant private static real        HITRANGE                = 150
+    constant private static real        STARTDELAY              = 3
+    //                                  DAMAGETAKEN INC         = SEE OBJECT EDITOR
+
+    // Technical
+    private constant static real MOVE_ADJUSTPERSEC = 20
+    private constant static real MOVE_UPDATEFREQ = 0.03
+    
+
+
+// Variables_____________________________________________________________________________
+
+    private constant static real MOVE_RANGEPERUPDATE = SPEED * MOVE_UPDATEFREQ
+    static boolean isReady = false
+    private static vec2 targetPoint
+    private static timer timer_Misc
+    private static timer timer_Animation
+    private static timer timer_SFX
+    private static timer timer_Shake
+    private static effect stunSFX
+
+    private static constant SoundDefinition effectSound1 = new SoundDefinition(Sounds.grizzlyBearReady1, false)
+    private static constant SoundDefinition effectSound2 = new SoundDefinition(Sounds.catapultMissile4, false, true)
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// START FUNCTIOn __________________________________________________________
+    
+    static function start()
+        print("starting charge")
+        if ENABLED
+            isReady = false    
+            TheBear.isIdle = false
+
+            TheBear.theBear.pause()
+            
+            timer_Misc.start(0.5, function startDelay1)
+            
+
+    static function startDelay1()
+        TheBear.theBear.setTimeScale(0.75)
+        TheBear.theBear.setAnimation(5)
+        TheBear.theBear.queueAnimation("stand")
+        addEffect("Abilities\\Spells\\NightElf\\BattleRoar\\RoarCaster.mdl", TheBear.theBear.getPos())
+        effectSound1.play()
+        timer_Misc.start(2.5, function startDelay2)
+        // TODO: Make him face before charging
+
+        
+    static function startDelay2()
+       
+        TheBear.theBear.setTimeScale(3)
+        TheBear.theBear.setAnimation(2)
+    
+        targetPoint = hunter.getPos()
+
+        CameraSetEQNoiseForPlayer(Player(0), 2)
+        moveSFX()
+        timer_Misc.startPeriodic(MOVE_UPDATEFREQ, function move)
+        timer_Animation.startPeriodic(0.305, function animation)
+        timer_SFX.startPeriodic(0.1, function moveSFX)
+
+
+// MOVE FUNCTIONS ____________________________________________________________________________________          
+    
+    private static function animation()
+        // Updating the walk animation
+        TheBear.theBear.setAnimation(2)
+
+    private static function moveSFX()
+        addEffect("Abilities\\Weapons\\AncientProtectorMissile\\AncientProtectorMissile.mdl", TheBear.theBear.getPos())
+        ..setOrientation(0,0, 0)
+        ..setScale(1.2)
+        ..destr()
+
+    private static function move()
+        real distance1 = targetPoint.distanceTo(hunter.getPos())
+        real directAdjust = (distance1>MOVE_ADJUSTPERSEC) ? MOVE_ADJUSTPERSEC : distance1
+        vec2 targetPos = TheBear.theBear.getPos().moveTowards(targetPoint, MOVE_RANGEPERUPDATE)
+        vec2 bearPos = TheBear.theBear.getPos()
+        boolean rockIsInRange = false
+
+        targetPoint = targetPoint.moveTowards(hunter.getPos(), directAdjust )
+        TheBear.theBear.setFacing(TheBear.theBear.getPos().angleTo(hunter.getPos()))
+        
+
+        // Rock is in range
+        for i=0 to 3
+            if bearPos.distanceTo( Rock.objects[i].pos ) < HITRANGE and Rock.objects[i] != null
+                rockIsInRange = true
+                timer_Misc.pause()
+                timer_Animation.pause()
+                timer_SFX.pause()
+                
+                hitRock(Rock.objects[i])
+    
+        // Hunter in range
+        if rockIsInRange == false and bearPos.distanceTo(hunter.getPos()) < HITRANGE
+            timer_Misc.pause()
+            timer_Animation.pause()
+            timer_SFX.pause()
+            hitHunter()
+
+        // Nothing is in range - moving Bear
+        else if rockIsInRange == false
+            TheBear.theBear.setX(targetPos.x)
+            TheBear.theBear.setY(targetPos.y) 
+    
+
+    
+// HIT FUNCTIONS __________________________________________________________
+
+    private static function hitRock(Rock rock)
+    
+        TheBear.theBear.setAnimation(0) 
+        TheBear.theBear.addAbility('A02F')
+
+        TheBear.theBear.pause()
+        TheBear.theBear.setTimeScale(1)
+        stunSFX = TheBear.theBear.addEffect("Abilities\\Spells\\Human\\Thunderclap\\ThunderclapTarget.mdl", "overhead")
+        
+        effectSound2.playOnPoint(TheBear.theBear.getPos3Real())
+
+        addEffect("Abilities\\Spells\\Orc\\WarStomp\\WarStompCaster.mdl", rock.pos)..destr()    
+        addEffect("Objects\\Spawnmodels\\Undead\\ImpaleTargetDust\\ImpaleTargetDust.mdl", rock.pos)
+            ..setOrientation(0,0, GetRandomReal(0, 2*PI))
+            ..setScale(1.2)
+            ..destr()
+
+        timer_Misc.start( STUN_DURATION_BEAR, function stop )
+
+        CameraSetEQNoiseForPlayer(Player(0), 4)
+        getTimer().start(1.5, function stopShake)
+        
+        destroy rock
+
+
+    private static function stopShake()
+        timer_Shake.pause()
+        CameraClearNoiseForPlayer(Player(0))
+        
+
+        
+    private static function hitHunter()
+        print("Hit Hunter!")
+        addEffect("Abilities\\Spells\\Orc\\WarStomp\\WarStompCaster.mdl", hunter.getPos() )..destr()
+        hunter.addEffect("Abilities\\Spells\\Other\\Stampede\\StampedeMissileDeath.mdl", "chest")..destr()
+        TheBear.theBear.setTimeScale(1)
+        TheBear.theBear.unpause()
+        InstantDummyCaster.castTarget(Player(11), 'A02E', STUN_DURATION_HUNTER, Orders.slow, hunter, hunter.getPos())
+        UnitDamageTarget(TheBear.theBear, hunter, DAMAGE, false, false, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL, WEAPON_TYPE_WHOKNOWS)
+        stop()
+
+
+    static function stop()
+        stopShake()
+        TheBear.isIdle = true
+        isReady = false
+        
+        timer_Animation.pause()
+        timer_Misc.pause()
+        timer_SFX.pause()
+
+        TheBear.theBear.queueAnimation("stand")
+        
+        TheBear.theBear.unpause()
+        if TheBear.theBear.getAbilityLevel('A02F') > 0
+            TheBear.theBear.removeAbility('A02F')
+        
+        if stunSFX != null
+            stunSFX.destr()
+        
+        timer_Misc.start(COOLDOWN, function setReady)
+
+
+    static function setReady()
+        isReady = true 
+
+
+    static function activate()
+        if ENABLED
+            timer_Misc = getTimer()
+            timer_Animation = getTimer()
+            timer_SFX = getTimer()
+            timer_Shake = getTimer() 
+            Rock.createAll()
+
+            if STARTWITHCOOLDOWN
+                isReady = false
+                timer_Misc.start(COOLDOWN, function setReady ) 
+            else
+                isReady = true
+
+
+    static function deactivate()
+        if ENABLED
+            timer_Misc.release()
+            timer_Animation.release()
+            timer_SFX.release()
+            timer_Shake.release()
+            Rock.destroyAll()
+
+    
+
+// ROCKS_______________________________________________________________________________________________________________________________
+class Rock
+    // The rocks that the bear can charge into
+  
+
+    static Rock array objects
+
+    int index
+    vec2 pos    
+    constant private static vec2 array POS = [vec2(-9356, 13672), vec2(-10359,13757), vec2(-10300,12780), vec2(-9425,12964)]
+    constant private static string array models = [
+        "Doodads\\LordaeronSummer\\Terrain\\LoardaeronRockChunks\\LoardaeronRockChunks1.mdl",
+        "Doodads\\LordaeronSummer\\Terrain\\LoardaeronRockChunks\\LoardaeronRockChunks3.mdl" ]
+
+    private effect model
+    private unit collisionDummy
+
+    construct( int whatIndex )
+        index = whatIndex
+        pos = POS[whatIndex]
+
+        model = addEffect(models[GetRandomInt(0, 1)], pos)
+        ..setOrientation(0, 0, GetRandomReal(0, 2*PI))  
+        ..setScale(GetRandomReal(1, 1.2))     
+        collisionDummy = createUnit( Player(PLAYER_NEUTRAL_PASSIVE), 'h00B', pos, angle(0))   
+
+    ondestroy
+        model.destr()
+        collisionDummy.remove()
+        objects[index] = null
+
+
+    static function destroyAll()
+        for i=0 to 3
+            if objects[i] != null
+                destroy objects[i]
+
+
+    static function createAll()
+        for i=0 to 3
+            objects[i] = new Rock(i) 

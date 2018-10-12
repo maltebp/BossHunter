@@ -1,0 +1,276 @@
+package InteractableObjects
+
+import General
+import TimerUtils
+import Orders
+import SoundUtils
+
+unit orderTarget = null
+
+public class InteractableObject
+
+// Constants
+    private static constant     real            STANDARD_ACTIVATEDISTANCE   = 100
+    private static constant     real            STANDARD_MODELSIZE          = 0.5
+    private static constant     integer         UNITID          =   'u00D'
+    private static constant     integer         MARKERID        =   'u00E'
+    private static constant     integer         SFXID           =   'h00A'
+    private static constant     SoundDefinition STANDARDSOUND   =   new SoundDefinition(Sounds.wayPointBling, false)
+    private static constant     group           filterGroup = CreateGroup()
+
+// Series
+    static constant     integer         SERIES_THEMONSTER = 0
+
+// Instance Management
+    private static      thistype array  instances
+    private static      integer         instanceCount   = -1
+    private             integer         index           = -1
+
+// Adjustable Variables    
+    SoundDefinition customSound = null
+    boolean soundOnPoint = false
+    boolean playSound = true
+    boolean removeOnInteract = false
+    real activateDist
+
+// Instance Privates
+    private unit object
+    private unit sfx 
+    private string name
+    private string info
+    private integer series
+    private string infoName
+    private real scale
+    private real SFXZ = 40
+    private timer   t
+    private vec2 pos
+
+//-----
+    construct( vec2 objectPos, real objectScale, integer objectSeries, string objectName, string objectInfoName, string objectInfo )
+
+        instanceCount += 1
+        instances[instanceCount] = this
+        index = instanceCount
+
+        name = objectName
+        activateDist = STANDARD_ACTIVATEDISTANCE
+        info = objectInfo
+        series = objectSeries
+        infoName = objectInfoName
+        scale = objectScale
+
+        // The Marker-unit can be used to a more exact position with the editor
+        if filterGroup != null
+            filterGroup.enumUnitsInRange( objectPos, 200, Condition(function filter) )
+            if filterGroup.size() > 0
+                unit u = filterGroup.getRandomUnit()
+                pos = u.getPos()
+                u.remove()
+                filterGroup.clear()
+            else 
+                pos = objectPos
+        else 
+            pos = objectPos
+        
+        // sfx = addEffect( SFX_MODEL, pos.withTerrainZ(-25) )
+        // ..setTimeScale(0.75)
+
+        // object = createUnit( Player(PLAYER_NEUTRAL_PASSIVE), UNITID, pos, angle(0) )
+        // ..setVertexColor(0, 0, 0, 0)
+        // ..setName(name)
+        // ..setScale(STANDARD_MODELSIZE*scale)
+
+        t = getTimer()
+
+    ondestroy
+        if customSound != null and customSound != STANDARDSOUND
+            destroy customSound
+        
+        object.remove()
+        sfx.remove()
+        t.release()
+
+        // THIS HAS NOT BEEN TESTED
+        integer i = index
+        while instances[i+1] != null
+            instances[i] = instances[i+1]
+            instances[i].index = i
+            i += 1
+        instances[i] = null
+        instanceCount -= 1
+   
+// Activation / Deactivation
+
+    static function activateSeries(integer series)
+        for i=0 to instanceCount
+            if instances[i].series == series
+                instances[i].sfx = createUnit( Player(PLAYER_NEUTRAL_PASSIVE), SFXID, instances[i].pos, angle(0) )
+                ..setFlyHeight(instances[i].SFXZ, 100)
+                ..setVertexColor(255, 255, 100, 200)    
+              
+                instances[i].object = createUnit( Player(PLAYER_NEUTRAL_PASSIVE), UNITID, instances[i].pos, angle(0) )
+                ..setVertexColor(0, 0, 0, 0)
+                ..setName(instances[i].name)
+                ..setScale(STANDARD_MODELSIZE*instances[i].scale)
+                
+
+    static function deactivateSeries( integer series)
+        
+        for i=0 to instanceCount
+            if instances[i].series == series
+                instances[i].object.remove()
+                instances[i].sfx.remove()
+                
+
+
+
+// Checking Markers 
+    private static function filter() returns boolean
+        return GetFilterUnit().getTypeId() == MARKERID
+
+    static function removeMarkers()
+        filterGroup.enumUnitsAll(Condition(function filter))
+        integer size = filterGroup.size()
+        if size > 0 
+            for i=1 to filterGroup.size()
+                filterGroup.next().remove()
+            filterGroup.clear()
+        filterGroup.destr() // No reason to keep the filter group, once markers have been removed
+        
+// Settings
+    function setCustomSound( string soundFile )
+        customSound = new SoundDefinition(soundFile, false)
+
+    function setSFXZ( real height )
+        SFXZ = height
+
+// Interaction Functions
+    private function onInteract()
+
+        if playSound
+            SoundDefinition soundToPlay
+            if customSound == null
+                soundToPlay = STANDARDSOUND
+            else
+                soundToPlay = customSound
+            if soundOnPoint
+                soundToPlay.playOnPoint(pos.withTerrainZ())
+            else                
+                soundToPlay.play()
+
+        //Printing
+        ClearTextMessages()
+        if infoName == ""
+            print("|cffFE890D"+name+"|r")
+        else
+            print("|cffFE890D"+infoName+"|r")
+        print(info)
+
+        if removeOnInteract
+            destroy this
+        
+        
+
+            
+    private static function checkDistance()
+        thistype instance = instances[GetExpiredTimer().getData()]
+
+        if orderTarget == instance.object
+            if instance.pos.distanceTo(hunter.getPos()) < instance.activateDist
+                instance.t.pause()
+                instance.onInteract()
+            else
+        else
+            instance.t.pause()
+
+        
+            
+    static function startDistCheck(unit whichObject)
+        if instanceCount > -1
+            for i=0 to instanceCount
+                if whichObject== instances[i].object
+                    instances[i].t.setData(instances[i].index)
+                    instances[i].t.startPeriodic( 0.1, function checkDistance )
+        else
+            print("ERROR 1")
+
+
+function isOrdered() returns boolean
+    if GetTriggerUnit().getTypeId() == hunter.getTypeId()
+        if GetIssuedOrderId() == Orders.smart
+            unit target = GetOrderTargetUnit()
+            if target != null // Checking if smart-order is a unit order
+                orderTarget = target
+                if target.getTypeId() == 'u00D' 
+                    InteractableObject.startDistCheck( target )
+            else
+                orderTarget = null
+        else
+            orderTarget = null
+    return false
+
+
+
+    
+
+init
+// Create Objects
+
+
+    new InteractableObject(vec2(-10320,5377), 1.0, InteractableObject.SERIES_THEMONSTER, "A Strange Letter", "", ""+
+    
+    "On the rock lies a new and unharmed letter. It doesn't\n"+
+    "state who it's addressed to. It reads: \n"+
+    "\n"+
+    "I hope your training has given you and your kin leverage\n"+
+    "to fend off the invaders. The stay of your kind and \n"+
+    "troubled soul has brought joy and sorrow to me and my\n"+
+    "family in the fortress, but not the least brought life\n"+
+    "to a long lifeless place. For this. we want to thank you,\n"+
+    "and grant you these last gifts of our power, in hope they\n"+
+    "will help you with the troubles at home. We long to see\n"+
+    "you again, and dearly hope you will return to us in the\n"+
+    "near future.\n"+
+    "\n"+
+    "We wish you much luck, dear friend\n"+
+    "T.H.M\n")
+    ..setCustomSound(Sounds.questActivateWhat1)
+
+    new InteractableObject(vec2(-11500,5200), 1.0, InteractableObject.SERIES_THEMONSTER, "Hateful Drawings", "", ""+
+    "A jagged and rough drawing of a tall, man-like figure co-\n"+
+    "vers this box. It's drawn in it red - it seems like blood")
+
+    new InteractableObject(vec2(-11275,5250), 1.0, InteractableObject.SERIES_THEMONSTER, "Blue Glowing Mushrooms", "", ""+
+    "A blue and greenish kind of mushroom, giving off a very\n"+
+    "vague glow - only enough to give light to the darkest of\n"+
+    "crevices. When touched it releases a characteristic scent,\n"+
+    "hard to describe as horrible or lovely. Its abundance in\n"+
+    "the mines suggests that the villagers don't fint it useful.\n"+
+    "Certain places, however, some has been cut down and put in\n"+
+    "old mine carts.")
+    
+    new InteractableObject(vec2(-9958,4273), 1.0, InteractableObject.SERIES_THEMONSTER, "Old markings", "", ""+
+    "Strange uninterpretable markings cover this rock, as if\n"+
+    "are a combination of simple drawings and twisted letters.\n"+
+    "One thing is sure: the wear and tear, shows it's old -"+
+    "very old.")
+
+    new InteractableObject(vec2(-11064, 3750), 1.0, InteractableObject.SERIES_THEMONSTER, "Precious Metal", "", ""+
+    "A material naturally found within the mines. It's thought\n"+
+    "of as very precious by the inhabitants of the village for\n"+
+    "it's many uses")
+    ..setSFXZ(150)
+
+    CreateTrigger()
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_ISSUED_ORDER)
+    ..addCondition( Condition( function isOrdered ))
+
+
+
+
+            
+
+        

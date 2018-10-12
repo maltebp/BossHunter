@@ -1,0 +1,473 @@
+package tm_MagicCrystal
+
+import initlater tm_Main
+import UnitLightning
+import TimerUtils
+import TimedEffect
+import SoundUtils
+import Orders
+
+init
+    CreateTrigger()
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+    ..addAction(function MagicCrystal.dies )
+
+    getTimer().start(0.1, function MagicCrystal.createBossInfo )
+
+
+public class MagicCrystal
+
+// Mechaninc Stats
+
+    private static  constant real           ABSORB_DUR      = 10
+    private static  constant integer        CRYSTAL_HP      = 400
+    private static  constant real           LIGHTNING_DMG   = 90
+    private static  constant real           LIGHTNING_FREQ  = 2.0
+    static          constant real array     activationHp    = [0.75, 0.5, 0.25]
+
+
+// Constants
+
+    private static thistype array crystals
+
+    private static constant rect array spawnRect = [ gg_rct_TM_MagicCrystal1, gg_rct_TM_MagicCrystal2, gg_rct_TM_MagicCrystal3 ]
+
+    private constant static integer placeholderId = 'u00A'
+
+    private constant static integer sfxId           =   'u00C'
+
+    private static constant SoundDefinition sound_AbsorbCrystal = new SoundDefinition(Sounds.siphonManaLoop, false)
+
+    private static constant real standardMoveSpeed = 350
+
+// Class Variables
+
+    private var pos = vec2(0,0) 
+
+    private unit crystal
+
+    private effect crystalSFX
+
+    private unit placeholder
+
+    private timer lightningTimer
+    
+    private integer index = -1
+
+
+    static boolean array hasRun = [false, false, false]
+
+    private static effect sfx_Shield
+
+    private static effect array absorbSFX 
+    
+    private static UnitLightning absorbLightning
+
+    private static timer runTimer1 = getTimer()
+    
+    private static timer runTimer2 = getTimer()
+
+    private static timer runTimer3 = getTimer()
+    
+    private static effect array enrageSFX
+
+    ondestroy
+        crystal.remove()
+        placeholder.remove()
+        crystalSFX.destr()
+
+        if lightningTimer != null
+            lightningTimer.release()
+            lightningTimer = null
+
+
+    static function clear()
+        
+        destroy crystals[0]
+        destroy crystals[1]
+        destroy crystals[2]
+
+        sfx_Shield.destr()
+
+        runTimer1.pause()
+        runTimer2.pause()
+        runTimer3.pause()
+
+        hasRun[0] = false
+        hasRun[1] = false
+        hasRun[2] = false
+
+        absorbSFX[0].destr()
+        absorbSFX[1].destr()
+        absorbSFX[2].destr()
+    
+
+    private function stopCrystal()
+
+        if lightningTimer != null
+            lightningTimer.pause()
+        if placeholder != null
+            placeholder.setInvulnerable(true)
+
+
+    static function stop()
+        
+        runTimer1.pause()
+        runTimer2.pause()
+        runTimer3.pause()
+        
+        enrageSFX[0].destr()
+
+        absorbSFX[0].destr()
+        absorbSFX[1].destr()
+        absorbSFX[2].destr()
+
+        theMonster.issueImmediateOrder("stop")
+
+        for i=0 to 2
+            crystals[i].stopCrystal()
+
+        //if absorbLightning != null
+            //destroy absorbLightning
+
+
+        
+    
+   
+
+    private static function lightning_Fire()
+        thistype instance = GetExpiredTimer().getData() castTo thistype    
+
+        new UnitLightning( instance.placeholder, hunter, 1, "FORK")
+        ..setColor(150, 255, 150)
+
+        addEffectDuration(instance.placeholder.addEffect("Abilities\\Spells\\NightElf\\Blink\\BlinkTarget.mdl", "chest"), 2.0)
+        ..setColor(100, 255, 0)
+        addEffectDuration(hunter.addEffect("Abilities\\Spells\\NightElf\\Blink\\BlinkCaster.mdl", "origin"), 2.0)
+        ..setColor(100, 255, 0)
+        hunter.addEffect("Abilities\\Weapons\\FarseerMissile\\FarseerMissile.mdl", "chest")
+        ..setColor(100, 255, 0)
+        ..destr()
+        hunter.addEffect("units\\nightelf\\Wisp\\Wisp.mdl", "origin")
+        ..setColorByPlayer(Player(22))
+        ..destr()
+
+        theMonster.damageTarget( hunter, LIGHTNING_DMG )
+        
+        //sound_Lightning.playOnPoint( hunter.getPos3Real() )
+
+
+    private static function moveSFX()
+        if not bossIsEnraged
+            absorbSFX[2].setPos(theMonster.getPos3Real())
+        enrageSFX[0].setPos(theMonster.getPos().withTerrainZ(100))
+        
+
+    private function death()
+        
+        placeholder.remove()
+        crystal.setAnimation("death")
+        crystalSFX.setTimeScale(1)
+        crystalSFX.destr()
+        lightningTimer.pause()
+
+
+    static function dies()
+        unit u = GetDyingUnit()
+
+        if u.getTypeId() == placeholderId
+        
+            if u == crystals[0].placeholder
+                crystals[0].death()
+                crystals[0].releaseBoss()
+            else if u == crystals[1].placeholder
+                crystals[1].death()
+                crystals[1].releaseBoss()
+
+            else if u == crystals[2].placeholder
+                crystals[2].death()
+                crystals[2].releaseBoss()
+            else
+                print("ERROR: A CRYSTAL DIED, BUT IS NOT AN INSTANCE!")
+
+    private static function releaseBossDelay2()
+        
+        theMonster.unpause()
+        theMonster.issueTargetOrder("attack", hunter)
+        setIdle(1)
+
+    private static function releaseBossDelay1()
+ 
+        if not bossIsEnraged
+            absorbSFX[2] = addEffect("Abilities\\Spells\\Human\\ManaShield\\ManaShieldCaster.mdl", theMonster.getPos().withTerrainZ(100) )
+            theMonster.setBaseDamage(R2I(theMonster.getBaseDamage(1)*CRYSTALABSORBED_DMGINC), 1)
+            bossDmgInc = CRYSTALABSORBED_DMGINC
+            theMonster.addAbility('A026')
+            enrageSFX[0] = addEffect(Abilities.farseerMissile, theMonster.getPos3with(75) )
+            ..setScale(2.0)
+            runTimer2.startPeriodic( 0.02, function moveSFX )
+
+        else
+            enrageSFX[0] = addEffect(Abilities.farseerMissile, theMonster.getPos3with(75) )
+            ..setScale(2.0)
+            theMonster.setVertexColor(200, 200, 255, 175)
+            runTimer2.startPeriodic( 0.02, function moveSFX )
+            theMonster.addAbility('A025')
+            theMonster.setBaseDamage(R2I(theMonster.getBaseDamage(1)*ENRAGE_DMGINC), 1)
+            bossDmgInc = ENRAGE_DMGINC
+
+        runTimer1.start(2.0, function releaseBossDelay2 )
+    
+        playMusic( Sounds.orcVictory )
+
+    private function releaseBoss()
+
+        runTimer1.pause()
+        runTimer2.pause()
+        runTimer3.pause()
+        
+        if index == 2
+            
+            theMonster.setAnimation("attack")
+            theMonster.queueAnimation("stand")
+           
+            addEffectDuration(theMonster.addEffect( Abilities.forkedLightningTarget, "origin"), 3)
+            theMonster.addEffect( Abilities.farseerMissile, "origin")
+            ..destr()
+
+            addEffectDuration(addEffect(Abilities.forkedLightningTarget, pos.withTerrainZ(50)), 3)
+            ..setScale(1.5)
+
+            addEffect(Abilities.farseerMissile, pos.withTerrainZ(50))
+            ..setScale(1.5)
+            ..destr()
+
+            runTimer1.start(2.0, function releaseBossDelay1 )
+        
+        else if bossHasAbsorbed
+
+            absorbSFX[0]
+            ..setTimeScale(1)
+            ..destr()
+
+            absorbSFX[1]
+            ..destr()
+
+            theMonster.setInvulnerable(true)
+            
+            theMonster.setAnimation("attack")
+            theMonster.queueAnimation("stand")
+            addEffectDuration( theMonster.addEffect("Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", "chest"), 3.0)
+            addEffectDuration( addEffect("Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", pos.withTerrainZ(50)), 3.0)
+
+            runTimer1.start(2.0, function releaseBossDelay1 )
+
+            // Do stuff here...
+            print("Boss has absorbed!")
+        else
+            absorbSFX[0]
+            ..setTimeScale(1)
+            ..destr()
+
+            absorbSFX[1]
+            ..destr()
+
+            theMonster.setAnimation("stand")
+     
+            runTimer1.start(2.0, function releaseBossDelay2 )
+
+    private static function finishAbsorb()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        print("Absorb  has finished")
+        
+        bossHasAbsorbed = true
+        
+        if instance.index == 2
+            bossIsEnraged = true
+            instance.death()
+            instance.releaseBoss()
+
+        else if instance.index == 0 or instance.index == 1
+            instance.placeholder.kill()
+                    
+
+    private static function animation()
+        theMonster.setAnimation("attack")
+
+    private static function loopSound()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        sound_AbsorbCrystal.playOnPoint(instance.placeholder.getPos3Fly()).snd.setVolume(75)
+
+        
+
+    private static function initiateAbsorbDelay1()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        
+        if instance.index == 2
+            //Do stuff...
+
+            runTimer1.start(0, function finishAbsorb)
+        
+        else if instance.index == 0 or instance.index == 1
+            instance.placeholder = createUnit( Player(11), placeholderId, instance.pos, angle(0) )
+            ..setVertexColor(255, 255, 255, 0)
+            ..setMaxHP( CRYSTAL_HP, true )
+
+            absorbLightning = new UnitLightning( instance.placeholder, theMonster, ABSORB_DUR, "MBUR")
+            ..setColor(255, 255, 255)
+            
+            absorbSFX[0] = addEffect("units\\nightelf\\Wisp\\Wisp.mdl", vec3( theMonster.getX(), theMonster.getY(), theMonster.getLocalZ()-200) )
+            ..setColorByPlayer(Player(22))
+            ..setScale(1.5)
+            absorbSFX[1] = theMonster.addEffect("Abilities\\Spells\\Other\\Drain\\ManaDrainTarget.mdl", "chest")
+            
+            runTimer1.setData( instance castTo int)
+            runTimer2.setData( instance castTo int )
+            runTimer3.setData( instance castTo int )
+
+            runTimer1.start( ABSORB_DUR, function finishAbsorb)
+            loopSound()
+            runTimer2.startPeriodic(1.65, function loopSound )
+            animation()
+            runTimer3.startPeriodic( 1.1, function animation )
+
+            instance.lightningTimer = getTimer()
+            ..setData( instance castTo int)
+            instance.lightningTimer.startPeriodic(LIGHTNING_FREQ, function lightning_Fire )
+            // Perhaps create a duration timer as a mana bar
+
+
+    private function initiateAbsorb()
+ 
+        theMonster.pause()
+        theMonster.setPathing(true)
+        theMonster.setMoveSpeed(standardMoveSpeed)
+
+        runTimer1.setData( this castTo int )
+        runTimer1.start( 2.0, function initiateAbsorbDelay1 )
+
+    
+    
+    private static function checkDistance()
+        thistype instance = crystals[GetExpiredTimer().getData()]
+        real bossFacing     = theMonster.getFacing()
+        real angleBetween   = theMonster.getPos().angleTo(instance.pos).degrees()
+        real difference     = (bossFacing - angleBetween)*1
+        real distance       = theMonster.getPos().distanceTo(instance.pos)
+
+        if distance < 500
+
+            if difference < 10
+                theMonster.issueImmediateOrder("stop")
+                runTimer1.pause()
+                instance.initiateAbsorb()
+                
+            else
+                theMonster.setFacing(theMonster.getPos().angleTo(instance.pos))
+
+        else if theMonster.getCurrentOrder() != Orders.move
+            theMonster.issuePointOrder( "move", instance.pos )
+
+
+    static function start(integer crystalIndex)
+        print("Magic crystal "+I2S(crystalIndex)+" has been started!")        
+
+        hasRun[crystalIndex] = true
+
+        theMonster.setMoveSpeed(450)
+        theMonster.setPathing(false)
+        theMonster.issuePointOrder( "move", crystals[crystalIndex].pos )
+
+        runTimer1.setData(crystalIndex)
+        runTimer1.startPeriodic(0.1, function checkDistance )
+
+
+    construct( integer crystalIndex )
+        
+        index = crystalIndex
+
+        crystals[crystalIndex] = this
+
+        pos = spawnRect[crystalIndex].getCenter()
+
+        crystal = createUnit( Player(11), sfxId, pos, getRandomAngle() )
+        ..setVertexColor(150, 255, 150, 255)
+        ..setTimeScale(1.5)
+       
+        crystalSFX = addEffect("units\\nightelf\\Wisp\\Wisp.mdl",pos.withZ(200) )
+        ..setColorByPlayer(Player(22))
+        ..setColor(colorA(150, 200, 255, 100))
+        ..setScale(1.5)
+        ..setTimeScale(0.25)
+
+        if index == 2
+            crystal.setVertexColor(255, 255, 255, 255)
+            crystalSFX.setColorByPlayer(Player(2))
+            //crystalSFX.setColor(colorA(255, 255, 255, 100))
+
+
+    static function createBossInfo()
+        GetExpiredTimer().release()
+        
+        Mechanic obj = new Mechanic("Magic Crystal", vec2(11520,14750))
+        ..setSoundOnClick(Sounds.arcaneVaultWhat1)
+        ..setDescription(""+
+        "Two Magic Crystals are present during the fight.\n"+
+        "When The Monster reaches "+R2I(activationHp[0]*100).toString()+"% and " + R2I(activationHp[1]*100).toString() +"% HP\n"+
+        "it will attempt to consume a crystal. If the crystal\n"+
+        "is not destroyed within "+R2I(ABSORB_DUR).toString()+" seconds, The Monster\n"+
+        "gain unstoppable powers. During its consumption the\n"+
+        "crystal will damage the Hunter every "+R2I(LIGHTNING_FREQ).toString()+" seconds, dealing "+R2I(LIGHTNING_DMG).toString()+" damage.")
+
+        obj.object.setMaxHP(CRYSTAL_HP, true)
+
+        obj.setUnitSfx( sfxId, 180 )
+        ..setVertexColor( 150, 255, 150, 255 )
+        ..setTimeScale(1.5)
+
+        obj.setSfx( "units\\nightelf\\Wisp\\Wisp.mdl", 200)
+        ..setColorByPlayer(Player(22))
+        ..setColor(colorA(150, 200, 255, 100))
+        ..setScale(1.5)
+        ..setTimeScale(0.25)
+
+        obj.objType = "Spell"
+
+
+        obj = new Mechanic("Lesser Magic Crystal", vec2(11570,14880))
+        ..setSoundOnClick(Sounds.arcaneVaultWhat1)
+        ..setDescription(""+
+        "")
+
+        obj.setUnitSfx( sfxId, 180 )
+        ..setVertexColor(255, 255, 255, 255)
+        ..setTimeScale(1.5)
+
+        obj.setSfx( "units\\nightelf\\Wisp\\Wisp.mdl", 200)
+        ..setColorByPlayer(Player(2))
+        ..setColor(colorA(150, 200, 255, 100))
+        ..setScale(1.5)
+        ..setTimeScale(0.25)
+
+        obj.objType = "Spell"
+
+
+    static function onEventInit()
+        new MagicCrystal(0)
+        new MagicCrystal(1)
+        new MagicCrystal(2)
+
+        
+
+        
+        
+        
+            
+
+        
+
+
+
+        
+
+    

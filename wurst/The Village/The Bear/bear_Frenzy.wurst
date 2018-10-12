@@ -1,0 +1,130 @@
+
+package bear_Frenzy
+
+//-------------------------------------------------------------
+
+import bear_Main
+import TimerUtils
+import SoundUtils
+import initlater bear_Enrage
+public class Frenzy
+//____________________________________________________________________________________________________________________________________
+
+
+// Settings
+
+    private static constant boolean ENABLED = true
+
+    private static constant real    MOVESPEEDINC    = 1.5
+    private static constant real    ATTACKSPEEDINC  = 1.5
+    private static constant real    SIZEINC         = 0.2 // Decimal Percent
+    private static constant real    DURATION        = 6 // MAX DURATION IS 20
+    private static constant real    COOLDOWN        = 20
+
+    private static constant real FINISH_DELAY = 5
+    private static constant boolean STARTWITHCOOLDOWN = true
+
+    // Technical
+    private static constant real GROWTHFREQ = 0.05
+    private static constant real GROWTHTIME = 0.75 // Seconds -  Also time for shrink
+
+
+    
+    
+
+    
+// Other Variables
+
+    static boolean isReady = false
+    
+    static boolean isActive = false
+    
+    private static boolean shrink = false
+
+    static real sizeInc
+    
+    private static real GROWTHPRTICK = SIZEINC / (GROWTHTIME / GROWTHFREQ)
+
+    private static timer timer_Misc
+    private static timer timer_Duration
+    private static constant SoundDefinition effectSound1 = new SoundDefinition(Sounds.grizzlyBearReady1, false)
+    private static constant SoundDefinition effectSound2 = new SoundDefinition(Sounds.battleRoar1, false)
+    private static effect array sfx
+
+
+
+    static function start()
+        if ENABLED
+            TheBear.isIdle = false
+            TheBear.canAttack = false
+            isReady = false
+            isActive = true
+
+            TheBear.theBear.pause()
+            TheBear.theBear.setAnimation("attack slam")
+            TheBear.theBear.queueAnimation("stand")
+            effectSound1.play()
+            effectSound2.play()
+            sfx[0] = TheBear.theBear.addEffect("Abilities\\Spells\\Orc\\Bloodlust\\BloodlustTarget.mdl", "hand right")
+            sfx[1] = TheBear.theBear.addEffect("Abilities\\Spells\\Orc\\Bloodlust\\BloodlustTarget.mdl", "hand left")
+            shrink = false
+            sizeInc = 0
+            TheBear.theBear.setMoveSpeed(TheBear.MOVESPEED*(1+MOVESPEEDINC))
+            TheBear.currentAttackSpeed = (TheBear.ATTACKSPEED/(1+ATTACKSPEEDINC))
+            timer_Misc.startPeriodic(GROWTHFREQ, function growth )
+            timer_Duration.start( DURATION, function stop )
+
+
+    private static function setReady()
+        isReady = true
+        
+
+    private static function growth()
+        if shrink
+            sizeInc -= GROWTHPRTICK
+            if sizeInc <= 0
+                sizeInc = 0
+                timer_Misc.pause()
+            Enrage.adjustSize()
+        else
+            sizeInc += GROWTHPRTICK
+            print(sizeInc)
+            Enrage.adjustSize()
+            if sizeInc >= SIZEINC
+                timer_Misc.pause()
+                TheBear.theBear.unpause()
+                TheBear.canAttack = true
+            
+
+    static function stop()
+        if ENABLED
+            shrink = true
+            isActive = false
+            TheBear.setIdle(FINISH_DELAY)
+            timer_Misc.startPeriodic(GROWTHFREQ, function growth )
+            timer_Duration.start(COOLDOWN, function setReady )
+            sfx[0].destr()
+            sfx[1].destr()
+            TheBear.theBear.setMoveSpeed(TheBear.MOVESPEED)
+            TheBear.currentAttackSpeed = TheBear.ATTACKSPEED
+        
+
+    
+
+
+// Activate / Deactivate ____________________________________________________________________________________________________
+    static function activate()
+        if ENABLED
+            timer_Misc = getTimer()
+            timer_Duration = getTimer()
+            sizeInc = 0
+            if STARTWITHCOOLDOWN
+                isReady = false
+                timer_Duration.start(COOLDOWN, function setReady )
+            else
+                isReady = true
+            
+    static function deactivate()
+        if ENABLED
+            timer_Misc.release()
+            timer_Duration.release()

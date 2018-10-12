@@ -1,0 +1,259 @@
+package tm_Main
+
+import public General
+import tm_MagicCrystal
+import TimerUtils
+import initlater tm_FlameStrike
+import initlater tm_IceBlast
+import initlater tm_ArcaneBeing
+import public Abilities
+import BossEvent
+import InteractableObjects
+import public BossInformation
+
+public unit theMonster = null
+
+constant integer bossId  = 'n00E'
+
+public boolean bossIsEnraged = false
+public boolean bossHasAbsorbed = false //Absorbed crystal
+
+// Toggle Mechanics
+constant boolean FLAMESTRIKE_TOGGLE     = true
+constant boolean ARCANEBEING_TOGGLE     = true
+constant boolean ICEBLAST_TOGGLE        = true
+constant boolean MAGICCRYSTAL_TOGGLE    = true
+constant boolean ENRAGE_TOGGLE          = true
+
+constant var bossSpawn = vec2(GetRectCenterX(gg_rct_TM_BossSpawn), GetRectCenterY(gg_rct_TM_BossSpawn) )
+constant var heroSpawn = vec2( GetRectCenterX(gg_rct_TM_HeroSpawn), GetRectCenterY(gg_rct_TM_HeroSpawn) )
+
+constant rect visionRect = gg_rct_TM_VisionRect
+
+constant timer loopTimer = getTimer()
+constant real LOOP_FREQ = 0.10
+
+constant timer busyDelayTimer = getTimer()
+
+boolean bossIsIdle = true
+
+public real bossDmgInc = 1.0
+
+
+// Boss Stats
+constant integer    THEMONSTER_HP = 7500
+constant integer    THEMONSTER_DAMAGE = 100
+constant real       THEMONSTER_ATTACKSPEED   = 2.0
+constant real       THEMONSTER_MOVESPEED = 370
+
+public constant real ENRAGE_DMGINC = 1.75
+public constant real CRYSTALABSORBED_DMGINC = 5.0
+
+boolean thisEventIsRunning = false
+
+
+// @ Game Init
+init
+    CreateTrigger()
+    ..registerPlayerChatEvent(Player(0), "-themonster", true)
+    ..addCondition(Condition(function initEvent ))
+
+    CreateTrigger()
+    ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+    ..addAction(function someoneDies )
+
+    CreateTrigger()
+    ..registerPlayerEvent( Player(0), EVENT_PLAYER_END_CINEMATIC)
+    ..addCondition( Condition(function leaveEvent) )
+
+    getTimer().start(0.1, function delayedInit )
+
+
+// Creating Boss Info ------------------------------------------------
+function delayedInit()
+    GetExpiredTimer().release()
+    
+    UnitObject obj = new UnitObject("The Monster", bossId, vec2(11840,14788), 315)
+    ..setSoundOnClick(Sounds.koboldWhat2)
+    ..setAttackDmg(THEMONSTER_DAMAGE)
+    ..setAttackSpeed(THEMONSTER_ATTACKSPEED)
+    ..setHP(THEMONSTER_HP)
+    ..setMoveSpeed(THEMONSTER_MOVESPEED)
+
+    ..setDescription(""+
+    "Will be present during the entire fight, and frequently\n"+
+    "cast Flame Strikes and Ice Blasts. Occasionally he'll\n"+
+    "attemtp to consume Magic Crystals")
+
+    obj.objectAnimation = "attack"
+    obj.objType = "The Boss"
+
+    
+    
+
+// Set Not Busy
+function ambient()
+    playMusic(Sounds.undeadGlueScreenLoop1)
+
+function someoneDies()
+    
+
+    if thisEventIsRunning
+        unit dyingUnit = GetDyingUnit()
+
+        if dyingUnit == theMonster
+
+            stopMusic()
+            
+            loopTimer.pause()
+            ArcaneBeing.stopSpawn()
+            ArcaneBeing.clear()
+            FlameStrike.clear()
+            MagicCrystal.stop()
+
+            hunter.setInvulnerable(true)
+
+            InteractableObject.activateSeries(InteractableObject.SERIES_THEMONSTER)
+
+            BossEvent.win(function ambient)
+
+            //Do stuff
+        
+        else if dyingUnit == hunter
+
+            stopMusic()
+
+            //Do stuff
+            hunterIsDead = true
+            theMonster.setInvulnerable(true) 
+            loopTimer.pause()
+            ArcaneBeing.stopSpawn()
+            MagicCrystal.stop()
+            BossEvent.failed( function clear )
+        
+    
+
+function idle()
+    busyDelayTimer.pause()
+    bossIsIdle = true
+
+public function setIdle(real delay)
+    busyDelayTimer.start( delay, function idle )
+
+function clear()
+    bossHasAbsorbed = false
+    bossIsEnraged = false
+    theMonster.remove()
+    MagicCrystal.clear()
+    FlameStrike.clear()
+    ArcaneBeing.clear()
+    IceBlast.isReady = false
+    thisEventIsRunning = false
+    InteractableObject.deactivateSeries(InteractableObject.SERIES_THEMONSTER)
+
+
+function leaveEvent() returns boolean
+
+    if( canLeave  )
+        canLeave = false
+        BossEvent.leave( function clear )
+    
+    return false
+
+
+
+
+// Main Loop
+function mainLoop()
+    
+    if bossIsIdle
+        real bossHp = theMonster.getHP() / theMonster.getMaxHP()
+
+        if bossHp <= MagicCrystal.activationHp[2] and not MagicCrystal.hasRun[2] and not bossHasAbsorbed and ENRAGE_TOGGLE
+            bossIsIdle = false
+            MagicCrystal.start(2)
+
+
+        else if bossHp <= MagicCrystal.activationHp[1] and not MagicCrystal.hasRun[1] and not bossHasAbsorbed and MAGICCRYSTAL_TOGGLE
+            bossIsIdle = false
+            MagicCrystal.start(1)
+
+        else if bossHp <= MagicCrystal.activationHp[0] and not MagicCrystal.hasRun[0] and not bossHasAbsorbed and MAGICCRYSTAL_TOGGLE
+            bossIsIdle = false
+            MagicCrystal.start(0)
+
+        else if IceBlast.isReady
+            bossIsIdle = false
+            IceBlast.start()
+            
+        else if FlameStrike.isReady
+            bossIsIdle = false
+            FlameStrike.start()
+        else
+            //print("I")
+    //else
+            //print("B")
+
+
+function initFight()
+
+    theMonster.unpause()
+    theMonster.issueTargetOrder("attack", hunter)
+
+    Player(0).select(hunter)
+    hunter.unpause()
+
+    if FLAMESTRIKE_TOGGLE
+        FlameStrike.runCooldown()
+
+    if ICEBLAST_TOGGLE
+        IceBlast.runCooldown()
+
+    if ARCANEBEING_TOGGLE
+        ArcaneBeing.runCooldown()
+
+    loopTimer.startPeriodic( LOOP_FREQ, function mainLoop )
+
+// Boss Init
+
+
+function onEventInit()
+
+    moveHunter(heroSpawn, visionRect, vec2(heroSpawn.x,heroSpawn.y+300))
+    playMusic(Sounds.nightElfX1)
+
+    theMonster = CreateUnit(Player(11), bossId, bossSpawn.x, bossSpawn.y, 270.0)
+    ..pause()
+    ..setMaxHP( THEMONSTER_HP, true)
+    ..setBaseDamage( THEMONSTER_DAMAGE, 1 )
+    ..setMoveSpeed( THEMONSTER_MOVESPEED )
+    ..setAttackCooldown( THEMONSTER_ATTACKSPEED, 1)
+
+    MagicCrystal.onEventInit()
+
+    bossHasAbsorbed = false
+    bossIsEnraged = false 
+    bossIsIdle = true
+    bossDmgInc = 1.0
+    thisEventIsRunning = true
+    SetWaterBaseColor(100, 255, 150, 150)
+
+    EnableDawnDusk(false)
+    SetTimeOfDay(0.00)
+    SetTimeOfDayScale(0)
+
+
+
+function initEvent() returns boolean
+
+    BossEvent.initiate( function onEventInit, function initFight )
+
+    return false
+
+// Boss End
+ 
+
+
+
+
+

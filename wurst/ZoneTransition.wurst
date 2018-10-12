@@ -1,0 +1,102 @@
+package ZoneTransition   
+import General
+import FadeAndFilters
+import Camera
+import DayCycle
+
+
+// Creating Transits
+function delayedInit()
+    GetExpiredTimer().release()
+
+init
+    getTimer().start(0.1, function delayedInit)
+
+// -----------------------------------------------------------------------------------------------------------------
+class ZoneTransit
+
+    private static thistype array instances
+    private static int instanceCounter = -1
+
+    private int index = -1
+    
+    private rect zone
+    private vec2 landing
+    private vec2 camPanPoint
+    private rect camBounds
+    private trigger trg
+    private boolean alwaysNight = false
+
+// Create Transit
+    construct( rect whichZone, vec2 whichLanding, vec2 whichCamPanPoint, rect whichCamBounds )
+
+        instanceCounter++
+        instances[instanceCounter] = this
+        index = instanceCounter
+
+        zone    = whichZone
+        landing        = whichLanding
+        camPanPoint = whichCamPanPoint
+        camBounds = whichCamBounds
+        
+
+        trg = CreateTrigger()
+        ..addCondition( Condition( function entered ))
+        TriggerRegisterEnterRectSimple( trg , zone) //No method exists for "entering rect"
+    
+// Transit methods 
+    private static function endTransit()    
+        hunter.unpause()
+
+    private static function transit()
+        thistype inst = GetExpiredTimer().getData() castTo thistype
+        hunter.setPos( inst.landing )
+        Player(0)
+        ..setCameraBoundsToRect(inst.camBounds)
+        ..panCameraToTimed(inst.camPanPoint, 0)
+
+        if inst.alwaysNight
+            DayCycle.setAlwaysNight()
+        else
+            DayCycle.setNormal()
+
+    private function startTransit()
+        hunter.pause()
+
+        new Fade()
+        ..setFadeInDuration(0.25)
+        ..setFadeOutDuration(0.25)
+        ..onFadeOut(function transit )
+        ..onFadeIn( function endTransit )
+        ..setData( this castTo int )
+        ..setCinematicMode(false)
+        ..start(FADEOUTIN)
+       
+// Enter Zone Transit
+    static function entered() returns boolean
+        
+        // Finding the entered region
+        if hunter == GetEnteringUnit()
+            if instanceCounter > -1 
+                int i = 0
+                boolean continue = true
+                vec2 hunterPos = hunter.getPos()
+                while i <= instanceCounter and continue
+                    if hunterPos.isInRect(instances[i].zone)
+                        continue = false
+                        instances[i].startTransit()
+                    else
+                        i++
+        return false
+
+// Settings
+
+    /** For caves and such */
+    function setAlwaysNight( boolean flag )
+        alwaysNight = flag 
+    
+        
+
+
+    
+    

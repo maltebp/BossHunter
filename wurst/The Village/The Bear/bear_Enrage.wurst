@@ -1,0 +1,44 @@
+package bear_Enrage
+import bear_Main
+import bear_Frenzy
+public class Enrage
+//_________________________________________________________________________________________-
+
+
+// Settings
+    static real greenPercReduc  = 0.3
+    static real bluePercReduc   = 0.3
+    static real sizeInc         = 0.25
+    static real damageInc       = 0.75
+
+    // All are in decimal percent point
+
+//Other Variables
+    static real count = 0
+
+
+
+// Adjust__________________________________________________________________________________
+    static function adjust()
+        // This is to save some instances from updating health, to the same
+        // as before, if he hasn't lost any health
+        real newCount = TheBear.theBear.getHP() / TheBear.theBear.getMaxHP()
+        if newCount != count
+            count = newCount
+
+            // Updating stats
+            TheBear.theBear.setVertexColor(TheBear.startRed,
+             R2I(TheBear.startGreen-(TheBear.startGreen*greenPercReduc*(1-count))),
+             R2I(TheBear.startBlue-(TheBear.startBlue*bluePercReduc*(1-count))), 255)
+             
+            TheBear.theBear.setScale(TheBear.startScale*(1+(sizeInc-sizeInc*count))*(1+Frenzy.sizeInc))
+            TheBear.damageInc = damageInc-damageInc*count
+            TheBear.theBear.setBaseDamage(R2I(TheBear.ATTACKDMG*(1+TheBear.damageInc)), 1)
+
+    static function adjustSize()
+        TheBear.theBear.setScale(TheBear.startScale*(1+(sizeInc-sizeInc*count))*(1+Frenzy.sizeInc))
+
+    static function reset()
+
+
+    
