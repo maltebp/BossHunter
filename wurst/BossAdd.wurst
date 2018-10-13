@@ -1,10 +1,37 @@
 package BossAdd
+import General
 
-class BossAdd
+public class BossAdd
     
+    private static int  DAMAGE = 10
+    private static real HEALTH = 100
+    private static real MANA   = 100
+    private static real MOVESPEED = 270
+    private static real ATTACKSPEED = 2
+    private static real ARMOR = 0
+
+    static int ID = 'hfoo'
+    private static player OWNER = Player(0)
+    private static vec2   SPAWNPOINT = vec2(0,0)
+
     unit mob
+    int unitid = 'hf00'
 
-    function spawn()
-    
-    
+    ondestroy
+
+    construct()
+        mob = createUnit(OWNER, unitid, vec2(0,0), GetRandomAngle())
+
+    construct( int id, int damage, real armor, real health, real movespeed, real attackspeed)
+
+    function kill()
+
+
+
+    static function getID() returns integer
+        return ID
+
+
+    static function startSpawn()
+        
     

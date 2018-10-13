@@ -1,3 +1,29 @@
 package nec_Ghoul
+import BossAdd
+ 
+public class Ghoul extends BossAdd
 
-class Ghoul
+//========================================================================================================================================
+
+    // Unit Stats
+    private static int  DAMAGE = 10
+    private static real ARMOR = 0
+    private static real HEALTH = 100
+    private static real MANA   = 100
+    private static real MOVESPEED = 270
+    private static real ATTACKSPEED = 2
+    private static real SPAWNFREQ = 10
+    
+    int unitid = 'u001'
+    
+
+//========================================================================================================================================
+
+    // Constants
+    static integer ID = 'u001'
+
+    //construct()
+    //    super(ID, DAMAGE, ARMOR, HEALTH, MOVESPEED, ATTACKSPEED)
+
+
+    

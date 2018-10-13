@@ -145,6 +145,9 @@ function pickup() returns boolean
 
     return false
 
+public function GetRandomAngle() returns angle
+    return angle(GetRandomReal(0, PI2))
+
 
 // Get Unit Index
 function selectionFilter() returns boolean

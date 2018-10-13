@@ -3,6 +3,7 @@ package nec_Main
 import BossEvent
 import DayCycle
 import public General
+import nec_Ghoul
 import public TimerUtils
 
 unit theNecromancer
@@ -29,6 +30,8 @@ class TheNecromancer
     static boolean  isIdle      = false
     static boolean  canAttack   = false
 
+    static timer    timer_MainLoop
+
     private static rect     camBounds = gg_rct_TheNec_CamBounds
 
 //______________________________________________________________________________________________________________________________________________________________________________
@@ -36,7 +39,10 @@ class TheNecromancer
 
 // Phase 1 ______________________________________________
     static function phase1()
-        // Spawn mobs
+        
+        // Start Mob Spawn
+        // Start Cauldron Timer
+        
 
 
 // Phase 2 ______________________________________________
@@ -67,16 +73,23 @@ class TheNecromancer
 
 // Event Initiation__________________________________________________________________________________
     
+
     // Start Fight
     static function initFight()
         hunter.unpause()
 
+        timer_MainLoop.startPeriodic( MAINLOOP_FREQ, function phase1 )
+
+
+
     // Setup Fight
     static function onEventInit()
         moveHunter(hunterSpawn, camBounds, hunterSpawn)
-        
-        
 
+        // Creating Timers
+        timer_MainLoop.release()
+
+    
     // Event init
     static function initEvent() returns boolean
         BossEvent.initiate( function onEventInit, function initFight )
@@ -85,12 +98,17 @@ class TheNecromancer
 
 // Clear Event _____________________________________________________________________
     static function clearEvent()
-       
+        timer_MainLoop.release()
 
 
 
 // On Game Init ____________________________________________________________________
     static function gameInit()
+
+        Ghoul g = new Ghoul()
+
+        print(g.mob.getName())
+
         CreateTrigger()
         ..registerPlayerChatEvent(Player(0), "-thenecromancer", true)
         ..addCondition(Condition(function TheNecromancer.initEvent ))
