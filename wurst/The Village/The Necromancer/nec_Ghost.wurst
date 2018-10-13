@@ -1,2 +1,4 @@
 package nec_Ghost
 
+class Ghost
+    

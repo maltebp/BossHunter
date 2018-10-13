@@ -1,2 +1,6 @@
 package nec_DeathPact
 
+class DeathPact
+
+
+    static function cast(unit caster, unit target)

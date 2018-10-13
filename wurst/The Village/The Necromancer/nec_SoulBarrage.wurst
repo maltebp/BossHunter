@@ -1,2 +1,5 @@
 package nec_SoulBarrage
 
+class SoulBarrage
+
+    function cast(unit caster, unit target)

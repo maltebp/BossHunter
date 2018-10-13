@@ -4,7 +4,6 @@ globals
 // real bj_RADTODEG=0.
 // real bj_DEGTORAD=0.
 // real bj_GAME_STARTED_THRESHOLD=0.
-// real bj_WAIT_FOR_COND_MIN_INTERVAL=0.
 // integer bj_MAX_INVENTORY=0
 // integer bj_MAX_PLAYERS=0
 // integer bj_PLAYER_NEUTRAL_VICTIM=0
@@ -19,13 +18,6 @@ globals
 // real bj_STOCK_RESTOCK_INTERVAL=0.
 // integer bj_STOCK_MAX_ITERATIONS=0
 // real bj_RESCUE_PING_TIME=0.
-// real bj_NOTHING_SOUND_DURATION=0.
-// real bj_TRANSMISSION_PING_TIME=0.
-// integer bj_TRANSMISSION_IND_RED=0
-// integer bj_TRANSMISSION_IND_BLUE=0
-// integer bj_TRANSMISSION_IND_GREEN=0
-// integer bj_TRANSMISSION_IND_ALPHA=0
-// real bj_TRANSMISSION_PORT_HANGTIME=0.
 // integer bj_MAX_QUEUED_TRIGGERS=0
 // real bj_QUEUED_TRIGGER_TIMEOUT=0.
 // integer bj_ALLIANCE_UNALLIED=0
@@ -36,15 +28,6 @@ globals
 // integer bj_ALLIANCE_ALLIED_ADVUNITS=0
 // integer bj_ALLIANCE_NEUTRAL=0
 // integer bj_ALLIANCE_NEUTRAL_VISION=0
-// integer bj_TIMETYPE_ADD=0
-// integer bj_TIMETYPE_SET=0
-// integer bj_TIMETYPE_SUB=0
-// integer bj_QUESTTYPE_REQ_DISCOVERED=0
-// integer bj_QUESTTYPE_REQ_UNDISCOVERED=0
-// integer bj_QUESTTYPE_OPT_DISCOVERED=0
-// integer bj_CINEFADETYPE_FADEIN=0
-// integer bj_CINEFADETYPE_FADEOUT=0
-// integer bj_CINEFADETYPE_FADEOUTIN=0
 // integer bj_GATEOPERATION_CLOSE=0
 // integer bj_GATEOPERATION_OPEN=0
 // integer bj_GATEOPERATION_DESTROY=0
@@ -72,26 +55,12 @@ globals
 // trigger bj_rescueUnitBehavior=null
 // boolean bj_rescueChangeColorUnit=false
 // boolean bj_rescueChangeColorBldg=false
-// sound bj_cineSceneLastSound=null
-// trigger bj_cineSceneBeingSkipped=null
-// timer bj_cineFadeFinishTimer=null
-// timer bj_cineFadeContinueTimer=null
-// real bj_cineFadeContinueRed=0.
-// real bj_cineFadeContinueGreen=0.
-// real bj_cineFadeContinueBlue=0.
-// real bj_cineFadeContinueTrans=0.
-// real bj_cineFadeContinueDuration=0.
-// string bj_cineFadeContinueTex=null
 // integer bj_queuedExecTotal=0
 // timer bj_queuedExecTimeoutTimer=null
 // trigger bj_queuedExecTimeout=null
-// integer bj_groupCountUnits=0
 // integer bj_groupEnumTypeId=0
 // player bj_groupEnumOwningPlayer=null
 // group bj_groupAddGroupDest=null
-// integer bj_groupRandomConsidered=0
-// unit bj_groupRandomCurrentPick=null
-// boolean bj_pauseAllUnitsFlag=false
 // location bj_enumDestructableCenter=null
 // real bj_enumDestructableRadius=0.
 // group bj_suspendDecayFleshGroup=null
@@ -100,20 +69,12 @@ globals
 // trigger bj_delayedSuspendDecayTrig=null
 // integer bj_livingPlayerUnitsTypeId=0
 // unit bj_lastCreatedUnit=null
-// destructable bj_lastCreatedDestructable=null
 // group bj_lastCreatedGroup=null
-// fogmodifier bj_lastCreatedFogModifier=null
 // effect bj_lastCreatedEffect=null
-// quest bj_lastCreatedQuest=null
-// questitem bj_lastCreatedQuestItem=null
 // timer bj_lastStartedTimer=null
-// timerdialog bj_lastCreatedTimerDialog=null
-// real bj_lastTransmissionDuration=0.
-// boolexpr filterGetUnitsInRectOfPlayer=null
 // boolean bj_wantDestroyGroup=false
 // integer PLAYER_NEUTRAL_PASSIVE=0
 // integer PLAYER_NEUTRAL_AGGRESSIVE=0
-// playercolor PLAYER_COLOR_RED=null
 // playercolor PLAYER_COLOR_LIGHT_BLUE=null
 // alliancetype ALLIANCE_PASSIVE=null
 // alliancetype ALLIANCE_HELP_REQUEST=null
@@ -133,7 +94,6 @@ globals
 // weapontype WEAPON_TYPE_WHOKNOWS=null
 // racepreference RACE_PREF_HUMAN=null
 // mapcontrol MAP_CONTROL_USER=null
-// mapcontrol MAP_CONTROL_COMPUTER=null
 // mapcontrol MAP_CONTROL_RESCUABLE=null
 // placement MAP_PLACEMENT_USE_MAP_SETTINGS=null
 // playerslotstate PLAYER_SLOT_STATE_PLAYING=null
@@ -153,7 +113,6 @@ globals
 // playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER=null
 // playerunitevent EVENT_PLAYER_UNIT_PICKUP_ITEM=null
 // playerunitevent EVENT_PLAYER_UNIT_USE_ITEM=null
-// unitevent EVENT_UNIT_DEATH=null
 // unitevent EVENT_UNIT_SELECTED=null
 // unitevent EVENT_UNIT_ATTACKED=null
 // playerevent EVENT_PLAYER_MOUSE_MOVE=null
@@ -171,32 +130,21 @@ globals
 // itemtype ITEM_TYPE_ARTIFACT=null
 // camerafield CAMERA_FIELD_TARGET_DISTANCE=null
 // blendmode BLEND_MODE_BLEND=null
-// texmapflags TEXMAP_FLAG_NONE=null
 // fogstate FOG_OF_WAR_VISIBLE=null
 // integer CAMERA_MARGIN_LEFT=0
 // integer CAMERA_MARGIN_RIGHT=0
 // integer CAMERA_MARGIN_TOP=0
 // integer CAMERA_MARGIN_BOTTOM=0
 location udg_tempPoint=null
-effect udg_NecroSFX=null
 unit udg_tempUnit=null
 unit udg_RedHero=null
-location array udg_AcolytePoint
 boolean array udg_MorbenFell_Booleans
-unit udg_MF_Ghost=null
-unit udg_AbsorbSoulUnit=null
 integer udg_TempInt=0
 real udg_TempReal=0.
-timer udg_MFTimer=null
-timerdialog udg_MF_TimerWindow=null
 group udg_tempUGroup=null
 location udg_tempPoint2=null
-questitem array udg_MFQuestRequirements
-quest array udg_MFQuests
-location udg_MF_DnDPoint=null
 integer udg_tempInt=0
 boolean udg_ArcaneEmpower=false
-unit udg_Abom=null
 effect array udg_ArcaneEmp_SFX
 location udg_BlizzardPoint=null
 timer array udg_Blizzard_Timer
@@ -224,19 +172,11 @@ effect array udg_MagicWard_SFX
 timer array udg_MagicWard_Timer
 boolean udg_MagicWard_Running=false
 rect gg_rct_MorbentAttackZone=null
-rect gg_rct_GhostSpawn=null
 rect gg_rct_MF_Exit1=null
-rect gg_rct_MF_Exit_2=null
-rect gg_rct_MorbentFell_Ghost=null
 rect gg_rct_MorbentFel=null
 rect gg_rct_MF_Camp=null
-rect gg_rct_MF_Cam_Bounds=null
-rect gg_rct_MF_InvulnDestru=null
-rect gg_rct_MFForceWall=null
-rect gg_rct_MFGraveyard=null
-rect gg_rct_Region_012=null
+rect gg_rct_TheNec_CamBounds=null
 rect gg_rct_Earthquake_TestRegion=null
-rect gg_rct_Oasis=null
 rect gg_rct_Region_014=null
 rect gg_rct_Region_016=null
 rect gg_rct_VisionZone_Hunters_Lair=null
@@ -313,41 +253,12 @@ trigger gg_trg_Arcane_Barrage_Damage=null
 trigger gg_trg_Arcane_Barrage_End=null
 trigger gg_trg_Unstable_Magic_Start=null
 trigger gg_trg_Unstable_Magic_Stop=null
-trigger gg_trg_Event_Init=null
-trigger gg_trg_Morbent_Init_Trigger=null
-trigger gg_trg_Time_runs_out=null
-trigger gg_trg_Acolyte_Animation=null
 trigger gg_trg_Ghoul_Spawn=null
 trigger gg_trg_Plague_Zombie_Spawn=null
 trigger gg_trg_Skeletal_Mages=null
 trigger gg_trg_Skeleton_Spawns=null
-trigger gg_trg_Zone_Exit=null
-trigger gg_trg_MF_Phase_2_Init=null
-trigger gg_trg_Necromancer_Death=null
-trigger gg_trg_Cauldron_Dies=null
-trigger gg_trg_Morbent_Eighty_Percent=null
-trigger gg_trg_Acolyte_Dies=null
-trigger gg_trg_Acolyte_Animation_reset=null
-trigger gg_trg_Death_and_Decay=null
-trigger gg_trg_Death_Coil=null
-trigger gg_trg_Morbent_Dies=null
-trigger gg_trg_Soul_Barrage=null
-trigger gg_trg_Spawn_Soul=null
-trigger gg_trg_Absorb_Soul=null
-trigger gg_trg_Absorb_Soul_Dies=null
-trigger gg_trg_MF_Dies=null
-trigger gg_trg_MF_Create_Achievements=null
 trigger gg_trg_Lightning_Enhancement_Effect=null
 trigger gg_trg_Earthquake=null
-unit gg_unit_n002_0030=null
-unit gg_unit_n002_0031=null
-unit gg_unit_n002_0039=null
-unit gg_unit_u004_0029=null
-unit gg_unit_h007_0021=null
-unit gg_unit_u000_0020=null
-unit gg_unit_u006_0040=null
-unit gg_unit_u006_0035=null
-destructable gg_dest_Dofw_0033=null
 destructable gg_dest_DTc2_2577=null
 string Abilities_farseerMissile=null
 string Abilities_forkedLightningTarget=null
@@ -652,12 +563,12 @@ real Bleed_DMG=0.
 real Bleed_DMG_FREQ=0.
 real Bleed_DURATION=0.
 boolean Bleed_RESETFREQONSTACK=false
-string Bleed_EFFECT=null
 integer Bleed_stacks=0
 timer Bleed_timer_UpdateText=null
 timer Bleed_timer_Damage=null
 timer Bleed_timer_Duration=null
 texttag Bleed_text=null
+string Bleed_EFFECT=null
 boolean Charge_ENABLED=false
 boolean Charge_STARTWITHCOOLDOWN=false
 real Charge_COOLDOWN=0.
@@ -688,10 +599,10 @@ real array Rock_POS_2
 string array Rock_models
 effect array Rock_model
 unit array Rock_collisionDummy
+real Enrage_damageInc=0.
+real Enrage_sizeInc=0.
 real Enrage_greenPercReduc=0.
 real Enrage_bluePercReduc=0.
-real Enrage_sizeInc=0.
-real Enrage_damageInc=0.
 real Enrage_count=0.
 boolean Frenzy_ENABLED=false
 real Frenzy_MOVESPEEDINC=0.
@@ -713,18 +624,18 @@ timer Frenzy_timer_Duration=null
 integer Frenzy_effectSound1=0
 integer Frenzy_effectSound2=0
 effect array Frenzy_sfx
-integer TheBear_BOSSID=0
-real TheBear_MAINLOOP_FREQ=0.
 integer TheBear_HP=0
 real TheBear_ARMOR=0.
 real TheBear_MOVESPEED=0.
 real TheBear_ATTACKSPEED=0.
 integer TheBear_ATTACKDMG=0
-real TheBear_currentAttackSpeed=0.
+real TheBear_MAINLOOP_FREQ=0.
+integer TheBear_BOSSID=0
 integer TheBear_startRed=0
 integer TheBear_startGreen=0
 integer TheBear_startBlue=0
 real TheBear_startScale=0.
+real TheBear_currentAttackSpeed=0.
 real TheBear_damageInc=0.
 trigger TheBear_trg_Death=null
 boolean TheBear_isIdle=false
@@ -757,6 +668,9 @@ timer Shockwave_timer_DmgTimer=null
 timer Shockwave_timer_Cooldown=null
 timer Shockwave_timer_Status=null
 unit Shockwave_caster=null
+real TheNecromancer_hunterSpawn_x=0.
+real TheNecromancer_hunterSpawn_y=0.
+rect TheNecromancer_camBounds=null
 group ArcaneBeing_allMobs=null
 rect ArcaneBeing_SPAWNAREA=null
 integer ArcaneBeing_UNITID=0
@@ -1106,47 +1020,10 @@ code ref_function_Trig_Arcane_Barrage_End_Actions=null
 code ref_function_Trig_Unstable_Magic_Start_Conditions=null
 code ref_function_Trig_Unstable_Magic_Start_Actions=null
 code ref_function_Trig_Unstable_Magic_Stop_Actions=null
-code ref_function_Trig_Event_Init_Func001002=null
-code ref_function_Trig_Event_Init_Actions=null
-code ref_function_Trig_Morbent_Init_Trigger_Actions=null
-code ref_function_Trig_Time_runs_out_Actions=null
-code ref_function_Trig_Acolyte_Animation_Actions=null
-code ref_function_Trig_Ghoul_Spawn_Conditions=null
 code ref_function_Trig_Ghoul_Spawn_Actions=null
-code ref_function_Trig_Plague_Zombie_Spawn_Conditions=null
 code ref_function_Trig_Plague_Zombie_Spawn_Actions=null
-code ref_function_Trig_Skeletal_Mages_Conditions=null
 code ref_function_Trig_Skeletal_Mages_Actions=null
 code ref_function_Trig_Skeleton_Spawns_Actions=null
-code ref_function_Trig_Zone_Exit_Actions=null
-code ref_function_Trig_MF_Phase_2_Init_Func008002=null
-code ref_function_Trig_MF_Phase_2_Init_Conditions=null
-code ref_function_Trig_MF_Phase_2_Init_Actions=null
-code ref_function_Trig_Necromancer_Death_Actions=null
-code ref_function_Trig_Cauldron_Dies_Func001002002=null
-code ref_function_Trig_Cauldron_Dies_Actions=null
-code ref_function_Trig_Morbent_Eighty_Percent_Conditions=null
-code ref_function_Trig_Morbent_Eighty_Percent_Actions=null
-code ref_function_Trig_Acolyte_Dies_Conditions=null
-code ref_function_Trig_Acolyte_Dies_Actions=null
-code ref_function_Trig_Acolyte_Animation_reset_Conditions=null
-code ref_function_Trig_Acolyte_Animation_reset_Actions=null
-code ref_function_Trig_Death_and_Decay_Actions=null
-code ref_function_Trig_Death_Coil_Actions=null
-code ref_function_Trig_Morbent_Dies_Actions=null
-code ref_function_Trig_Soul_Barrage_Actions=null
-code ref_function_Trig_Spawn_Soul_Actions=null
-code ref_function_Trig_Absorb_Soul_Func003001001003=null
-code ref_function_Trig_Absorb_Soul_Func001001001001001002=null
-code ref_function_Trig_Absorb_Soul_Func006002001003=null
-code ref_function_Trig_Absorb_Soul_Conditions=null
-code ref_function_Trig_Absorb_Soul_Actions=null
-code ref_function_Trig_Absorb_Soul_Dies_Conditions=null
-code ref_function_Trig_Absorb_Soul_Dies_Actions=null
-code ref_function_Trig_MF_Dies_Func008002=null
-code ref_function_Trig_MF_Dies_Conditions=null
-code ref_function_Trig_MF_Dies_Actions=null
-code ref_function_Trig_MF_Create_Achievements_Actions=null
 code ref_function_Trig_Lightning_Enhancement_Effect_Func001002002=null
 code ref_function_Trig_Lightning_Enhancement_Effect_Func002A=null
 code ref_function_Trig_Lightning_Enhancement_Effect_Func005002003=null
@@ -1214,13 +1091,14 @@ code ref_function_init_Orders=null
 code ref_function_bridge_init_InteractableObjects=null
 code ref_function_init_UnitLightning=null
 code ref_function_bridge_init_ZoneTransition=null
-code ref_function_bridge_init_bear_Main=null
+code ref_function_init_bear_Main=null
 code ref_function_init_bear_Bleed=null
 code ref_function_bridge_init_bear_Frenzy=null
 code ref_function_bridge_init_bear_Attack=null
 code ref_function_bridge_init_bear_Charge=null
 code ref_function_init_bear_Enrage=null
 code ref_function_bridge_init_bear_Shockwave=null
+code ref_function_init_nec_Main=null
 code ref_function_bridge_init_tm_MagicCrystal=null
 code ref_function_bridge_init_tm_Main=null
 code ref_function_bridge_init_tm_ArcaneBeing=null
@@ -1294,18 +1172,22 @@ code ref_function_Frenzy_setReady=null
 code ref_function_TheBear_idle=null
 code ref_function_bridge_TheBear_initEvent=null
 code ref_function_TheBear_someoneDies=null
-code ref_function_bridge_TheBear_onEventInit=null
-code ref_function_TheBear_initFight=null
 code ref_function_bridge_TheBear_clearEvent=null
 code ref_function_bridge_TheBear_clearEvent_2=null
 code ref_function_bridge_TheBear_mainLoop=null
+code ref_function_bridge_TheBear_onEventInit=null
+code ref_function_TheBear_initFight=null
 code ref_function_Shockwave_onCast=null
-code ref_function_Shockwave_move=null
-code ref_function_Shockwave_finishCooldown=null
 code ref_function_Shockwave_checkStatus=null
 code ref_function_Shockwave_endDelay=null
 code ref_function_Shockwave_resetDelay=null
+code ref_function_Shockwave_move=null
+code ref_function_Shockwave_finishCooldown=null
 code ref_function_Shockwave_dmgFilter=null
+code ref_function_bridge_TheNecromancer_initEvent=null
+code ref_function_TheNecromancer_someoneDies=null
+code ref_function_TheNecromancer_onEventInit=null
+code ref_function_TheNecromancer_initFight=null
 code ref_function_bridge_ArcaneBeing_createBossInfo=null
 code ref_function_bridge_ArcaneBeing_spawn=null
 code ref_function_bridge_ArcaneBeing_onDeathDelay=null
@@ -1359,7 +1241,6 @@ endglobals
 native UnitAlive takes unit id returns boolean
 function CreateAllDestructables takes nothing returns nothing
 	set gg_dest_DTc2_2577 = CreateDestructable(1146381106, 13568.0, 14432.0, 270.000, 1.000, 0)
-	set gg_dest_Dofw_0033 = CreateDestructable(1148151415,  - 13632.0, 11968.0, 270.000, 1.000, 0)
 endfunction
 
 function CreateAllItems takes nothing returns nothing
@@ -1468,16 +1349,8 @@ function CreateBuildingsForPlayer0 takes nothing returns nothing
 	set u = null
 endfunction
 
-function CreateBuildingsForPlayer11 takes nothing returns nothing
-	local player p = Player(11)
-	set gg_unit_u004_0029 = CreateUnit(p, 1966092340,  - 13632.0, 13632.0, 270.000)
-	call SetUnitColor(gg_unit_u004_0029, ConvertPlayerColor(10))
-	set p = null
-endfunction
-
 function CreatePlayerBuildings takes nothing returns nothing
 	call CreateBuildingsForPlayer0()
-	call CreateBuildingsForPlayer11()
 endfunction
 
 function CreateUnitsForPlayer0 takes nothing returns nothing
@@ -1495,7 +1368,7 @@ endfunction
 
 function CreateUnitsForPlayer1 takes nothing returns nothing
 	local player p = Player(1)
-	set gg_unit_h007_0021 = CreateUnit(p, 1747988535,  - 13875.5, 5520.3, 294.710)
+	call CreateUnit(p, 1747988535,  - 13875.5, 5520.3, 294.710)
 	call CreateUnit(p, 1747988534,  - 13935.9, 6238.2, 90.453)
 	call CreateUnit(p, 1747988534,  - 13367.9, 6225.9, 109.675)
 	call CreateUnit(p, 1747988534,  - 13446.7, 6172.3, 106.883)
@@ -1508,20 +1381,11 @@ endfunction
 
 function CreateUnitsForPlayer11 takes nothing returns nothing
 	local player p = Player(11)
-	set gg_unit_u000_0020 = CreateUnit(p, 1966092336,  - 13629.7, 14181.5, 274.133)
-	call SetUnitColor(gg_unit_u000_0020, ConvertPlayerColor(12))
-	set gg_unit_n002_0030 = CreateUnit(p, 1848651826,  - 14135.2, 13647.9, 355.880)
-	call SetUnitColor(gg_unit_n002_0030, ConvertPlayerColor(3))
-	set gg_unit_n002_0031 = CreateUnit(p, 1848651826,  - 13624.3, 13057.5, 93.120)
-	call SetUnitColor(gg_unit_n002_0031, ConvertPlayerColor(3))
-	set gg_unit_u006_0035 = CreateUnit(p, 1966092342,  - 13970.6, 11632.1, 278.846)
-	call SetUnitColor(gg_unit_u006_0035, ConvertPlayerColor(10))
-	set gg_unit_n002_0039 = CreateUnit(p, 1848651826,  - 13103.7, 13652.9, 178.883)
-	call SetUnitColor(gg_unit_n002_0039, ConvertPlayerColor(3))
-	set gg_unit_u006_0040 = CreateUnit(p, 1966092342,  - 13325.1, 11633.6, 260.406)
-	call SetUnitColor(gg_unit_u006_0040, ConvertPlayerColor(10))
-	call CreateUnit(p, 1865429040,  - 13586.2, 1161.3, 3.439)
+	local unit u = CreateUnit(p, 1966092336,  - 13629.7, 14181.5, 274.133)
+	call SetUnitColor(u, ConvertPlayerColor(12))
+	set u = CreateUnit(p, 1865429040,  - 13586.2, 1161.3, 3.439)
 	set p = null
+	set u = null
 endfunction
 
 function CreatePlayerUnits takes nothing returns nothing
@@ -1542,23 +1406,23 @@ function CreateRegions takes nothing returns nothing
 	local weathereffect we
 	call Rect( - 15136.0, 13376.0,  - 15040.0, 13472.0)
 	set gg_rct_MorbentAttackZone = Rect( - 13920.0, 5184.0,  - 13472.0, 5472.0)
-	set gg_rct_GhostSpawn = Rect( - 14368.0, 12896.0,  - 12928.0, 14336.0)
+	call Rect( - 14368.0, 12896.0,  - 12928.0, 14336.0)
 	set gg_rct_MF_Exit1 = Rect( - 13984.0, 12032.0,  - 13312.0, 12192.0)
-	set gg_rct_MF_Exit_2 = Rect( - 13824.0, 11712.0,  - 13504.0, 11840.0)
-	set gg_rct_MorbentFell_Ghost = Rect( - 13696.0, 13568.0,  - 13536.0, 13696.0)
-	set gg_rct_MorbentFel = Rect( - 14784.0, 12384.0,  - 12448.0, 14752.0)
+	call Rect( - 13824.0, 11712.0,  - 13504.0, 11840.0)
+	call Rect( - 13696.0, 13568.0,  - 13536.0, 13696.0)
+	set gg_rct_MorbentFel = Rect( - 14784.0, 12320.0,  - 12448.0, 14752.0)
 	set we = AddWeatherEffect(gg_rct_MorbentFel, 1178888044)
 	call EnableWeatherEffect(we, true)
 	set gg_rct_MF_Camp = Rect( - 14208.0, 5248.0,  - 13152.0, 6336.0)
 	set we = AddWeatherEffect(gg_rct_MF_Camp, 1280470369)
 	call EnableWeatherEffect(we, true)
-	set gg_rct_MF_Cam_Bounds = Rect( - 14336.0, 5152.0,  - 13056.0, 12192.0)
-	set gg_rct_MF_InvulnDestru = Rect( - 14464.0, 4928.0,  - 12992.0, 6688.0)
-	set gg_rct_MFForceWall = Rect( - 13696.0, 12128.0,  - 13568.0, 12224.0)
-	set gg_rct_MFGraveyard = Rect( - 15648.0, 13344.0,  - 14688.0, 14080.0)
-	set gg_rct_Region_012 = Rect( - 13856.0, 12224.0,  - 13408.0, 12384.0)
+	set gg_rct_TheNec_CamBounds = Rect( - 14336.0, 7104.0,  - 13024.0, 12256.0)
+	call Rect( - 14464.0, 5376.0,  - 13152.0, 6464.0)
+	call Rect( - 13696.0, 12128.0,  - 13568.0, 12224.0)
+	call Rect( - 15648.0, 13344.0,  - 14688.0, 14080.0)
+	call Rect( - 13856.0, 12224.0,  - 13408.0, 12384.0)
 	set gg_rct_Earthquake_TestRegion = Rect( - 15072.0, 928.0,  - 13856.0, 2048.0)
-	set gg_rct_Oasis = Rect( - 3072.0,  - 1952.0, 96.0, 704.0)
+	call Rect( - 3072.0,  - 1952.0, 96.0, 704.0)
 	set gg_rct_Region_014 = Rect( - 9344.0,  - 800.0,  - 6496.0, 960.0)
 	set we = AddWeatherEffect(gg_rct_Region_014, 1178886760)
 	call EnableWeatherEffect(we, true)
@@ -1598,43 +1462,8 @@ function CreateRegions takes nothing returns nothing
 	set gg_rct_TheBear_Effect1 = Rect( - 11488.0, 11968.0,  - 8096.0, 14592.0)
 	set we = AddWeatherEffect(gg_rct_TheBear_Effect1, 1178892140)
 	call EnableWeatherEffect(we, true)
+	call Rect( - 13920.0, 13376.0,  - 13312.0, 13920.0)
 	set we = null
-endfunction
-
-function InitTrig_Absorb_Soul takes nothing returns nothing
-	set gg_trg_Absorb_Soul = CreateTrigger()
-	call DisableTrigger(gg_trg_Absorb_Soul)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Absorb_Soul, 20.00)
-	call TriggerAddCondition(gg_trg_Absorb_Soul, Condition(ref_function_Trig_Absorb_Soul_Conditions))
-	call TriggerAddAction(gg_trg_Absorb_Soul, ref_function_Trig_Absorb_Soul_Actions)
-endfunction
-
-function InitTrig_Absorb_Soul_Dies takes nothing returns nothing
-	set gg_trg_Absorb_Soul_Dies = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Absorb_Soul_Dies, EVENT_PLAYER_UNIT_DEATH)
-	call TriggerAddCondition(gg_trg_Absorb_Soul_Dies, Condition(ref_function_Trig_Absorb_Soul_Dies_Conditions))
-	call TriggerAddAction(gg_trg_Absorb_Soul_Dies, ref_function_Trig_Absorb_Soul_Dies_Actions)
-endfunction
-
-function InitTrig_Acolyte_Animation takes nothing returns nothing
-	set gg_trg_Acolyte_Animation = CreateTrigger()
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Acolyte_Animation, 2.27)
-	call TriggerAddAction(gg_trg_Acolyte_Animation, ref_function_Trig_Acolyte_Animation_Actions)
-endfunction
-
-function InitTrig_Acolyte_Animation_reset takes nothing returns nothing
-	set gg_trg_Acolyte_Animation_reset = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Acolyte_Animation_reset, EVENT_PLAYER_UNIT_DEATH)
-	call TriggerAddCondition(gg_trg_Acolyte_Animation_reset, Condition(ref_function_Trig_Acolyte_Animation_reset_Conditions))
-	call TriggerAddAction(gg_trg_Acolyte_Animation_reset, ref_function_Trig_Acolyte_Animation_reset_Actions)
-endfunction
-
-function InitTrig_Acolyte_Dies takes nothing returns nothing
-	set gg_trg_Acolyte_Dies = CreateTrigger()
-	call DisableTrigger(gg_trg_Acolyte_Dies)
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Acolyte_Dies, EVENT_PLAYER_UNIT_DEATH)
-	call TriggerAddCondition(gg_trg_Acolyte_Dies, Condition(ref_function_Trig_Acolyte_Dies_Conditions))
-	call TriggerAddAction(gg_trg_Acolyte_Dies, ref_function_Trig_Acolyte_Dies_Actions)
 endfunction
 
 function InitTrig_Arcane_Barrage_Buff takes nothing returns nothing
@@ -1734,29 +1563,9 @@ function InitTrig_Buy_SPells takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Buy_SPells, ref_function_Trig_Buy_SPells_Actions)
 endfunction
 
-function InitTrig_Cauldron_Dies takes nothing returns nothing
-	set gg_trg_Cauldron_Dies = CreateTrigger()
-	call TriggerRegisterUnitEvent(gg_trg_Cauldron_Dies, gg_unit_u004_0029, EVENT_UNIT_DEATH)
-	call TriggerAddAction(gg_trg_Cauldron_Dies, ref_function_Trig_Cauldron_Dies_Actions)
-endfunction
-
 function InitTrig_Custom_Init takes nothing returns nothing
 	set gg_trg_Custom_Init = CreateTrigger()
 	call TriggerAddAction(gg_trg_Custom_Init, ref_function_Trig_Custom_Init_Actions)
-endfunction
-
-function InitTrig_Death_Coil takes nothing returns nothing
-	set gg_trg_Death_Coil = CreateTrigger()
-	call DisableTrigger(gg_trg_Death_Coil)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Death_Coil, 7.00)
-	call TriggerAddAction(gg_trg_Death_Coil, ref_function_Trig_Death_Coil_Actions)
-endfunction
-
-function InitTrig_Death_and_Decay takes nothing returns nothing
-	set gg_trg_Death_and_Decay = CreateTrigger()
-	call DisableTrigger(gg_trg_Death_and_Decay)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Death_and_Decay, 10.00)
-	call TriggerAddAction(gg_trg_Death_and_Decay, ref_function_Trig_Death_and_Decay_Actions)
 endfunction
 
 function InitTrig_Earthquake takes nothing returns nothing
@@ -1766,17 +1575,10 @@ function InitTrig_Earthquake takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Earthquake, ref_function_Trig_Earthquake_Actions)
 endfunction
 
-function InitTrig_Event_Init takes nothing returns nothing
-	set gg_trg_Event_Init = CreateTrigger()
-	call TriggerRegisterPlayerChatEvent(gg_trg_Event_Init, Player(0), "-morbentfell", true)
-	call TriggerAddAction(gg_trg_Event_Init, ref_function_Trig_Event_Init_Actions)
-endfunction
-
 function InitTrig_Ghoul_Spawn takes nothing returns nothing
 	set gg_trg_Ghoul_Spawn = CreateTrigger()
 	call DisableTrigger(gg_trg_Ghoul_Spawn)
 	call TriggerRegisterTimerEventPeriodic(gg_trg_Ghoul_Spawn, 12.00)
-	call TriggerAddCondition(gg_trg_Ghoul_Spawn, Condition(ref_function_Trig_Ghoul_Spawn_Conditions))
 	call TriggerAddAction(gg_trg_Ghoul_Spawn, ref_function_Trig_Ghoul_Spawn_Actions)
 endfunction
 
@@ -1819,26 +1621,6 @@ function InitTrig_Lightning_Enhancement_Effect takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Lightning_Enhancement_Effect, ref_function_Trig_Lightning_Enhancement_Effect_Actions)
 endfunction
 
-function InitTrig_MF_Create_Achievements takes nothing returns nothing
-	set gg_trg_MF_Create_Achievements = CreateTrigger()
-	call TriggerRegisterTimerEventSingle(gg_trg_MF_Create_Achievements, 0.01)
-	call TriggerAddAction(gg_trg_MF_Create_Achievements, ref_function_Trig_MF_Create_Achievements_Actions)
-endfunction
-
-function InitTrig_MF_Dies takes nothing returns nothing
-	set gg_trg_MF_Dies = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_MF_Dies, EVENT_PLAYER_UNIT_DEATH)
-	call TriggerAddCondition(gg_trg_MF_Dies, Condition(ref_function_Trig_MF_Dies_Conditions))
-	call TriggerAddAction(gg_trg_MF_Dies, ref_function_Trig_MF_Dies_Actions)
-endfunction
-
-function InitTrig_MF_Phase_2_Init takes nothing returns nothing
-	set gg_trg_MF_Phase_2_Init = CreateTrigger()
-	call TriggerRegisterEnterRectSimple(gg_trg_MF_Phase_2_Init, gg_rct_MorbentFel)
-	call TriggerAddCondition(gg_trg_MF_Phase_2_Init, Condition(ref_function_Trig_MF_Phase_2_Init_Conditions))
-	call TriggerAddAction(gg_trg_MF_Phase_2_Init, ref_function_Trig_MF_Phase_2_Init_Actions)
-endfunction
-
 function InitTrig_Magic_Ward_Delayed_SFX_Destruction takes nothing returns nothing
 	set gg_trg_Magic_Ward_Delayed_SFX_Destruction = CreateTrigger()
 	call TriggerRegisterTimerExpireEventBJ(gg_trg_Magic_Ward_Delayed_SFX_Destruction, udg_MagicWard_Timer[3])
@@ -1877,37 +1659,10 @@ function InitTrig_Mana_Regeneration takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Mana_Regeneration, ref_function_Trig_Mana_Regeneration_Actions)
 endfunction
 
-function InitTrig_Morbent_Dies takes nothing returns nothing
-	set gg_trg_Morbent_Dies = CreateTrigger()
-	call TriggerRegisterUnitEvent(gg_trg_Morbent_Dies, gg_unit_u000_0020, EVENT_UNIT_DEATH)
-	call TriggerAddAction(gg_trg_Morbent_Dies, ref_function_Trig_Morbent_Dies_Actions)
-endfunction
-
-function InitTrig_Morbent_Eighty_Percent takes nothing returns nothing
-	set gg_trg_Morbent_Eighty_Percent = CreateTrigger()
-	call DisableTrigger(gg_trg_Morbent_Eighty_Percent)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Morbent_Eighty_Percent, 1.00)
-	call TriggerAddCondition(gg_trg_Morbent_Eighty_Percent, Condition(ref_function_Trig_Morbent_Eighty_Percent_Conditions))
-	call TriggerAddAction(gg_trg_Morbent_Eighty_Percent, ref_function_Trig_Morbent_Eighty_Percent_Actions)
-endfunction
-
-function InitTrig_Morbent_Init_Trigger takes nothing returns nothing
-	set gg_trg_Morbent_Init_Trigger = CreateTrigger()
-	call TriggerRegisterTimerEventSingle(gg_trg_Morbent_Init_Trigger, 0.01)
-	call TriggerAddAction(gg_trg_Morbent_Init_Trigger, ref_function_Trig_Morbent_Init_Trigger_Actions)
-endfunction
-
-function InitTrig_Necromancer_Death takes nothing returns nothing
-	set gg_trg_Necromancer_Death = CreateTrigger()
-	call TriggerRegisterAnyUnitEventBJ(gg_trg_Necromancer_Death, EVENT_PLAYER_UNIT_DEATH)
-	call TriggerAddAction(gg_trg_Necromancer_Death, ref_function_Trig_Necromancer_Death_Actions)
-endfunction
-
 function InitTrig_Plague_Zombie_Spawn takes nothing returns nothing
 	set gg_trg_Plague_Zombie_Spawn = CreateTrigger()
 	call DisableTrigger(gg_trg_Plague_Zombie_Spawn)
 	call TriggerRegisterTimerEventPeriodic(gg_trg_Plague_Zombie_Spawn, 19.00)
-	call TriggerAddCondition(gg_trg_Plague_Zombie_Spawn, Condition(ref_function_Trig_Plague_Zombie_Spawn_Conditions))
 	call TriggerAddAction(gg_trg_Plague_Zombie_Spawn, ref_function_Trig_Plague_Zombie_Spawn_Actions)
 endfunction
 
@@ -1954,7 +1709,6 @@ function InitTrig_Skeletal_Mages takes nothing returns nothing
 	set gg_trg_Skeletal_Mages = CreateTrigger()
 	call DisableTrigger(gg_trg_Skeletal_Mages)
 	call TriggerRegisterTimerEventPeriodic(gg_trg_Skeletal_Mages, 13.00)
-	call TriggerAddCondition(gg_trg_Skeletal_Mages, Condition(ref_function_Trig_Skeletal_Mages_Conditions))
 	call TriggerAddAction(gg_trg_Skeletal_Mages, ref_function_Trig_Skeletal_Mages_Actions)
 endfunction
 
@@ -1963,26 +1717,6 @@ function InitTrig_Skeleton_Spawns takes nothing returns nothing
 	call DisableTrigger(gg_trg_Skeleton_Spawns)
 	call TriggerRegisterTimerEventPeriodic(gg_trg_Skeleton_Spawns, 6.00)
 	call TriggerAddAction(gg_trg_Skeleton_Spawns, ref_function_Trig_Skeleton_Spawns_Actions)
-endfunction
-
-function InitTrig_Soul_Barrage takes nothing returns nothing
-	set gg_trg_Soul_Barrage = CreateTrigger()
-	call DisableTrigger(gg_trg_Soul_Barrage)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Soul_Barrage, 20.00)
-	call TriggerAddAction(gg_trg_Soul_Barrage, ref_function_Trig_Soul_Barrage_Actions)
-endfunction
-
-function InitTrig_Spawn_Soul takes nothing returns nothing
-	set gg_trg_Spawn_Soul = CreateTrigger()
-	call DisableTrigger(gg_trg_Spawn_Soul)
-	call TriggerRegisterTimerEventPeriodic(gg_trg_Spawn_Soul, 4.00)
-	call TriggerAddAction(gg_trg_Spawn_Soul, ref_function_Trig_Spawn_Soul_Actions)
-endfunction
-
-function InitTrig_Time_runs_out takes nothing returns nothing
-	set gg_trg_Time_runs_out = CreateTrigger()
-	call TriggerRegisterTimerExpireEventBJ(gg_trg_Time_runs_out, udg_MFTimer)
-	call TriggerAddAction(gg_trg_Time_runs_out, ref_function_Trig_Time_runs_out_Actions)
 endfunction
 
 function InitTrig_Unstable_Magic_Start takes nothing returns nothing
@@ -2038,12 +1772,6 @@ function InitTrig_Volcano_Strike takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Volcano_Strike, ref_function_Trig_Volcano_Strike_Actions)
 endfunction
 
-function InitTrig_Zone_Exit takes nothing returns nothing
-	set gg_trg_Zone_Exit = CreateTrigger()
-	call TriggerRegisterEnterRectSimple(gg_trg_Zone_Exit, gg_rct_MF_Exit1)
-	call TriggerAddAction(gg_trg_Zone_Exit, ref_function_Trig_Zone_Exit_Actions)
-endfunction
-
 function InitCustomTriggers takes nothing returns nothing
 	call InitTrig_Custom_Init()
 	call InitTrig_Untitled_Trigger_005()
@@ -2088,30 +1816,10 @@ function InitCustomTriggers takes nothing returns nothing
 	call InitTrig_Arcane_Barrage_End()
 	call InitTrig_Unstable_Magic_Start()
 	call InitTrig_Unstable_Magic_Stop()
-	call InitTrig_Event_Init()
-	call InitTrig_Morbent_Init_Trigger()
-	call InitTrig_Time_runs_out()
-	call InitTrig_Acolyte_Animation()
 	call InitTrig_Ghoul_Spawn()
 	call InitTrig_Plague_Zombie_Spawn()
 	call InitTrig_Skeletal_Mages()
 	call InitTrig_Skeleton_Spawns()
-	call InitTrig_Zone_Exit()
-	call InitTrig_MF_Phase_2_Init()
-	call InitTrig_Necromancer_Death()
-	call InitTrig_Cauldron_Dies()
-	call InitTrig_Morbent_Eighty_Percent()
-	call InitTrig_Acolyte_Dies()
-	call InitTrig_Acolyte_Animation_reset()
-	call InitTrig_Death_and_Decay()
-	call InitTrig_Death_Coil()
-	call InitTrig_Morbent_Dies()
-	call InitTrig_Soul_Barrage()
-	call InitTrig_Spawn_Soul()
-	call InitTrig_Absorb_Soul()
-	call InitTrig_Absorb_Soul_Dies()
-	call InitTrig_MF_Dies()
-	call InitTrig_MF_Create_Achievements()
 	call InitTrig_Lightning_Enhancement_Effect()
 	call InitTrig_Earthquake()
 endfunction
@@ -2126,7 +1834,7 @@ function InitGlobals takes nothing returns nothing
 	endloop
 	set udg_TempInt = 0
 	set udg_TempReal = 0.
-	set udg_MFTimer = CreateTimer()
+	call CreateTimer()
 	call CreateGroup()
 	set udg_tempUGroup = CreateGroup()
 	call CreateGroup()
@@ -3296,206 +3004,16 @@ function TheBear_someoneDies takes nothing returns boolean
 	return false
 endfunction
 
-function Trig_Absorb_Soul_Func001001001 takes nothing returns boolean
-	return CountUnitsInGroup(GetUnitsInRectMatching(gg_rct_MorbentFel, Condition(ref_function_Trig_Absorb_Soul_Func001001001001001002))) >= 1
+function TheNecromancer_initFight takes nothing returns nothing
+	call unit_unpause(General_hunter)
 endfunction
 
-function Trig_Absorb_Soul_Func001001002 takes nothing returns boolean
-	return udg_MorbenFell_Booleans[5] == false
+function TheNecromancer_onEventInit takes nothing returns nothing
+	call moveHunter(TheNecromancer_hunterSpawn_x, TheNecromancer_hunterSpawn_y, TheNecromancer_camBounds, TheNecromancer_hunterSpawn_x, TheNecromancer_hunterSpawn_y)
 endfunction
 
-function Trig_Absorb_Soul_Func001001 takes nothing returns boolean
-	return GetBooleanAnd(Trig_Absorb_Soul_Func001001001(), Trig_Absorb_Soul_Func001001002())
-endfunction
-
-function Trig_Absorb_Soul_Func009C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(udg_AbsorbSoulUnit) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Absorb_Soul_Actions takes nothing returns nothing
-	loop
-		exitwhen Trig_Absorb_Soul_Func001001()
-		call TriggerSleepAction(RMaxBJ(bj_WAIT_FOR_COND_MIN_INTERVAL, 0.20))
-	endloop
-	set udg_MorbenFell_Booleans[4] = true
-	call PauseUnitBJ(true, udg_MF_Ghost)
-	call SetUnitAnimation(udg_MF_Ghost, "channel")
-	set udg_AbsorbSoulUnit = GroupPickRandomUnit(GetUnitsInRangeOfLocMatching(2000.00, GetUnitLoc(udg_MF_Ghost), Condition(ref_function_Trig_Absorb_Soul_Func006002001003)))
-	call AddSpecialEffectTargetUnitBJ("chest", udg_AbsorbSoulUnit, "Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl")
-	call TriggerSleepAction(8.00)
-	if Trig_Absorb_Soul_Func009C() then
-		call AddSpecialEffectTargetUnitBJ("origin", udg_AbsorbSoulUnit, "Abilities\\Spells\\Undead\\DarkRitual\\DarkRitualTarget.mdl")
-		call SetUnitLifeBJ(udg_MF_Ghost, GetUnitStateSwap(UNIT_STATE_LIFE, udg_AbsorbSoulUnit) + GetUnitStateSwap(UNIT_STATE_LIFE, udg_MF_Ghost) * 2.00)
-		call KillUnit(udg_AbsorbSoulUnit)
-	endif
-	call PauseUnitBJ(false, udg_MF_Ghost)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	call TriggerSleepAction(0.50)
-	set udg_MorbenFell_Booleans[4] = false
-endfunction
-
-function Trig_Absorb_Soul_Conditions takes nothing returns boolean
-	if  not (CountUnitsInGroup(GetUnitsInRangeOfLocMatching(1500.00, GetUnitLoc(udg_MF_Ghost), Condition(ref_function_Trig_Absorb_Soul_Func003001001003))) >= 1) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Absorb_Soul_Dies_Actions takes nothing returns nothing
-	call TriggerSleepAction(0.50)
-	call PauseUnitBJ(false, udg_MF_Ghost)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	set udg_MorbenFell_Booleans[4] = false
-endfunction
-
-function Trig_Absorb_Soul_Dies_Conditions takes nothing returns boolean
-	if  not (GetDyingUnit() == udg_AbsorbSoulUnit) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Absorb_Soul_Func001001001001001002001 takes nothing returns boolean
-	return 1848651829 == GetUnitTypeId(GetFilterUnit())
-endfunction
-
-function Trig_Absorb_Soul_Func001001001001001002002 takes nothing returns boolean
-	return IsUnitAliveBJ(GetFilterUnit()) == true
-endfunction
-
-function Trig_Absorb_Soul_Func001001001001001002 takes nothing returns boolean
-	return GetBooleanAnd(Trig_Absorb_Soul_Func001001001001001002001(), Trig_Absorb_Soul_Func001001001001001002002())
-endfunction
-
-function Trig_Absorb_Soul_Func003001001003001 takes nothing returns boolean
-	return GetUnitTypeId(GetFilterUnit()) == 1848651829
-endfunction
-
-function Trig_Absorb_Soul_Func003001001003002 takes nothing returns boolean
-	return IsUnitAliveBJ(GetFilterUnit()) == true
-endfunction
-
-function Trig_Absorb_Soul_Func003001001003 takes nothing returns boolean
-	return GetBooleanAnd(Trig_Absorb_Soul_Func003001001003001(), Trig_Absorb_Soul_Func003001001003002())
-endfunction
-
-function Trig_Absorb_Soul_Func006002001003001 takes nothing returns boolean
-	return GetUnitTypeId(GetFilterUnit()) == 1848651829
-endfunction
-
-function Trig_Absorb_Soul_Func006002001003002 takes nothing returns boolean
-	return IsUnitAliveBJ(GetFilterUnit()) == true
-endfunction
-
-function Trig_Absorb_Soul_Func006002001003 takes nothing returns boolean
-	return GetBooleanAnd(Trig_Absorb_Soul_Func006002001003001(), Trig_Absorb_Soul_Func006002001003002())
-endfunction
-
-function Trig_Acolyte_Animation_Func001C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0030) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Animation_Func002C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0039) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Animation_Func003C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0031) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Animation_Actions takes nothing returns nothing
-	if Trig_Acolyte_Animation_Func001C() then
-		call SetUnitAnimation(gg_unit_n002_0030, "work")
-		call AddSpecialEffectTargetUnitBJ("origin", gg_unit_n002_0030, "Abilities\\Spells\\Other\\TalkToMe\\TalkToMe.mdl")
-	endif
-	if Trig_Acolyte_Animation_Func002C() then
-		call SetUnitAnimation(gg_unit_n002_0039, "work")
-	endif
-	if Trig_Acolyte_Animation_Func003C() then
-		call SetUnitAnimation(gg_unit_n002_0031, "work")
-	endif
-endfunction
-
-function Trig_Acolyte_Animation_reset_Actions takes nothing returns nothing
-	call ResetUnitAnimation(GetDyingUnit())
-endfunction
-
-function Trig_Acolyte_Animation_reset_Func002C takes nothing returns boolean
-	if  not (GetUnitTypeId(GetDyingUnit()) == 1848651826) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Animation_reset_Conditions takes nothing returns boolean
-	if  not Trig_Acolyte_Animation_reset_Func002C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Dies_Func001C takes nothing returns boolean
-	if  not (GetDyingUnit() == gg_unit_n002_0039) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Dies_Func002C takes nothing returns boolean
-	if  not (GetDyingUnit() == gg_unit_n002_0031) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Dies_Func003C takes nothing returns boolean
-	if  not (GetDyingUnit() == gg_unit_n002_0030) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Acolyte_Dies_Actions takes nothing returns nothing
-	if Trig_Acolyte_Dies_Func001C() then
-		call TriggerSleepAction(1.50)
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[1], bj_UNIT_FACING)
-		call UnitAddAbilityBJ(1093677113, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-	endif
-	if Trig_Acolyte_Dies_Func002C() then
-		call TriggerSleepAction(1.50)
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[2], bj_UNIT_FACING)
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-		call UnitAddAbilityBJ(1093677127, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	endif
-	if Trig_Acolyte_Dies_Func003C() then
-		call TriggerSleepAction(1.50)
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[3], bj_UNIT_FACING)
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-		call UnitAddAbilityBJ(1093677121, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	endif
-endfunction
-
-function Trig_Acolyte_Dies_Conditions takes nothing returns boolean
-	if  not (GetUnitTypeId(GetDyingUnit()) == 1848651826) then
-		return false
-	endif
-	return true
+function TheNecromancer_someoneDies takes nothing returns boolean
+	return false
 endfunction
 
 function Trig_Arcane_Barrage_Buff_Actions takes nothing returns nothing
@@ -4054,149 +3572,9 @@ function Trig_Buy_SPells_Conditions takes nothing returns boolean
 	return true
 endfunction
 
-function Trig_Cauldron_Dies_Func002001 takes nothing returns boolean
-	return CountUnitsInGroup(udg_tempUGroup) <= 0
-endfunction
-
-function Trig_Cauldron_Dies_Func003001 takes nothing returns boolean
-	return CountUnitsInGroup(udg_tempUGroup) >= 3
-endfunction
-
-function Trig_Cauldron_Dies_Func022C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0039) == false) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Cauldron_Dies_Func023C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0031) == false) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Cauldron_Dies_Func024C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0030) == false) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Cauldron_Dies_Actions takes nothing returns nothing
-	set udg_tempUGroup = GetUnitsInRectMatching(gg_rct_MorbentFel, Condition(ref_function_Trig_Cauldron_Dies_Func001002002))
-	if Trig_Cauldron_Dies_Func002001() then
-		call QuestItemSetCompletedBJ(udg_MFQuestRequirements[1], true)
-	else
-		call DoNothing()
-	endif
-	if Trig_Cauldron_Dies_Func003001() then
-		call QuestItemSetCompletedBJ(udg_MFQuestRequirements[3], true)
-	else
-		call DoNothing()
-	endif
-	call DestroyTimerDialogBJ(udg_MF_TimerWindow)
-	call DisableTrigger(gg_trg_Time_runs_out)
-	call DoNothing()
-	call TriggerSleepAction(1.50)
-	call StopMusicBJ(true)
-	call ResetUnitAnimation(gg_unit_u000_0020)
-	call DestroyEffectBJ(udg_NecroSFX)
-	call DisplayTimedTextToForce(GetPlayersAll(), 8.00, "TRIGSTR_150")
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), gg_unit_u000_0020, "TRIGSTR_151", null, "TRIGSTR_152", bj_TIMETYPE_SET, 8.00, false)
-	call TriggerSleepAction(4.00)
-	call ResumeMusicBJ()
-	call PlayThematicMusicBJ("Sound\\Music\\mp3Music\\DarkAgents.mp3")
-	call PauseUnitBJ(false, gg_unit_u000_0020)
-	call SetUnitInvulnerable(gg_unit_u000_0020, false)
-	call EnableTrigger(gg_trg_Acolyte_Dies)
-	call EnableTrigger(gg_trg_Death_and_Decay)
-	call EnableTrigger(gg_trg_Morbent_Eighty_Percent)
-	call EnableTrigger(gg_trg_Death_Coil)
-	if Trig_Cauldron_Dies_Func022C() then
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[1], bj_UNIT_FACING)
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-		call UnitAddAbilityBJ(1093677113, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	endif
-	if Trig_Cauldron_Dies_Func023C() then
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[2], bj_UNIT_FACING)
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-		call UnitAddAbilityBJ(1093677127, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	endif
-	if Trig_Cauldron_Dies_Func024C() then
-		call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[3], bj_UNIT_FACING)
-		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-		call UnitAddAbilityBJ(1093677121, GetLastCreatedUnit())
-		call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	endif
-endfunction
-
-function Trig_Cauldron_Dies_Func001002002001 takes nothing returns boolean
-	return 1848651826 == GetUnitTypeId(GetFilterUnit())
-endfunction
-
-function Trig_Cauldron_Dies_Func001002002002 takes nothing returns boolean
-	return IsUnitAliveBJ(GetFilterUnit()) == true
-endfunction
-
-function Trig_Cauldron_Dies_Func001002002 takes nothing returns boolean
-	return GetBooleanAnd(Trig_Cauldron_Dies_Func001002002001(), Trig_Cauldron_Dies_Func001002002002())
-endfunction
-
 function Trig_Custom_Init_Actions takes nothing returns nothing
 	call SetCameraFieldForPlayer(Player(0), CAMERA_FIELD_TARGET_DISTANCE, 2000.00, 0.)
 	call ModifyGateBJ(bj_GATEOPERATION_OPEN, gg_dest_DTc2_2577)
-endfunction
-
-function Trig_Death_Coil_Func001001 takes nothing returns boolean
-	return udg_MorbenFell_Booleans[2] == false
-endfunction
-
-function Trig_Death_Coil_Actions takes nothing returns nothing
-	loop
-		exitwhen Trig_Death_Coil_Func001001()
-		call TriggerSleepAction(RMaxBJ(bj_WAIT_FOR_COND_MIN_INTERVAL, 0.20))
-	endloop
-	set udg_MorbenFell_Booleans[3] = true
-	call PauseUnitBJ(true, gg_unit_u000_0020)
-	call SetUnitAnimation(gg_unit_u000_0020, "channel")
-	call AddSpecialEffectTargetUnitBJ("chest", gg_unit_u000_0020, "Abilities\\Spells\\NightElf\\ManaBurn\\ManaBurnTarget.mdl")
-	set udg_tempPoint = GetUnitLoc(udg_RedHero)
-	call TriggerSleepAction(1.50)
-	call PauseUnitBJ(false, gg_unit_u000_0020)
-	call ResetUnitAnimation(gg_unit_u000_0020)
-	call IssueTargetOrderBJ(gg_unit_u000_0020, "deathcoil", udg_RedHero)
-	call TriggerSleepAction(0.50)
-	call IssueTargetOrderBJ(gg_unit_u000_0020, "attack", udg_RedHero)
-	set udg_MorbenFell_Booleans[3] = false
-endfunction
-
-function Trig_Death_and_Decay_Func001001 takes nothing returns boolean
-	return udg_MorbenFell_Booleans[3] == false
-endfunction
-
-function Trig_Death_and_Decay_Actions takes nothing returns nothing
-	loop
-		exitwhen Trig_Death_and_Decay_Func001001()
-		call TriggerSleepAction(RMaxBJ(bj_WAIT_FOR_COND_MIN_INTERVAL, 0.20))
-	endloop
-	set udg_MorbenFell_Booleans[2] = true
-	call PauseUnitBJ(true, gg_unit_u000_0020)
-	call SetUnitAnimation(gg_unit_u000_0020, "channel")
-	call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_u000_0020), "Abilities\\Spells\\Undead\\DeathPact\\DeathPactTarget.mdl")
-	set udg_MF_DnDPoint = GetUnitLoc(udg_RedHero)
-	call TriggerSleepAction(1.00)
-	call CreateNUnitsAtLoc(1, 1747988532, Player(11), udg_MF_DnDPoint, bj_UNIT_FACING)
-	call UnitAddAbilityBJ(1093677107, GetLastCreatedUnit())
-	call IssuePointOrderLocBJ(GetLastCreatedUnit(), "deathanddecay", udg_MF_DnDPoint)
-	call UnitApplyTimedLifeBJ(30.00, 1112820806, GetLastCreatedUnit())
-	call PauseUnitBJ(false, gg_unit_u000_0020)
-	call ResetUnitAnimation(gg_unit_u000_0020)
-	call TriggerSleepAction(0.50)
-	set udg_MorbenFell_Booleans[2] = false
-	call RemoveLocation(udg_MF_DnDPoint)
 endfunction
 
 function Trig_Earthquake_Actions takes nothing returns nothing
@@ -4208,43 +3586,6 @@ function Trig_Earthquake_Actions takes nothing returns nothing
 	call RemoveLocation(udg_tempPoint)
 endfunction
 
-function Trig_Event_Init_Actions takes nothing returns nothing
-	call EnumDestructablesInRectAll(gg_rct_MF_InvulnDestru, ref_function_Trig_Event_Init_Func001002)
-	call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUTIN, 3.00, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0., 0., 0., 0.)
-	call TriggerSleepAction(1.50)
-	call SetTimeOfDay(24.00)
-	call SetTimeOfDayScalePercentBJ(0.00)
-	call PauseAllUnitsBJ(true)
-	call SetUnitPositionLocFacingBJ(udg_RedHero, GetRectCenter(gg_rct_MorbentAttackZone), 90.00)
-	call SetCameraBoundsToRectForPlayerBJ(Player(0), gg_rct_MF_Cam_Bounds)
-	call PanCameraToTimedLocForPlayer(Player(0), GetRectCenter(gg_rct_MorbentAttackZone), 0.)
-	call SetCameraFieldForPlayer(Player(0), CAMERA_FIELD_TARGET_DISTANCE, 2000.00, 0.)
-	call CreateFogModifierRectBJ(true, Player(0), FOG_OF_WAR_VISIBLE, gg_rct_MF_Cam_Bounds)
-	call PlayThematicMusicBJ("Sound\\Music\\mp3Music\\DarkAgents.mp3")
-	call TriggerSleepAction(2.50)
-	call SetUnitFacingToFaceUnitTimed(udg_RedHero, gg_unit_h007_0021, 0.50)
-	call SetUnitFacingToFaceUnitTimed(gg_unit_h007_0021, udg_RedHero, 0.50)
-	call DisplayTimedTextToForce(GetPlayersAll(), 7.00, "TRIGSTR_138")
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), gg_unit_h007_0021, "TRIGSTR_140", null, "TRIGSTR_141", bj_TIMETYPE_SET, 7.00, true)
-	call EnableTrigger(gg_trg_Ghoul_Spawn)
-	call EnableTrigger(gg_trg_Plague_Zombie_Spawn)
-	call EnableTrigger(gg_trg_Skeletal_Mages)
-	call EnableTrigger(gg_trg_Skeleton_Spawns)
-	call DisplayTimedTextToForce(GetPlayersAll(), 10.00, "TRIGSTR_139")
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), gg_unit_h007_0021, "TRIGSTR_142", null, "TRIGSTR_143", bj_TIMETYPE_SET, 10.00, true)
-	call StartTimerBJ(udg_MFTimer, false, 150.00)
-	call CreateTimerDialogBJ(GetLastCreatedTimerBJ(), "TRIGSTR_144")
-	call TimerDialogDisplayForPlayerBJ(true, GetLastCreatedTimerDialogBJ(), Player(0))
-	set udg_MF_TimerWindow = GetLastCreatedTimerDialogBJ()
-	call PlayThematicMusicBJ("Sound\\Music\\mp3Music\\PursuitTheme.mp3")
-	call PauseAllUnitsBJ(false)
-	call PauseUnitBJ(true, gg_unit_u000_0020)
-endfunction
-
-function Trig_Event_Init_Func001002 takes nothing returns nothing
-	call SetDestructableInvulnerableBJ(GetEnumDestructable(), true)
-endfunction
-
 function Trig_Ghoul_Spawn_Func008C takes nothing returns boolean
 	if  not (udg_MorbenFell_Booleans[1] == false) then
 		return false
@@ -4253,23 +3594,13 @@ function Trig_Ghoul_Spawn_Func008C takes nothing returns boolean
 endfunction
 
 function Trig_Ghoul_Spawn_Actions takes nothing returns nothing
-	set udg_tempPoint = GetRandomLocInRect(RectFromCenterSizeBJ(GetUnitLoc(gg_unit_n002_0031), 300.00, 300.00))
 	call CreateNUnitsAtLoc(1, 1966092337, Player(11), udg_tempPoint, bj_UNIT_FACING)
-	call SetUnitAnimation(gg_unit_n002_0030, "attack")
 	call AddSpecialEffectLocBJ(udg_tempPoint, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_n002_0031), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 	if Trig_Ghoul_Spawn_Func008C() then
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "move", GetRectCenter(gg_rct_MF_Exit1))
 	else
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
 	endif
-endfunction
-
-function Trig_Ghoul_Spawn_Conditions takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0031) == true) then
-		return false
-	endif
-	return true
 endfunction
 
 function Trig_Healing_Potion_Effect_Actions takes nothing returns nothing
@@ -4452,145 +3783,6 @@ function Trig_Lightning_Enhancement_Effect_Func006A takes nothing returns nothin
 	call RemoveLocation(udg_tempPoint2)
 endfunction
 
-function Trig_MF_Create_Achievements_Actions takes nothing returns nothing
-	call CreateQuestBJ(bj_QUESTTYPE_REQ_DISCOVERED, "TRIGSTR_265", "TRIGSTR_266", "ReplaceableTextures\\CommandButtons\\BTNAcolyte.blp")
-	set udg_MFQuests[1] = GetLastCreatedQuestBJ()
-	call CreateQuestItemBJ(GetLastCreatedQuestBJ(), "TRIGSTR_268")
-	set udg_MFQuestRequirements[1] = GetLastCreatedQuestItemBJ()
-	call CreateQuestItemBJ(GetLastCreatedQuestBJ(), "TRIGSTR_269")
-	set udg_MFQuestRequirements[2] = GetLastCreatedQuestItemBJ()
-	call CreateQuestBJ(bj_QUESTTYPE_REQ_DISCOVERED, "TRIGSTR_263", "TRIGSTR_264", "ReplaceableTextures\\CommandButtons\\BTNSacrificialPit.blp")
-	set udg_MFQuests[2] = GetLastCreatedQuestBJ()
-	call CreateQuestItemBJ(GetLastCreatedQuestBJ(), "TRIGSTR_272")
-	set udg_MFQuestRequirements[3] = GetLastCreatedQuestItemBJ()
-	call CreateQuestItemBJ(GetLastCreatedQuestBJ(), "TRIGSTR_273")
-	set udg_MFQuestRequirements[4] = GetLastCreatedQuestItemBJ()
-	call FlashQuestDialogButtonBJ()
-endfunction
-
-function Trig_MF_Dies_Func015Func004001 takes nothing returns boolean
-	return IsQuestItemCompleted(udg_MFQuestRequirements[1]) == true
-endfunction
-
-function Trig_MF_Dies_Func015Func004002 takes nothing returns boolean
-	return IsQuestItemCompleted(udg_MFQuestRequirements[2]) == true
-endfunction
-
-function Trig_MF_Dies_Func015C takes nothing returns boolean
-	if  not GetBooleanAnd(Trig_MF_Dies_Func015Func004001(), Trig_MF_Dies_Func015Func004002()) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_MF_Dies_Func016Func004001 takes nothing returns boolean
-	return IsQuestItemCompleted(udg_MFQuestRequirements[3]) == true
-endfunction
-
-function Trig_MF_Dies_Func016Func004002 takes nothing returns boolean
-	return IsQuestItemCompleted(udg_MFQuestRequirements[4]) == true
-endfunction
-
-function Trig_MF_Dies_Func016C takes nothing returns boolean
-	if  not GetBooleanAnd(Trig_MF_Dies_Func016Func004001(), Trig_MF_Dies_Func016Func004002()) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_MF_Dies_Func017Func003C takes nothing returns boolean
-	if IsQuestCompleted(udg_MFQuests[1]) == true then
-		return true
-	endif
-	if IsQuestCompleted(udg_MFQuests[2]) == true then
-		return true
-	endif
-	return false
-endfunction
-
-function Trig_MF_Dies_Func017C takes nothing returns boolean
-	if  not Trig_MF_Dies_Func017Func003C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_MF_Dies_Actions takes nothing returns nothing
-	call DisableTrigger(gg_trg_Absorb_Soul)
-	call DisableTrigger(gg_trg_Spawn_Soul)
-	call DisableTrigger(gg_trg_Soul_Barrage)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	call DisplayTimedTextToForce(GetPlayersAll(), 4.50, "TRIGSTR_156")
-	call PlaySoundBJ(gg_snd_KelThuzadDeath1)
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), udg_MF_Ghost, "TRIGSTR_157", null, "TRIGSTR_158", bj_TIMETYPE_SET, 4.50, true)
-	call ForGroupBJ(GetUnitsInRectOfPlayer(gg_rct_MorbentFel, Player(11)), ref_function_Trig_MF_Dies_Func008002)
-	call TriggerSleepAction(0.75)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	call PlaySoundBJ(gg_snd_QuestCompleted)
-	call QuestItemSetCompletedBJ(udg_MFQuestRequirements[2], true)
-	call QuestItemSetCompletedBJ(udg_MFQuestRequirements[4], true)
-	call TriggerSleepAction(2.00)
-	if Trig_MF_Dies_Func015C() then
-		call FlashQuestDialogButtonBJ()
-		call QuestSetCompletedBJ(udg_MFQuests[1], true)
-		call DisplayTextToForce(GetPlayersAll(), "TRIGSTR_286")
-	endif
-	if Trig_MF_Dies_Func016C() then
-		call FlashQuestDialogButtonBJ()
-		call QuestSetCompletedBJ(udg_MFQuests[2], true)
-		call DisplayTextToForce(GetPlayersAll(), "TRIGSTR_285")
-	endif
-	if Trig_MF_Dies_Func017C() then
-		call PlaySoundBJ(gg_snd_GoodJob)
-	else
-		call DisplayTextToForce(GetPlayersAll(), "TRIGSTR_288")
-	endif
-	call TriggerSleepAction(4.00)
-	call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUTIN, 3.00, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0., 0., 0., 0.)
-	call TriggerSleepAction(1.50)
-	call PauseAllUnitsBJ(true)
-	call SetCameraBoundsToRectForPlayerBJ(Player(0), gg_rct_Oasis)
-	call SetUnitPositionLocFacingBJ(udg_RedHero, GetRectCenter(gg_rct_Oasis), 90.00)
-	call SetCameraBoundsToRectForPlayerBJ(Player(0), gg_rct_Oasis)
-	call PanCameraToTimedLocForPlayer(Player(0), GetRectCenter(gg_rct_Oasis), 0.)
-	call TriggerSleepAction(1.50)
-	call PauseAllUnitsBJ(false)
-endfunction
-
-function Trig_MF_Dies_Conditions takes nothing returns boolean
-	if  not (udg_MF_Ghost == GetDyingUnit()) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_MF_Dies_Func008002 takes nothing returns nothing
-	call KillUnit(GetEnumUnit())
-endfunction
-
-function Trig_MF_Phase_2_Init_Actions takes nothing returns nothing
-	call DisableTrigger(GetTriggeringTrigger())
-	call SetCameraBoundsToRectForPlayerBJ(Player(0), gg_rct_MorbentFel)
-	call CreateFogModifierRectBJ(true, Player(0), FOG_OF_WAR_VISIBLE, gg_rct_MorbentFel)
-	call CreateFogModifierRectBJ(true, Player(0), FOG_OF_WAR_VISIBLE, gg_rct_MFGraveyard)
-	call DisplayTimedTextToForce(GetPlayersAll(), 4.00, "TRIGSTR_147")
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), gg_unit_u000_0020, "TRIGSTR_148", null, "TRIGSTR_149", bj_TIMETYPE_SET, 4.00, false)
-	call TriggerSleepAction(2.)
-	call ForGroupBJ(GetUnitsInRectOfPlayer(gg_rct_MF_Cam_Bounds, Player(11)), ref_function_Trig_MF_Phase_2_Init_Func008002)
-	call CreateDestructableLoc(1148151415, GetRectCenter(gg_rct_MFForceWall), 270.00, 1., 1)
-endfunction
-
-function Trig_MF_Phase_2_Init_Conditions takes nothing returns boolean
-	if  not (GetTriggerUnit() == udg_RedHero) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_MF_Phase_2_Init_Func008002 takes nothing returns nothing
-	call SetUnitPositionLoc(GetEnumUnit(), GetRectCenter(gg_rct_Region_012))
-endfunction
-
 function Trig_Magic_Ward_Delayed_SFX_Destruction_Actions takes nothing returns nothing
 	call PauseTimerBJ(true, udg_MagicWard_Timer[1])
 	call PauseTimerBJ(true, udg_MagicWard_Timer[3])
@@ -4710,157 +3902,6 @@ function Trig_Mana_Regeneration_Actions takes nothing returns nothing
 	call SetUnitManaBJ(udg_RedHero, GetUnitStateSwap(UNIT_STATE_MANA, udg_RedHero) + udg_TempReal / 5.00)
 endfunction
 
-function Trig_Morbent_Dies_Actions takes nothing returns nothing
-	call DisableTrigger(gg_trg_Death_and_Decay)
-	call DisableTrigger(gg_trg_Death_Coil)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	call TriggerSleepAction(2.00)
-	call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_u000_0020), "Abilities\\Spells\\Items\\TomeOfRetraining\\TomeOfRetrainingCaster.mdl")
-	call TriggerSleepAction(2.00)
-	call CreateNUnitsAtLoc(1, 1966092341, Player(11), GetRectCenter(gg_rct_MorbentFell_Ghost), bj_UNIT_FACING)
-	call AddSpecialEffectTargetUnitBJ("chest", GetLastCreatedUnit(), "Abilities\\Spells\\Human\\Invisibility\\InvisibilityTarget.mdl")
-	set udg_MF_Ghost = GetLastCreatedUnit()
-	call DisplayTimedTextToForce(GetPlayersAll(), 8.00, "TRIGSTR_153")
-	call TransmissionFromUnitWithNameBJ(GetPlayersAll(), udg_MF_Ghost, "TRIGSTR_154", null, "TRIGSTR_155", bj_TIMETYPE_SET, 8.00, false)
-	call EnableTrigger(gg_trg_Soul_Barrage)
-	call EnableTrigger(gg_trg_Absorb_Soul)
-	call EnableTrigger(gg_trg_Spawn_Soul)
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Func001Func006C takes nothing returns boolean
-	if IsUnitAliveBJ(gg_unit_n002_0039) == true then
-		return true
-	endif
-	if IsUnitAliveBJ(gg_unit_n002_0031) == true then
-		return true
-	endif
-	if IsUnitAliveBJ(gg_unit_n002_0030) == true then
-		return true
-	endif
-	return false
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Func001C takes nothing returns boolean
-	if  not Trig_Morbent_Eighty_Percent_Func001Func006C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Func001Func001C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0039) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Func001Func002C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0031) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Func001Func003C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0030) == true) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Actions takes nothing returns nothing
-	if Trig_Morbent_Eighty_Percent_Func001C() then
-		if Trig_Morbent_Eighty_Percent_Func001Func001C() then
-			call AddSpecialEffectLocBJ(udg_AcolytePoint[1], "Objects\\Spawnmodels\\Undead\\UndeadLargeDeathExplode\\UndeadLargeDeathExplode.mdl")
-			call RemoveUnit(gg_unit_n002_0039)
-			call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[1], bj_UNIT_FACING)
-			call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-			call UnitAddAbilityBJ(1093677113, GetLastCreatedUnit())
-		endif
-		if Trig_Morbent_Eighty_Percent_Func001Func002C() then
-			call AddSpecialEffectLocBJ(udg_AcolytePoint[2], "Objects\\Spawnmodels\\Undead\\UndeadLargeDeathExplode\\UndeadLargeDeathExplode.mdl")
-			call RemoveUnit(gg_unit_n002_0031)
-			call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[2], bj_UNIT_FACING)
-			call UnitAddAbilityBJ(1093677127, GetLastCreatedUnit())
-			call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-		endif
-		if Trig_Morbent_Eighty_Percent_Func001Func003C() then
-			call AddSpecialEffectLocBJ(udg_AcolytePoint[3], "Objects\\Spawnmodels\\Undead\\UndeadLargeDeathExplode\\UndeadLargeDeathExplode.mdl")
-			call RemoveUnit(gg_unit_n002_0030)
-			call CreateNUnitsAtLoc(1, 1848651828, Player(11), udg_AcolytePoint[3], bj_UNIT_FACING)
-			call UnitAddAbilityBJ(1093677121, GetLastCreatedUnit())
-			call AddSpecialEffectLocBJ(GetUnitLoc(GetLastCreatedUnit()), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-		endif
-		call DisableTrigger(GetTriggeringTrigger())
-	else
-		call DisableTrigger(GetTriggeringTrigger())
-	endif
-endfunction
-
-function Trig_Morbent_Eighty_Percent_Conditions takes nothing returns boolean
-	if  not (GetUnitLifePercent(gg_unit_u000_0020) <= 80.00) then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Morbent_Init_Trigger_Actions takes nothing returns nothing
-	set udg_MorbenFell_Booleans[4] = false
-	call AddSpecialEffectTargetUnitBJ("origin", gg_unit_u000_0020, "Abilities\\Spells\\Demon\\DarkConversion\\ZombifyTarget.mdl")
-	set udg_NecroSFX = GetLastCreatedEffectBJ()
-	call PauseUnitBJ(true, gg_unit_u000_0020)
-	call SetUnitInvulnerable(gg_unit_u000_0020, true)
-	call SetUnitAnimation(gg_unit_u000_0020, "channel")
-	call PauseUnitBJ(true, gg_unit_u006_0035)
-	call SetUnitAnimation(gg_unit_u006_0035, "channel")
-	call PauseUnitBJ(true, gg_unit_u006_0040)
-	call SetUnitAnimation(gg_unit_u006_0040, "channel")
-	set udg_AcolytePoint[1] = GetUnitLoc(gg_unit_n002_0039)
-	set udg_AcolytePoint[2] = GetUnitLoc(gg_unit_n002_0031)
-	set udg_AcolytePoint[3] = GetUnitLoc(gg_unit_n002_0030)
-endfunction
-
-function Trig_Necromancer_Death_Func001Func004Func001001 takes nothing returns boolean
-	return IsUnitAliveBJ(gg_unit_u006_0040) == false
-endfunction
-
-function Trig_Necromancer_Death_Func001Func004Func001002 takes nothing returns boolean
-	return GetDyingUnit() == gg_unit_u006_0035
-endfunction
-
-function Trig_Necromancer_Death_Func001Func004Func002001 takes nothing returns boolean
-	return IsUnitAliveBJ(gg_unit_u006_0035) == false
-endfunction
-
-function Trig_Necromancer_Death_Func001Func004Func002002 takes nothing returns boolean
-	return GetDyingUnit() == gg_unit_u006_0040
-endfunction
-
-function Trig_Necromancer_Death_Func001Func004C takes nothing returns boolean
-	if GetBooleanAnd(Trig_Necromancer_Death_Func001Func004Func001001(), Trig_Necromancer_Death_Func001Func004Func001002()) then
-		return true
-	endif
-	if GetBooleanAnd(Trig_Necromancer_Death_Func001Func004Func002001(), Trig_Necromancer_Death_Func001Func004Func002002()) then
-		return true
-	endif
-	return false
-endfunction
-
-function Trig_Necromancer_Death_Func001C takes nothing returns boolean
-	if  not Trig_Necromancer_Death_Func001Func004C() then
-		return false
-	endif
-	return true
-endfunction
-
-function Trig_Necromancer_Death_Actions takes nothing returns nothing
-	if Trig_Necromancer_Death_Func001C() then
-		set udg_MorbenFell_Booleans[1] = true
-		call DisableTrigger(gg_trg_Zone_Exit)
-		call KillDestructable(gg_dest_Dofw_0033)
-	endif
-endfunction
-
 function Trig_Plague_Zombie_Spawn_Func007C takes nothing returns boolean
 	if  not (udg_MorbenFell_Booleans[1] == false) then
 		return false
@@ -4869,23 +3910,13 @@ function Trig_Plague_Zombie_Spawn_Func007C takes nothing returns boolean
 endfunction
 
 function Trig_Plague_Zombie_Spawn_Actions takes nothing returns nothing
-	set udg_tempPoint = GetRandomLocInRect(RectFromCenterSizeBJ(GetUnitLoc(gg_unit_n002_0039), 300.00, 300.00))
 	call CreateNUnitsAtLoc(1, 1848651825, Player(11), udg_tempPoint, bj_UNIT_FACING)
-	call SetUnitAnimation(gg_unit_n002_0039, "attack")
 	call AddSpecialEffectLocBJ(udg_tempPoint, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_n002_0039), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 	if Trig_Plague_Zombie_Spawn_Func007C() then
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "move", GetRectCenter(gg_rct_MF_Exit1))
 	else
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
 	endif
-endfunction
-
-function Trig_Plague_Zombie_Spawn_Conditions takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0039) == true) then
-		return false
-	endif
-	return true
 endfunction
 
 function Trig_Remove_E_Spells_Actions takes nothing returns nothing
@@ -4947,11 +3978,8 @@ function Trig_Skeletal_Mages_Func007C takes nothing returns boolean
 endfunction
 
 function Trig_Skeletal_Mages_Actions takes nothing returns nothing
-	set udg_tempPoint = GetRandomLocInRect(RectFromCenterSizeBJ(GetUnitLoc(gg_unit_n002_0030), 300.00, 300.00))
 	call CreateNUnitsAtLoc(1, 1966092338, Player(11), udg_tempPoint, bj_UNIT_FACING)
-	call SetUnitAnimation(gg_unit_n002_0030, "attack")
 	call AddSpecialEffectLocBJ(udg_tempPoint, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_n002_0030), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 	if Trig_Skeletal_Mages_Func007C() then
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "move", GetRectCenter(gg_rct_MF_Exit1))
 	else
@@ -4959,91 +3987,25 @@ function Trig_Skeletal_Mages_Actions takes nothing returns nothing
 	endif
 endfunction
 
-function Trig_Skeletal_Mages_Conditions takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_n002_0030) == true) then
-		return false
-	endif
-	return true
-endfunction
-
 function Trig_Skeleton_Spawns_Func001C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_u006_0040) == true) then
-		return false
-	endif
 	return true
 endfunction
 
 function Trig_Skeleton_Spawns_Func002C takes nothing returns boolean
-	if  not (IsUnitAliveBJ(gg_unit_u006_0035) == true) then
-		return false
-	endif
 	return true
 endfunction
 
 function Trig_Skeleton_Spawns_Actions takes nothing returns nothing
 	if Trig_Skeleton_Spawns_Func001C() then
-		set udg_tempPoint = GetRandomLocInRect(RectFromCenterSizeBJ(GetUnitLoc(gg_unit_u006_0040), 300.00, 300.00))
 		call CreateNUnitsAtLoc(1, 1848651827, Player(11), udg_tempPoint, bj_UNIT_FACING)
 		call AddSpecialEffectLocBJ(udg_tempPoint, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-		call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_u006_0040), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetRectCenter(gg_rct_MorbentAttackZone))
 	endif
 	if Trig_Skeleton_Spawns_Func002C() then
-		set udg_tempPoint = GetRandomLocInRect(RectFromCenterSizeBJ(GetUnitLoc(gg_unit_u006_0035), 300.00, 300.00))
 		call CreateNUnitsAtLoc(1, 1966092343, Player(11), udg_tempPoint, bj_UNIT_FACING)
 		call AddSpecialEffectLocBJ(udg_tempPoint, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-		call AddSpecialEffectLocBJ(GetUnitLoc(gg_unit_u006_0035), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 		call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetRectCenter(gg_rct_MorbentAttackZone))
 	endif
-endfunction
-
-function Trig_Soul_Barrage_Func001001 takes nothing returns boolean
-	return udg_MorbenFell_Booleans[4] == false
-endfunction
-
-function Trig_Soul_Barrage_Actions takes nothing returns nothing
-	loop
-		exitwhen Trig_Soul_Barrage_Func001001()
-		call TriggerSleepAction(RMaxBJ(bj_WAIT_FOR_COND_MIN_INTERVAL, 0.20))
-	endloop
-	set udg_MorbenFell_Booleans[5] = true
-	call PauseUnitBJ(true, udg_MF_Ghost)
-	call SetUnitAnimation(udg_MF_Ghost, "channel")
-	call AddSpecialEffectTargetUnitBJ("chest", udg_MF_Ghost, "Abilities\\Spells\\NightElf\\Blink\\BlinkCaster.mdl")
-	call TriggerSleepAction(1.00)
-	set udg_tempPoint = GetUnitLoc(udg_MF_Ghost)
-	call CreateNUnitsAtLoc(1, 1747988533, Player(11), udg_tempPoint, bj_UNIT_FACING)
-	call IssueTargetOrderBJ(GetLastCreatedUnit(), "attack", udg_RedHero)
-	call UnitApplyTimedLifeBJ(7.00, 1112820806, GetLastCreatedUnit())
-	call TriggerSleepAction(7.00)
-	call PauseUnitBJ(false, udg_MF_Ghost)
-	call ResetUnitAnimation(udg_MF_Ghost)
-	call TriggerSleepAction(0.50)
-	set udg_MorbenFell_Booleans[5] = false
-endfunction
-
-function Trig_Spawn_Soul_Actions takes nothing returns nothing
-	call CreateNUnitsAtLoc(1, 1848651829, Player(11), GetRandomLocInRect(gg_rct_GhostSpawn), bj_UNIT_FACING)
-	call IssuePointOrderLocBJ(GetLastCreatedUnit(), "attack", GetUnitLoc(udg_RedHero))
-	call AddSpecialEffectTargetUnitBJ("chest", GetLastCreatedUnit(), "Abilities\\Spells\\Human\\Invisibility\\InvisibilityTarget.mdl")
-endfunction
-
-function Trig_Time_runs_out_Actions takes nothing returns nothing
-	call DisableTrigger(gg_trg_Cauldron_Dies)
-	call TriggerSleepAction(1.50)
-	call CreateNUnitsAtLoc(1, 1966092345, Player(11), GetRectCenter(gg_rct_MorbentFel), bj_UNIT_FACING)
-	set udg_Abom = GetLastCreatedUnit()
-	call AddSpecialEffectTargetUnitBJ("origin", GetLastCreatedUnit(), "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-	call BlzSetSpecialEffectScale(GetLastCreatedEffectBJ(), 3.00)
-	call PauseUnitBJ(true, GetLastCreatedUnit())
-	call SetUnitAnimation(GetLastCreatedUnit(), "stand; 2")
-	call TriggerSleepAction(2.00)
-	call PlayThematicMusicBJ("Sound\\Music\\mp3Music\\Doom.mp3")
-	call IssuePointOrderLocBJ(udg_Abom, "attack", GetUnitLoc(udg_RedHero))
-	call PlaySoundOnUnitBJ(gg_snd_AbominationPissed5, 100., udg_Abom)
-	call PauseUnitBJ(false, udg_Abom)
-	call DestroyTimerDialogBJ(udg_MF_TimerWindow)
-	call EnableTrigger(gg_trg_Zone_Exit)
 endfunction
 
 function Trig_Unstable_Magic_Start_Actions takes nothing returns nothing
@@ -5109,11 +4071,6 @@ endfunction
 function Trig_Volcano_Strike_Func003A takes nothing returns nothing
 	call UnitDamageTargetBJ(GetSpellAbilityUnit(), GetEnumUnit(), 100.00, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
 	call AddSpecialEffectTargetUnitBJ("chest", GetEnumUnit(), "Objects\\Spawnmodels\\Human\\FragmentationShards\\FragBoomSpawn.mdl")
-endfunction
-
-function Trig_Zone_Exit_Actions takes nothing returns nothing
-	call SetUnitPositionLocFacingLocBJ(GetEnteringUnit(), GetRectCenter(gg_rct_MF_Exit_2), GetRectCenter(gg_rct_MorbentAttackZone))
-	call IssuePointOrderLocBJ(GetEnteringUnit(), "attack", GetRectCenter(gg_rct_MorbentAttackZone))
 endfunction
 
 function ZoneTransit_endTransit takes nothing returns nothing
@@ -5279,7 +4236,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 		if SoundDefinition_maxIndex < 32768 then
 			set SoundDefinition_maxIndex = SoundDefinition_maxIndex + 1
 			set this = SoundDefinition_maxIndex
-			set SoundDefinition_typeId[this] = 693
+			set SoundDefinition_typeId[this] = 704
 		else
 			call error("Out of memory: Could not create SoundDefinition.", "when calling error in ")
 			set this = 0
@@ -5287,7 +4244,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 	else
 		set SoundDefinition_firstFree = SoundDefinition_firstFree - 1
 		set this = SoundDefinition_nextFree[SoundDefinition_firstFree]
-		set SoundDefinition_typeId[this] = 693
+		set SoundDefinition_typeId[this] = 704
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5301,7 +4258,7 @@ function alloc_LinkedList takes string stackPos returns integer
 		if LinkedList_maxIndex < 32768 then
 			set LinkedList_maxIndex = LinkedList_maxIndex + 1
 			set this = LinkedList_maxIndex
-			set LinkedList_typeId[this] = 679
+			set LinkedList_typeId[this] = 686
 		else
 			call error("Out of memory: Could not create LinkedList.", "when calling error in ")
 			set this = 0
@@ -5309,7 +4266,7 @@ function alloc_LinkedList takes string stackPos returns integer
 	else
 		set LinkedList_firstFree = LinkedList_firstFree - 1
 		set this = LinkedList_nextFree[LinkedList_firstFree]
-		set LinkedList_typeId[this] = 679
+		set LinkedList_typeId[this] = 686
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5323,7 +4280,7 @@ function alloc_LLEntry takes string stackPos returns integer
 		if LLEntry_maxIndex < 32768 then
 			set LLEntry_maxIndex = LLEntry_maxIndex + 1
 			set this = LLEntry_maxIndex
-			set LLEntry_typeId[this] = 675
+			set LLEntry_typeId[this] = 682
 		else
 			call error("Out of memory: Could not create LLEntry.", "when calling error in ")
 			set this = 0
@@ -5331,7 +4288,7 @@ function alloc_LLEntry takes string stackPos returns integer
 	else
 		set LLEntry_firstFree = LLEntry_firstFree - 1
 		set this = LLEntry_nextFree[LLEntry_firstFree]
-		set LLEntry_typeId[this] = 675
+		set LLEntry_typeId[this] = 682
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5517,7 +4474,7 @@ function alloc_UnitObject takes string stackPos returns integer
 		if ClickableObject_maxIndex < 32768 then
 			set ClickableObject_maxIndex = ClickableObject_maxIndex + 1
 			set this = ClickableObject_maxIndex
-			set ClickableObject_typeId[this] = 646
+			set ClickableObject_typeId[this] = 648
 		else
 			call error("Out of memory: Could not create UnitObject.", "when calling error in ")
 			set this = 0
@@ -5525,7 +4482,7 @@ function alloc_UnitObject takes string stackPos returns integer
 	else
 		set ClickableObject_firstFree = ClickableObject_firstFree - 1
 		set this = ClickableObject_nextFree[ClickableObject_firstFree]
-		set ClickableObject_typeId[this] = 646
+		set ClickableObject_typeId[this] = 648
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5575,7 +4532,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 		if UnitIndex_maxIndex < 32768 then
 			set UnitIndex_maxIndex = UnitIndex_maxIndex + 1
 			set this = UnitIndex_maxIndex
-			set UnitIndex_typeId[this] = 717
+			set UnitIndex_typeId[this] = 729
 		else
 			call error("Out of memory: Could not create UnitIndex.", "when calling error in ")
 			set this = 0
@@ -5583,7 +4540,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 	else
 		set UnitIndex_firstFree = UnitIndex_firstFree - 1
 		set this = UnitIndex_nextFree[UnitIndex_firstFree]
-		set UnitIndex_typeId[this] = 717
+		set UnitIndex_typeId[this] = 729
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6035,7 +4992,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 		if SoundInstance_maxIndex < 32768 then
 			set SoundInstance_maxIndex = SoundInstance_maxIndex + 1
 			set this = SoundInstance_maxIndex
-			set SoundInstance_typeId[this] = 694
+			set SoundInstance_typeId[this] = 705
 		else
 			call error("Out of memory: Could not create SoundInstance.", "when calling error in ")
 			set this = 0
@@ -6043,7 +5000,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 	else
 		set SoundInstance_firstFree = SoundInstance_firstFree - 1
 		set this = SoundInstance_nextFree[SoundInstance_firstFree]
-		set SoundInstance_typeId[this] = 694
+		set SoundInstance_typeId[this] = 705
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6577,7 +5534,7 @@ endfunction
 function Attack_onHit takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_playOnPoint_2(Attack_hitSounds[GetRandomInt(0, 2)], unit_getPos3Real(General_hunter), unit_getPos3Real_return_y, unit_getPos3Real_return_z, "when calling playOnPoint in bear_Attack, line 67")
+	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_playOnPoint_2(Attack_hitSounds[GetRandomInt(0, 2)], unit_getPos3Real(General_hunter), unit_getPos3Real_return_y, unit_getPos3Real_return_z, "when calling playOnPoint in bear_Attack, line 82")
 	set Attack_onCooldown = true
 	call timer_start(Attack_timer_AttackCD, TheBear_currentAttackSpeed, ref_function_Attack_cooldownFinished)
 	call UnitDamageTarget(TheBear_theBear, General_hunter, TheBear_ATTACKDMG * (1. + TheBear_damageInc), false, false, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL, WEAPON_TYPE_WHOKNOWS)
@@ -6590,20 +5547,20 @@ endfunction
 
 function bridge_Attack_onHit takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Attack_onHit("bear_Attack, line 13")
+	call Attack_onHit("bear_Attack, line 109")
 endfunction
 
 function BossEvent_failed_soundDelay takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Fail, "when calling play in BossEvent, line 58")
+	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Fail, "when calling play in BossEvent, line 59")
 	call timer_start(BossEvent_miscTimer, 3., ref_function_bridge_BossEvent_startFade)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_BossEvent_failed_soundDelay takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_failed_soundDelay("BossEvent, line 55")
+	call BossEvent_failed_soundDelay("BossEvent, line 56")
 endfunction
 
 function Fade_onFadeIn takes integer this, code codeToFire returns nothing
@@ -6691,7 +5648,7 @@ function alloc_Fade takes string stackPos returns integer
 		if Fade_maxIndex < 32768 then
 			set Fade_maxIndex = Fade_maxIndex + 1
 			set this = Fade_maxIndex
-			set Fade_typeId[this] = 658
+			set Fade_typeId[this] = 663
 		else
 			call error("Out of memory: Could not create Fade.", "when calling error in ")
 			set this = 0
@@ -6699,7 +5656,7 @@ function alloc_Fade takes string stackPos returns integer
 	else
 		set Fade_firstFree = Fade_firstFree - 1
 		set this = Fade_nextFree[Fade_firstFree]
-		set Fade_typeId[this] = 658
+		set Fade_typeId[this] = 663
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6775,46 +5732,50 @@ function BossEvent_startFade takes string stackPos returns nothing
 	local integer receiver_4
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set receiver = new_Fade("when calling new_Fade in BossEvent, line 46")
-	call dispatch_Fade_FadeAndFilters_Fade_setStartDelay(receiver, 0., "when calling setStartDelay in BossEvent, line 47")
+	set receiver = new_Fade("when calling new_Fade in BossEvent, line 47")
+	call dispatch_Fade_FadeAndFilters_Fade_setStartDelay(receiver, 0., "when calling setStartDelay in BossEvent, line 48")
 	set receiver_2 = receiver
-	call dispatch_Fade_FadeAndFilters_Fade_onFadeOut(receiver_2, ref_function_BossEvent_toShop, "when calling onFadeOut in BossEvent, line 48")
+	call dispatch_Fade_FadeAndFilters_Fade_onFadeOut(receiver_2, ref_function_BossEvent_toShop, "when calling onFadeOut in BossEvent, line 49")
 	set receiver_3 = receiver_2
-	call dispatch_Fade_FadeAndFilters_Fade_onFadeIn(receiver_3, ref_function_BossEvent_inShop, "when calling onFadeIn in BossEvent, line 49")
+	call dispatch_Fade_FadeAndFilters_Fade_onFadeIn(receiver_3, ref_function_BossEvent_inShop, "when calling onFadeIn in BossEvent, line 50")
 	set receiver_4 = receiver_3
-	call dispatch_Fade_FadeAndFilters_Fade_start(receiver_4, FadeAndFilters_FADEOUTIN, "when calling start in BossEvent, line 50")
+	call dispatch_Fade_FadeAndFilters_Fade_start(receiver_4, FadeAndFilters_FADEOUTIN, "when calling start in BossEvent, line 51")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_BossEvent_startFade takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_startFade("BossEvent, line 59")
+	call BossEvent_startFade("BossEvent, line 60")
 endfunction
 
 function bridge_BossEvent_startFade_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_startFade("BossEvent, line 76")
+	call BossEvent_startFade("BossEvent, line 77")
 endfunction
 
 function bridge_BossEvent_startFade_3 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_startFade("BossEvent, line 66")
+	call BossEvent_startFade("BossEvent, line 67")
 endfunction
 
 function BossEvent_win_soundDelay takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Win, "when calling play in BossEvent, line 65")
+	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Win, "when calling play in BossEvent, line 66")
 	call timer_start(BossEvent_miscTimer, 3., ref_function_bridge_BossEvent_startFade_2)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_BossEvent_win_soundDelay takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_win_soundDelay("BossEvent, line 70")
+	call BossEvent_win_soundDelay("BossEvent, line 71")
 endfunction
 
 function ClosureTimers_closure_impl takes integer this returns nothing
+	set ClosureTimers_x = ClosureTimers_x * 2
+endfunction
+
+function ClosureTimers_closure_impl_2 takes integer this returns nothing
 	set ClosureTimers_x = ClosureTimers_x + 50
 endfunction
 
@@ -6827,13 +5788,9 @@ function int_assertEquals takes integer this, integer expected returns nothing
 	endif
 endfunction
 
-function ClosureTimers_closure_impl_2 takes integer this returns nothing
+function ClosureTimers_closure_impl_3 takes integer this returns nothing
 	set ClosureTimers_x = ClosureTimers_x / 2
 	call int_assertEquals(ClosureTimers_x, 250)
-endfunction
-
-function ClosureTimers_closure_impl_3 takes integer this returns nothing
-	set ClosureTimers_x = ClosureTimers_x * 2
 endfunction
 
 function group_destr takes group this returns nothing
@@ -6933,7 +5890,7 @@ function alloc_Closure takes string stackPos returns integer
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this] = 663
+			set ForGroupCallback_typeId[this] = 668
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in ")
 			set this = 0
@@ -6941,7 +5898,7 @@ function alloc_Closure takes string stackPos returns integer
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this] = 663
+		set ForGroupCallback_typeId[this] = 668
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -7013,17 +5970,17 @@ function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call takes integer
 			call error("Called CallbackSingle.ClosureTimers_CallbackSingle_call on invalid object.", "when calling error in ")
 		endif
 	endif
-	if CallbackSingle_typeId[this] <= 640 then
-		if CallbackSingle_typeId[this] <= 639 then
-			if CallbackSingle_typeId[this] <= 638 then
-				call ClosureTimers_closure_impl(this)
+	if CallbackSingle_typeId[this] <= 642 then
+		if CallbackSingle_typeId[this] <= 641 then
+			if CallbackSingle_typeId[this] <= 640 then
+				call ClosureTimers_closure_impl_2(this)
 			else
-				call ClosureTimers_closure_impl_3(this)
+				call ClosureTimers_closure_impl(this)
 			endif
 		else
-			call ClosureTimers_closure_impl_2(this)
+			call ClosureTimers_closure_impl_3(this)
 		endif
-	elseif CallbackSingle_typeId[this] <= 641 then
+	elseif CallbackSingle_typeId[this] <= 643 then
 		call OnUnitEnterLeave_closure_impl_4(this)
 	else
 		call Preloader_closure_impl_2(this, "when calling Preloader_closure_impl in ClosureTimers, line 65")
@@ -8418,7 +7375,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 		if FlameStrike_maxIndex < 32768 then
 			set FlameStrike_maxIndex = FlameStrike_maxIndex + 1
 			set this = FlameStrike_maxIndex
-			set FlameStrike_typeId[this] = 659
+			set FlameStrike_typeId[this] = 664
 		else
 			call error("Out of memory: Could not create FlameStrike.", "when calling error in ")
 			set this = 0
@@ -8426,7 +7383,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 	else
 		set FlameStrike_firstFree = FlameStrike_firstFree - 1
 		set this = FlameStrike_nextFree[FlameStrike_firstFree]
-		set FlameStrike_typeId[this] = 659
+		set FlameStrike_typeId[this] = 664
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -8608,7 +7565,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 		if ExecutableEffect_maxIndex < 32768 then
 			set ExecutableEffect_maxIndex = ExecutableEffect_maxIndex + 1
 			set this = ExecutableEffect_maxIndex
-			set ExecutableEffect_typeId[this] = 657
+			set ExecutableEffect_typeId[this] = 662
 		else
 			call error("Out of memory: Could not create ExecutableEffect.", "when calling error in ")
 			set this = 0
@@ -8616,7 +7573,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 	else
 		set ExecutableEffect_firstFree = ExecutableEffect_firstFree - 1
 		set this = ExecutableEffect_nextFree[ExecutableEffect_firstFree]
-		set ExecutableEffect_typeId[this] = 657
+		set ExecutableEffect_typeId[this] = 662
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -8764,7 +7721,7 @@ function alloc_Mechanic takes string stackPos returns integer
 		if ClickableObject_maxIndex < 32768 then
 			set ClickableObject_maxIndex = ClickableObject_maxIndex + 1
 			set this = ClickableObject_maxIndex
-			set ClickableObject_typeId[this] = 645
+			set ClickableObject_typeId[this] = 647
 		else
 			call error("Out of memory: Could not create Mechanic.", "when calling error in ")
 			set this = 0
@@ -8772,7 +7729,7 @@ function alloc_Mechanic takes string stackPos returns integer
 	else
 		set ClickableObject_firstFree = ClickableObject_firstFree - 1
 		set this = ClickableObject_nextFree[ClickableObject_firstFree]
-		set ClickableObject_typeId[this] = 645
+		set ClickableObject_typeId[this] = 647
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9012,7 +7969,7 @@ function dispatch_HashMap_HashMap_HashMap_put takes integer this, integer key, i
 			call error("Called HashMap.HashMap_HashMap_put on invalid object.", "when calling error in ")
 		endif
 	endif
-	if Table_typeId[this] <= 707 then
+	if Table_typeId[this] <= 718 then
 		call HashMap_put(this, key, value, "when calling put in HashMap, line 15")
 	else
 		call IterableMap_put(this, key, value, "when calling put in HashMap, line 15")
@@ -9429,7 +8386,7 @@ function MagicCrystal_initiateAbsorb takes integer this, string stackPos returns
 	call unit_pause(tm_Main_theMonster)
 	call unit_setPathing(tm_Main_theMonster, true)
 	call unit_setMoveSpeed(tm_Main_theMonster, MagicCrystal_standardMoveSpeed)
-	call timer_setData(MagicCrystal_runTimer1, this, "when calling setData in tm_MagicCrystal, line 346")
+	call timer_setData(MagicCrystal_runTimer1, this, "when calling setData in tm_MagicCrystal, line 348")
 	call timer_start(MagicCrystal_runTimer1, 2.0, ref_function_bridge_MagicCrystal_initiateAbsorbDelay1)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -9444,7 +8401,7 @@ function dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_initiateAbsorb takes
 			call error("Called MagicCrystal.tm_MagicCrystal_MagicCrystal_initiateAbsorb on invalid object.", "when calling error in ")
 		endif
 	endif
-	call MagicCrystal_initiateAbsorb(this, "when calling initiateAbsorb in tm_MagicCrystal, line 340")
+	call MagicCrystal_initiateAbsorb(this, "when calling initiateAbsorb in tm_MagicCrystal, line 342")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9476,7 +8433,7 @@ function MagicCrystal_checkDistance takes string stackPos returns nothing
 	local unit temp_8
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = MagicCrystal_crystals[timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 352")]
+	set instance = MagicCrystal_crystals[timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 354")]
 	set bossFacing = unit_getFacing(tm_Main_theMonster)
 	set temp = unit_getPos(tm_Main_theMonster)
 	set temp_2 = unit_getPos_return_y
@@ -9491,7 +8448,7 @@ function MagicCrystal_checkDistance takes string stackPos returns nothing
 		if difference < 10. then
 			call unit_issueImmediateOrder(tm_Main_theMonster, "stop")
 			call timer_pause(MagicCrystal_runTimer1)
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_initiateAbsorb(instance, "when calling initiateAbsorb in tm_MagicCrystal, line 363")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_initiateAbsorb(instance, "when calling initiateAbsorb in tm_MagicCrystal, line 365")
 		else
 			set temp_7 = tm_Main_theMonster
 			set temp_5 = unit_getPos(tm_Main_theMonster)
@@ -9511,7 +8468,7 @@ endfunction
 
 function bridge_MagicCrystal_checkDistance takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_checkDistance("tm_MagicCrystal, line 382")
+	call MagicCrystal_checkDistance("tm_MagicCrystal, line 384")
 endfunction
 
 function ClickableObject_setUnitSfx takes integer this, integer unitType, real facing returns unit
@@ -9571,18 +8528,18 @@ function MagicCrystal_createBossInfo takes string stackPos returns nothing
 	local effect receiver_16
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in tm_MagicCrystal, line 410")
-	set receiver = new_Mechanic("Magic Crystal", 11520., 14750., "when calling new_Mechanic in tm_MagicCrystal, line 412")
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver, Sounds_arcaneVaultWhat1, "when calling setSoundOnClick in tm_MagicCrystal, line 413")
+	call timer_release(GetExpiredTimer(), "when calling release in tm_MagicCrystal, line 412")
+	set receiver = new_Mechanic("Magic Crystal", 11520., 14750., "when calling new_Mechanic in tm_MagicCrystal, line 414")
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver, Sounds_arcaneVaultWhat1, "when calling setSoundOnClick in tm_MagicCrystal, line 415")
 	set receiver_2 = receiver
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_2, "" + "Two Magic Crystals are present during the fight.\n" + "When The Monster reaches " + int_toString(R2I(MagicCrystal_activationHp[0] * 100.)) + "% and " + int_toString(R2I(MagicCrystal_activationHp[1] * 100.)) + "% HP\n" + "it will attempt to consume a crystal. If the crystal\n" + "is not destroyed within " + int_toString(R2I(MagicCrystal_ABSORB_DUR)) + " seconds, The Monster\n" + "gain unstoppable powers. During its consumption the\n" + "crystal will damage the Hunter every " + int_toString(R2I(MagicCrystal_LIGHTNING_FREQ)) + " seconds, dealing " + int_toString(R2I(MagicCrystal_LIGHTNING_DMG)) + " damage.", "when calling setDescription in tm_MagicCrystal, line 414")
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_2, "" + "Two Magic Crystals are present during the fight.\n" + "When The Monster reaches " + int_toString(R2I(MagicCrystal_activationHp[0] * 100.)) + "% and " + int_toString(R2I(MagicCrystal_activationHp[1] * 100.)) + "% HP\n" + "it will attempt to consume a crystal. If the crystal\n" + "is not destroyed within " + int_toString(R2I(MagicCrystal_ABSORB_DUR)) + " seconds, The Monster\n" + "gain unstoppable powers. During its consumption the\n" + "crystal will damage the Hunter every " + int_toString(R2I(MagicCrystal_LIGHTNING_FREQ)) + " seconds, dealing " + int_toString(R2I(MagicCrystal_LIGHTNING_DMG)) + " damage.", "when calling setDescription in tm_MagicCrystal, line 416")
 	set obj = receiver_2
 	call unit_setMaxHP(ClickableObject_object[obj], MagicCrystal_CRYSTAL_HP, true)
-	set receiver_3 = dispatch_ClickableObject_BossInformation_ClickableObject_setUnitSfx(obj, MagicCrystal_sfxId, 180., "when calling setUnitSfx in tm_MagicCrystal, line 424")
+	set receiver_3 = dispatch_ClickableObject_BossInformation_ClickableObject_setUnitSfx(obj, MagicCrystal_sfxId, 180., "when calling setUnitSfx in tm_MagicCrystal, line 426")
 	call unit_setVertexColor(receiver_3, 150, 255, 150, 255)
 	set receiver_4 = receiver_3
 	call unit_setTimeScale(receiver_4, 1.5)
-	set receiver_5 = dispatch_ClickableObject_BossInformation_ClickableObject_setSfx(obj, "units\\nightelf\\Wisp\\Wisp.mdl", 200., "when calling setSfx in tm_MagicCrystal, line 428")
+	set receiver_5 = dispatch_ClickableObject_BossInformation_ClickableObject_setSfx(obj, "units\\nightelf\\Wisp\\Wisp.mdl", 200., "when calling setSfx in tm_MagicCrystal, line 430")
 	call effect_setColorByPlayer(receiver_5, Player(22))
 	set receiver_6 = receiver_5
 	call effect_setColor_2(receiver_6, 150, 200, 255, 100)
@@ -9591,16 +8548,16 @@ function MagicCrystal_createBossInfo takes string stackPos returns nothing
 	set receiver_8 = receiver_7
 	call effect_setTimeScale(receiver_8, 0.25)
 	set ClickableObject_objType[obj] = "Spell"
-	set receiver_9 = new_Mechanic("Lesser Magic Crystal", 11570., 14880., "when calling new_Mechanic in tm_MagicCrystal, line 437")
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver_9, Sounds_arcaneVaultWhat1, "when calling setSoundOnClick in tm_MagicCrystal, line 438")
+	set receiver_9 = new_Mechanic("Lesser Magic Crystal", 11570., 14880., "when calling new_Mechanic in tm_MagicCrystal, line 439")
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver_9, Sounds_arcaneVaultWhat1, "when calling setSoundOnClick in tm_MagicCrystal, line 440")
 	set receiver_10 = receiver_9
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_10, "" + "", "when calling setDescription in tm_MagicCrystal, line 439")
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_10, "" + "", "when calling setDescription in tm_MagicCrystal, line 441")
 	set obj = receiver_10
-	set receiver_11 = dispatch_ClickableObject_BossInformation_ClickableObject_setUnitSfx(obj, MagicCrystal_sfxId, 180., "when calling setUnitSfx in tm_MagicCrystal, line 442")
+	set receiver_11 = dispatch_ClickableObject_BossInformation_ClickableObject_setUnitSfx(obj, MagicCrystal_sfxId, 180., "when calling setUnitSfx in tm_MagicCrystal, line 444")
 	call unit_setVertexColor(receiver_11, 255, 255, 255, 255)
 	set receiver_12 = receiver_11
 	call unit_setTimeScale(receiver_12, 1.5)
-	set receiver_13 = dispatch_ClickableObject_BossInformation_ClickableObject_setSfx(obj, "units\\nightelf\\Wisp\\Wisp.mdl", 200., "when calling setSfx in tm_MagicCrystal, line 446")
+	set receiver_13 = dispatch_ClickableObject_BossInformation_ClickableObject_setSfx(obj, "units\\nightelf\\Wisp\\Wisp.mdl", 200., "when calling setSfx in tm_MagicCrystal, line 448")
 	call effect_setColorByPlayer(receiver_13, Player(2))
 	set receiver_14 = receiver_13
 	call effect_setColor_2(receiver_14, 150, 200, 255, 100)
@@ -9626,7 +8583,7 @@ endfunction
 
 function bridge_MagicCrystal_createBossInfo takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_createBossInfo("tm_MagicCrystal, line 15")
+	call MagicCrystal_createBossInfo("tm_MagicCrystal, line 16")
 endfunction
 
 function MagicCrystal_death takes integer this returns nothing
@@ -9659,7 +8616,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 		if EffectDuration_maxIndex < 32768 then
 			set EffectDuration_maxIndex = EffectDuration_maxIndex + 1
 			set this = EffectDuration_maxIndex
-			set EffectDuration_typeId[this] = 655
+			set EffectDuration_typeId[this] = 660
 		else
 			call error("Out of memory: Could not create EffectDuration.", "when calling error in ")
 			set this = 0
@@ -9667,7 +8624,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 	else
 		set EffectDuration_firstFree = EffectDuration_firstFree - 1
 		set this = EffectDuration_nextFree[EffectDuration_firstFree]
-		set EffectDuration_typeId[this] = 655
+		set EffectDuration_typeId[this] = 660
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9733,12 +8690,12 @@ function MagicCrystal_releaseBoss takes integer this, string stackPos returns no
 	if MagicCrystal_index[this] == 2 then
 		call unit_setAnimation_2(tm_Main_theMonster, "attack")
 		call unit_queueAnimation(tm_Main_theMonster, "stand")
-		call addEffectDuration(widget_addEffect(tm_Main_theMonster, Abilities_forkedLightningTarget, "origin"), 3., "when calling addEffectDuration in tm_MagicCrystal, line 234")
+		call addEffectDuration(widget_addEffect(tm_Main_theMonster, Abilities_forkedLightningTarget, "origin"), 3., "when calling addEffectDuration in tm_MagicCrystal, line 236")
 		set receiver = widget_addEffect(tm_Main_theMonster, Abilities_farseerMissile, "origin")
 		call effect_destr(receiver)
 		set temp = Abilities_forkedLightningTarget
 		set tempIndex = this
-		set receiver_2 = addEffectDuration(addEffect_2(temp, vec2_withTerrainZ(MagicCrystal_pos[tempIndex], MagicCrystal_pos_2[tempIndex], 50.), vec2_withTerrainZ_return_y, vec2_withTerrainZ_return_z), 3., "when calling addEffectDuration in tm_MagicCrystal, line 238")
+		set receiver_2 = addEffectDuration(addEffect_2(temp, vec2_withTerrainZ(MagicCrystal_pos[tempIndex], MagicCrystal_pos_2[tempIndex], 50.), vec2_withTerrainZ_return_y, vec2_withTerrainZ_return_z), 3., "when calling addEffectDuration in tm_MagicCrystal, line 240")
 		call effect_setScale(receiver_2, 1.5)
 		set temp_2 = Abilities_farseerMissile
 		set tempIndex_2 = this
@@ -9757,9 +8714,9 @@ function MagicCrystal_releaseBoss takes integer this, string stackPos returns no
 		call unit_setInvulnerable(tm_Main_theMonster, true)
 		call unit_setAnimation_2(tm_Main_theMonster, "attack")
 		call unit_queueAnimation(tm_Main_theMonster, "stand")
-		call addEffectDuration(widget_addEffect(tm_Main_theMonster, "Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", "chest"), 3.0, "when calling addEffectDuration in tm_MagicCrystal, line 260")
+		call addEffectDuration(widget_addEffect(tm_Main_theMonster, "Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", "chest"), 3.0, "when calling addEffectDuration in tm_MagicCrystal, line 262")
 		set tempIndex_3 = this
-		call addEffectDuration(addEffect_2("Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", vec2_withTerrainZ(MagicCrystal_pos[tempIndex_3], MagicCrystal_pos_2[tempIndex_3], 50.), vec2_withTerrainZ_return_y, vec2_withTerrainZ_return_z), 3.0, "when calling addEffectDuration in tm_MagicCrystal, line 261")
+		call addEffectDuration(addEffect_2("Abilities\\Spells\\Human\\ManaFlare\\ManaFlareBoltImpact.mdl", vec2_withTerrainZ(MagicCrystal_pos[tempIndex_3], MagicCrystal_pos_2[tempIndex_3], 50.), vec2_withTerrainZ_return_y, vec2_withTerrainZ_return_z), 3.0, "when calling addEffectDuration in tm_MagicCrystal, line 263")
 		call timer_start(MagicCrystal_runTimer1, 2.0, ref_function_MagicCrystal_releaseBossDelay1)
 		call print("Boss has absorbed!")
 	else
@@ -9795,7 +8752,7 @@ function dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss takes in
 			call error("Called MagicCrystal.tm_MagicCrystal_MagicCrystal_releaseBoss on invalid object.", "when calling error in ")
 		endif
 	endif
-	call MagicCrystal_releaseBoss(this, "when calling releaseBoss in tm_MagicCrystal, line 223")
+	call MagicCrystal_releaseBoss(this, "when calling releaseBoss in tm_MagicCrystal, line 225")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9806,14 +8763,14 @@ function MagicCrystal_dies takes string stackPos returns nothing
 	set u = GetDyingUnit()
 	if unit_getTypeId(u) == MagicCrystal_placeholderId then
 		if u == MagicCrystal_placeholder[MagicCrystal_crystals[0]] then
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[0], "when calling death in tm_MagicCrystal, line 181")
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[0], "when calling releaseBoss in tm_MagicCrystal, line 182")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[0], "when calling death in tm_MagicCrystal, line 183")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[0], "when calling releaseBoss in tm_MagicCrystal, line 184")
 		elseif u == MagicCrystal_placeholder[MagicCrystal_crystals[1]] then
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[1], "when calling death in tm_MagicCrystal, line 184")
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[1], "when calling releaseBoss in tm_MagicCrystal, line 185")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[1], "when calling death in tm_MagicCrystal, line 186")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[1], "when calling releaseBoss in tm_MagicCrystal, line 187")
 		elseif u == MagicCrystal_placeholder[MagicCrystal_crystals[2]] then
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[2], "when calling death in tm_MagicCrystal, line 188")
-			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[2], "when calling releaseBoss in tm_MagicCrystal, line 189")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(MagicCrystal_crystals[2], "when calling death in tm_MagicCrystal, line 190")
+			call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(MagicCrystal_crystals[2], "when calling releaseBoss in tm_MagicCrystal, line 191")
 		else
 			call print("ERROR: A CRYSTAL DIED, BUT IS NOT AN INSTANCE!")
 		endif
@@ -9824,7 +8781,7 @@ endfunction
 
 function bridge_MagicCrystal_dies takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_dies("tm_MagicCrystal, line 11")
+	call MagicCrystal_dies("tm_MagicCrystal, line 12")
 endfunction
 
 function unit_kill takes unit this returns nothing
@@ -9835,13 +8792,13 @@ function MagicCrystal_finishAbsorb takes string stackPos returns nothing
 	local integer instance
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 280")
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 282")
 	call print("Absorb  has finished")
 	set tm_Main_bossHasAbsorbed = true
 	if MagicCrystal_index[instance] == 2 then
 		set tm_Main_bossIsEnraged = true
-		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(instance, "when calling death in tm_MagicCrystal, line 287")
-		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(instance, "when calling releaseBoss in tm_MagicCrystal, line 288")
+		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_death(instance, "when calling death in tm_MagicCrystal, line 289")
+		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_releaseBoss(instance, "when calling releaseBoss in tm_MagicCrystal, line 290")
 	elseif MagicCrystal_index[instance] == 0 or MagicCrystal_index[instance] == 1 then
 		call unit_kill(MagicCrystal_placeholder[instance])
 	endif
@@ -9850,20 +8807,20 @@ endfunction
 
 function bridge_MagicCrystal_finishAbsorb takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 309")
+	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 311")
 endfunction
 
 function bridge_MagicCrystal_finishAbsorb_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 328")
+	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 330")
 endfunction
 
 function MagicCrystal_loopSound takes string stackPos returns nothing
 	local integer instance
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 298")
-	call sound_setVolume(SoundInstance_snd[dispatch_SoundDefinition_SoundUtils_SoundDefinition_playOnPoint_2(MagicCrystal_sound_AbsorbCrystal, unit_getPos3Fly(MagicCrystal_placeholder[instance]), unit_getPos3Fly_return_y, unit_getPos3Fly_return_z, "when calling playOnPoint in tm_MagicCrystal, line 299")], 75)
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 300")
+	call sound_setVolume(SoundInstance_snd[dispatch_SoundDefinition_SoundUtils_SoundDefinition_playOnPoint_2(MagicCrystal_sound_AbsorbCrystal, unit_getPos3Fly(MagicCrystal_placeholder[instance]), unit_getPos3Fly_return_y, unit_getPos3Fly_return_z, "when calling playOnPoint in tm_MagicCrystal, line 301")], 75)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -9901,7 +8858,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 		if UnitLightning_maxIndex < 32768 then
 			set UnitLightning_maxIndex = UnitLightning_maxIndex + 1
 			set this = UnitLightning_maxIndex
-			set UnitLightning_typeId[this] = 718
+			set UnitLightning_typeId[this] = 730
 		else
 			call error("Out of memory: Could not create UnitLightning.", "when calling error in ")
 			set this = 0
@@ -9909,7 +8866,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 	else
 		set UnitLightning_firstFree = UnitLightning_firstFree - 1
 		set this = UnitLightning_nextFree[UnitLightning_firstFree]
-		set UnitLightning_typeId[this] = 718
+		set UnitLightning_typeId[this] = 730
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9973,7 +8930,7 @@ function MagicCrystal_initiateAbsorbDelay1 takes string stackPos returns nothing
 	local integer temp_4
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 304")
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 306")
 	if MagicCrystal_index[instance] == 2 then
 		call timer_start(MagicCrystal_runTimer1, 0., ref_function_bridge_MagicCrystal_finishAbsorb)
 	elseif MagicCrystal_index[instance] == 0 or MagicCrystal_index[instance] == 1 then
@@ -9986,25 +8943,25 @@ function MagicCrystal_initiateAbsorbDelay1 takes string stackPos returns nothing
 		set receiver_2 = receiver
 		call unit_setMaxHP(receiver_2, MagicCrystal_CRYSTAL_HP, true)
 		set MagicCrystal_placeholder[temp] = receiver_2
-		set receiver_3 = new_UnitLightning(MagicCrystal_placeholder[instance], tm_Main_theMonster, MagicCrystal_ABSORB_DUR, "MBUR", "when calling new_UnitLightning in tm_MagicCrystal, line 316")
-		call dispatch_UnitLightning_UnitLightning_UnitLightning_setColor(receiver_3, 255, 255, 255, "when calling setColor in tm_MagicCrystal, line 317")
+		set receiver_3 = new_UnitLightning(MagicCrystal_placeholder[instance], tm_Main_theMonster, MagicCrystal_ABSORB_DUR, "MBUR", "when calling new_UnitLightning in tm_MagicCrystal, line 318")
+		call dispatch_UnitLightning_UnitLightning_UnitLightning_setColor(receiver_3, 255, 255, 255, "when calling setColor in tm_MagicCrystal, line 319")
 		set receiver_4 = addEffect_2("units\\nightelf\\Wisp\\Wisp.mdl", unit_getX(tm_Main_theMonster), unit_getY(tm_Main_theMonster), unit_getLocalZ(tm_Main_theMonster) - 200.)
 		call effect_setColorByPlayer(receiver_4, Player(22))
 		set receiver_5 = receiver_4
 		call effect_setScale(receiver_5, 1.5)
 		set MagicCrystal_absorbSFX[0] = receiver_5
 		set MagicCrystal_absorbSFX[1] = widget_addEffect(tm_Main_theMonster, "Abilities\\Spells\\Other\\Drain\\ManaDrainTarget.mdl", "chest")
-		call timer_setData(MagicCrystal_runTimer1, instance, "when calling setData in tm_MagicCrystal, line 324")
-		call timer_setData(MagicCrystal_runTimer2, instance, "when calling setData in tm_MagicCrystal, line 325")
-		call timer_setData(MagicCrystal_runTimer3, instance, "when calling setData in tm_MagicCrystal, line 326")
+		call timer_setData(MagicCrystal_runTimer1, instance, "when calling setData in tm_MagicCrystal, line 326")
+		call timer_setData(MagicCrystal_runTimer2, instance, "when calling setData in tm_MagicCrystal, line 327")
+		call timer_setData(MagicCrystal_runTimer3, instance, "when calling setData in tm_MagicCrystal, line 328")
 		call timer_start(MagicCrystal_runTimer1, MagicCrystal_ABSORB_DUR, ref_function_bridge_MagicCrystal_finishAbsorb_2)
-		call MagicCrystal_loopSound("when calling loopSound in tm_MagicCrystal, line 329")
+		call MagicCrystal_loopSound("when calling loopSound in tm_MagicCrystal, line 331")
 		call timer_startPeriodic(MagicCrystal_runTimer2, 1.65, ref_function_bridge_MagicCrystal_loopSound)
 		call MagicCrystal_animation()
 		call timer_startPeriodic(MagicCrystal_runTimer3, 1.1, ref_function_MagicCrystal_animation)
 		set temp_2 = instance
-		set receiver_6 = getTimer("when calling getTimer in tm_MagicCrystal, line 334")
-		call timer_setData(receiver_6, instance, "when calling setData in tm_MagicCrystal, line 335")
+		set receiver_6 = getTimer("when calling getTimer in tm_MagicCrystal, line 336")
+		call timer_setData(receiver_6, instance, "when calling setData in tm_MagicCrystal, line 337")
 		set MagicCrystal_lightningTimer[temp_2] = receiver_6
 		call timer_startPeriodic(MagicCrystal_lightningTimer[instance], MagicCrystal_LIGHTNING_FREQ, ref_function_bridge_MagicCrystal_lightning_Fire)
 	endif
@@ -10019,7 +8976,7 @@ endfunction
 
 function bridge_MagicCrystal_initiateAbsorbDelay1 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_initiateAbsorbDelay1("tm_MagicCrystal, line 347")
+	call MagicCrystal_initiateAbsorbDelay1("tm_MagicCrystal, line 349")
 endfunction
 
 function MagicCrystal_lightning_Fire takes string stackPos returns nothing
@@ -10033,12 +8990,12 @@ function MagicCrystal_lightning_Fire takes string stackPos returns nothing
 	local effect receiver_7
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 139")
-	set receiver = new_UnitLightning(MagicCrystal_placeholder[instance], General_hunter, 1., "FORK", "when calling new_UnitLightning in tm_MagicCrystal, line 141")
-	call dispatch_UnitLightning_UnitLightning_UnitLightning_setColor(receiver, 150, 255, 150, "when calling setColor in tm_MagicCrystal, line 142")
-	set receiver_2 = addEffectDuration(widget_addEffect(MagicCrystal_placeholder[instance], "Abilities\\Spells\\NightElf\\Blink\\BlinkTarget.mdl", "chest"), 2.0, "when calling addEffectDuration in tm_MagicCrystal, line 144")
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in tm_MagicCrystal, line 141")
+	set receiver = new_UnitLightning(MagicCrystal_placeholder[instance], General_hunter, 1., "FORK", "when calling new_UnitLightning in tm_MagicCrystal, line 143")
+	call dispatch_UnitLightning_UnitLightning_UnitLightning_setColor(receiver, 150, 255, 150, "when calling setColor in tm_MagicCrystal, line 144")
+	set receiver_2 = addEffectDuration(widget_addEffect(MagicCrystal_placeholder[instance], "Abilities\\Spells\\NightElf\\Blink\\BlinkTarget.mdl", "chest"), 2.0, "when calling addEffectDuration in tm_MagicCrystal, line 146")
 	call effect_setColor(receiver_2, 100, 255, 0)
-	set receiver_3 = addEffectDuration(widget_addEffect(General_hunter, "Abilities\\Spells\\NightElf\\Blink\\BlinkCaster.mdl", "origin"), 2.0, "when calling addEffectDuration in tm_MagicCrystal, line 146")
+	set receiver_3 = addEffectDuration(widget_addEffect(General_hunter, "Abilities\\Spells\\NightElf\\Blink\\BlinkCaster.mdl", "origin"), 2.0, "when calling addEffectDuration in tm_MagicCrystal, line 148")
 	call effect_setColor(receiver_3, 100, 255, 0)
 	set receiver_4 = widget_addEffect(General_hunter, "Abilities\\Weapons\\FarseerMissile\\FarseerMissile.mdl", "chest")
 	call effect_setColor(receiver_4, 100, 255, 0)
@@ -10060,12 +9017,12 @@ endfunction
 
 function bridge_MagicCrystal_lightning_Fire takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_lightning_Fire("tm_MagicCrystal, line 336")
+	call MagicCrystal_lightning_Fire("tm_MagicCrystal, line 338")
 endfunction
 
 function bridge_MagicCrystal_loopSound takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_loopSound("tm_MagicCrystal, line 330")
+	call MagicCrystal_loopSound("tm_MagicCrystal, line 332")
 endfunction
 
 function RegisterEvents_closure_impl takes string stackPos returns boolean
@@ -10160,12 +9117,12 @@ endfunction
 
 function bridge_SoundDefinition_playSound takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call SoundDefinition_playSound("SoundUtils, line 118")
+	call SoundDefinition_playSound("SoundUtils, line 90")
 endfunction
 
 function bridge_SoundDefinition_playSound_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call SoundDefinition_playSound("SoundUtils, line 90")
+	call SoundDefinition_playSound("SoundUtils, line 118")
 endfunction
 
 function LinkedList_add_1 takes integer this, integer elems_0, string stackPos returns nothing
@@ -10318,8 +9275,8 @@ endfunction
 function Attack_deactivate takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(Attack_timer_AttackCD, "when calling release in bear_Attack, line 41")
-	call timer_release(Attack_timer_UpdateMove, "when calling release in bear_Attack, line 42")
+	call timer_release(Attack_timer_AttackCD, "when calling release in bear_Attack, line 105")
+	call timer_release(Attack_timer_UpdateMove, "when calling release in bear_Attack, line 106")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10332,9 +9289,9 @@ function Bleed_deactivate takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if Bleed_ENABLED then
 		call texttag_destr(Bleed_text)
-		call timer_release(Bleed_timer_Damage, "when calling release in bear_Bleed, line 70")
-		call timer_release(Bleed_timer_UpdateText, "when calling release in bear_Bleed, line 71")
-		set Bleed_timer_Duration = getTimer("when calling getTimer in bear_Bleed, line 72")
+		call timer_release(Bleed_timer_Damage, "when calling release in bear_Bleed, line 75")
+		call timer_release(Bleed_timer_UpdateText, "when calling release in bear_Bleed, line 76")
+		set Bleed_timer_Duration = getTimer("when calling getTimer in bear_Bleed, line 77")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -10381,9 +9338,9 @@ function Shockwave_deactivate takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if Shockwave_ENABLED then
-		call timer_release(Shockwave_timer_DmgTimer, "when calling release in bear_Shockwave, line 170")
-		call timer_release(Shockwave_timer_Status, "when calling release in bear_Shockwave, line 171")
-		call timer_release(Shockwave_timer_Cooldown, "when calling release in bear_Shockwave, line 172")
+		call timer_release(Shockwave_timer_DmgTimer, "when calling release in bear_Shockwave, line 172")
+		call timer_release(Shockwave_timer_Status, "when calling release in bear_Shockwave, line 173")
+		call timer_release(Shockwave_timer_Cooldown, "when calling release in bear_Shockwave, line 174")
 		call group_destr(Shockwave_targetsHit)
 		call group_destr(Shockwave_tempGroup)
 	endif
@@ -10398,23 +9355,25 @@ function TheBear_clearEvent takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call unit_remove(TheBear_theBear)
+	call timer_release(TheBear_mainLoopTimer, "when calling release in bear_Main, line 191")
+	call timer_release(TheBear_idleDelayTimer, "when calling release in bear_Main, line 192")
 	call trigger_disable(TheBear_trg_Death)
-	call Attack_deactivate("when calling deactivate in bear_Main, line 108")
-	call Bleed_deactivate("when calling deactivate in bear_Main, line 109")
-	call Shockwave_deactivate("when calling deactivate in bear_Main, line 110")
-	call Frenzy_deactivate("when calling deactivate in bear_Main, line 111")
-	call Charge_deactivate("when calling deactivate in bear_Main, line 112")
+	call Attack_deactivate("when calling deactivate in bear_Main, line 194")
+	call Bleed_deactivate("when calling deactivate in bear_Main, line 195")
+	call Shockwave_deactivate("when calling deactivate in bear_Main, line 196")
+	call Frenzy_deactivate("when calling deactivate in bear_Main, line 197")
+	call Charge_deactivate("when calling deactivate in bear_Main, line 198")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_TheBear_clearEvent takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 141")
+	call TheBear_clearEvent("bear_Main, line 137")
 endfunction
 
 function bridge_TheBear_clearEvent_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 159")
+	call TheBear_clearEvent("bear_Main, line 119")
 endfunction
 
 function Fade_setEndDelay takes integer this, real duration returns nothing
@@ -10449,16 +9408,16 @@ function BossEvent_initiate takes code onInit, code onFight, string stackPos ret
 		set BossEvent_codeOnInit = onInit
 		call stopMusic()
 		call PlaySound(Sounds_questNew)
-		set receiver = new_Fade("when calling new_Fade in BossEvent, line 97")
-		call dispatch_Fade_FadeAndFilters_Fade_onFadeOut(receiver, ref_function_BossEvent_onFade, "when calling onFadeOut in BossEvent, line 98")
+		set receiver = new_Fade("when calling new_Fade in BossEvent, line 98")
+		call dispatch_Fade_FadeAndFilters_Fade_onFadeOut(receiver, ref_function_BossEvent_onFade, "when calling onFadeOut in BossEvent, line 99")
 		set receiver_2 = receiver
-		call dispatch_Fade_FadeAndFilters_Fade_onFadeIn(receiver_2, onFight, "when calling onFadeIn in BossEvent, line 99")
+		call dispatch_Fade_FadeAndFilters_Fade_onFadeIn(receiver_2, onFight, "when calling onFadeIn in BossEvent, line 100")
 		set receiver_3 = receiver_2
-		call dispatch_Fade_FadeAndFilters_Fade_setEndDelay(receiver_3, 2., "when calling setEndDelay in BossEvent, line 100")
+		call dispatch_Fade_FadeAndFilters_Fade_setEndDelay(receiver_3, 2., "when calling setEndDelay in BossEvent, line 101")
 		set receiver_4 = receiver_3
-		call dispatch_Fade_FadeAndFilters_Fade_setStartDelay(receiver_4, 3., "when calling setStartDelay in BossEvent, line 101")
+		call dispatch_Fade_FadeAndFilters_Fade_setStartDelay(receiver_4, 3., "when calling setStartDelay in BossEvent, line 102")
 		set receiver_5 = receiver_4
-		call dispatch_Fade_FadeAndFilters_Fade_start(receiver_5, FadeAndFilters_FADEOUTIN, "when calling start in BossEvent, line 102")
+		call dispatch_Fade_FadeAndFilters_Fade_start(receiver_5, FadeAndFilters_FADEOUTIN, "when calling start in BossEvent, line 103")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -10466,21 +9425,20 @@ endfunction
 function TheBear_initEvent takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call BossEvent_initiate(ref_function_bridge_TheBear_onEventInit, ref_function_TheBear_initFight, "when calling initiate in bear_Main, line 205")
+	call BossEvent_initiate(ref_function_bridge_TheBear_onEventInit, ref_function_TheBear_initFight, "when calling initiate in bear_Main, line 184")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return false
 endfunction
 
 function bridge_TheBear_initEvent takes nothing returns boolean
 	set wurst_stack_depth = 0
-	return TheBear_initEvent("bear_Main, line 119")
+	return TheBear_initEvent("bear_Main, line 204")
 endfunction
 
 function Attack_start takes nothing returns nothing
 	if unit_getCurrentOrder(TheBear_theBear) != Orders_fingerofdeath then
 		if vec2_distanceTo(unit_getPos(TheBear_theBear), unit_getPos_return_y, unit_getPos(General_hunter), unit_getPos_return_y) <= Attack_ATTACKRANGE then
 			if  not Attack_onCooldown then
-				call print("Ordering finger of death")
 				call unit_issueTargetOrderById(TheBear_theBear, Orders_fingerofdeath, General_hunter)
 			elseif Attack_updateMove then
 				call unit_setFacing(TheBear_theBear, vec2_angleTo(unit_getPos(TheBear_theBear), unit_getPos_return_y, unit_getPos(General_hunter), unit_getPos_return_y))
@@ -10569,7 +9527,7 @@ function TheBear_mainLoop takes string stackPos returns nothing
 		if Charge_isReady and ( not Frenzy_isActive) then
 			call Charge_start()
 		elseif Frenzy_isReady then
-			call Frenzy_start("when calling start in bear_Main, line 73")
+			call Frenzy_start("when calling start in bear_Main, line 64")
 		elseif Shockwave_ENABLED and ( not Frenzy_isActive) and Shockwave_isReady and ( not Shockwave_delayIsRunning) and vec2_distanceTo(unit_getPos(TheBear_theBear), unit_getPos_return_y, unit_getPos(General_hunter), unit_getPos_return_y) > Shockwave_MIN_DIST then
 			if Shockwave_delayHasRun then
 				call Shockwave_start()
@@ -10583,7 +9541,7 @@ function TheBear_mainLoop takes string stackPos returns nothing
 		if Charge_isReady and ( not Frenzy_isActive) then
 			call Charge_start()
 		elseif Frenzy_isReady then
-			call Frenzy_start("when calling start in bear_Main, line 89")
+			call Frenzy_start("when calling start in bear_Main, line 80")
 		elseif Shockwave_ENABLED and ( not Frenzy_isActive) and Shockwave_isReady and ( not Shockwave_delayIsRunning) and vec2_distanceTo(unit_getPos(TheBear_theBear), unit_getPos_return_y, unit_getPos(General_hunter), unit_getPos_return_y) > Shockwave_MIN_DIST then
 			if Shockwave_delayHasRun then
 				call Shockwave_start()
@@ -10601,14 +9559,14 @@ endfunction
 
 function bridge_TheBear_mainLoop takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_mainLoop("bear_Main, line 172")
+	call TheBear_mainLoop("bear_Main, line 152")
 endfunction
 
 function Attack_activate takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set Attack_timer_AttackCD = getTimer("when calling getTimer in bear_Attack, line 36")
-	set Attack_timer_UpdateMove = getTimer("when calling getTimer in bear_Attack, line 37")
+	set Attack_timer_AttackCD = getTimer("when calling getTimer in bear_Attack, line 100")
+	set Attack_timer_UpdateMove = getTimer("when calling getTimer in bear_Attack, line 101")
 	set Attack_updateMove = true
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -10657,9 +9615,9 @@ function Bleed_activate takes string stackPos returns nothing
 		call texttag_setVisibility(receiver, false)
 		set Bleed_text = receiver
 		set Bleed_stacks = 0
-		set Bleed_timer_Damage = getTimer("when calling getTimer in bear_Bleed, line 61")
-		set Bleed_timer_UpdateText = getTimer("when calling getTimer in bear_Bleed, line 62")
-		set Bleed_timer_Duration = getTimer("when calling getTimer in bear_Bleed, line 63")
+		set Bleed_timer_Damage = getTimer("when calling getTimer in bear_Bleed, line 66")
+		set Bleed_timer_UpdateText = getTimer("when calling getTimer in bear_Bleed, line 67")
+		set Bleed_timer_Duration = getTimer("when calling getTimer in bear_Bleed, line 68")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
@@ -10673,7 +9631,7 @@ function alloc_Rock takes string stackPos returns integer
 		if Rock_maxIndex < 32768 then
 			set Rock_maxIndex = Rock_maxIndex + 1
 			set this = Rock_maxIndex
-			set Rock_typeId[this] = 690
+			set Rock_typeId[this] = 700
 		else
 			call error("Out of memory: Could not create Rock.", "when calling error in ")
 			set this = 0
@@ -10681,7 +9639,7 @@ function alloc_Rock takes string stackPos returns integer
 	else
 		set Rock_firstFree = Rock_firstFree - 1
 		set this = Rock_nextFree[Rock_firstFree]
-		set Rock_typeId[this] = 690
+		set Rock_typeId[this] = 700
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -10793,9 +9751,9 @@ function Shockwave_activate takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if Shockwave_ENABLED then
-		set Shockwave_timer_DmgTimer = getTimer("when calling getTimer in bear_Shockwave, line 159")
-		set Shockwave_timer_Status = getTimer("when calling getTimer in bear_Shockwave, line 160")
-		set Shockwave_timer_Cooldown = getTimer("when calling getTimer in bear_Shockwave, line 161")
+		set Shockwave_timer_DmgTimer = getTimer("when calling getTimer in bear_Shockwave, line 161")
+		set Shockwave_timer_Status = getTimer("when calling getTimer in bear_Shockwave, line 162")
+		set Shockwave_timer_Cooldown = getTimer("when calling getTimer in bear_Shockwave, line 163")
 		set Shockwave_targetsHit = CreateGroup()
 		set Shockwave_tempGroup = CreateGroup()
 		set Shockwave_isReady = true
@@ -10839,11 +9797,13 @@ function TheBear_onEventInit takes string stackPos returns nothing
 	set TheBear_theBear = receiver_8
 	call DayCycle_setAlwaysDay()
 	call trigger_enable(TheBear_trg_Death)
-	call Attack_activate("when calling activate in bear_Main, line 196")
-	call Bleed_activate("when calling activate in bear_Main, line 197")
-	call Shockwave_activate("when calling activate in bear_Main, line 198")
-	call Frenzy_activate("when calling activate in bear_Main, line 199")
-	call Charge_activate("when calling activate in bear_Main, line 200")
+	set TheBear_mainLoopTimer = getTimer("when calling getTimer in bear_Main, line 173")
+	set TheBear_idleDelayTimer = getTimer("when calling getTimer in bear_Main, line 174")
+	call Attack_activate("when calling activate in bear_Main, line 176")
+	call Bleed_activate("when calling activate in bear_Main, line 177")
+	call Shockwave_activate("when calling activate in bear_Main, line 178")
+	call Frenzy_activate("when calling activate in bear_Main, line 179")
+	call Charge_activate("when calling activate in bear_Main, line 180")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
@@ -10857,7 +9817,20 @@ endfunction
 
 function bridge_TheBear_onEventInit takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_onEventInit("bear_Main, line 205")
+	call TheBear_onEventInit("bear_Main, line 184")
+endfunction
+
+function TheNecromancer_initEvent takes string stackPos returns boolean
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call BossEvent_initiate(ref_function_TheNecromancer_onEventInit, ref_function_TheNecromancer_initFight, "when calling initiate in nec_Main, line 82")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return false
+endfunction
+
+function bridge_TheNecromancer_initEvent takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return TheNecromancer_initEvent("nec_Main, line 96")
 endfunction
 
 function getEnterLeaveUnit takes nothing returns unit
@@ -11201,7 +10174,7 @@ function MagicCrystal_onDestroy takes integer this, string stackPos returns noth
 	call unit_remove(MagicCrystal_placeholder[this])
 	call effect_destr(MagicCrystal_crystalSFX[this])
 	if MagicCrystal_lightningTimer[this] != null then
-		call timer_release(MagicCrystal_lightningTimer[this], "when calling release in tm_MagicCrystal, line 80")
+		call timer_release(MagicCrystal_lightningTimer[this], "when calling release in tm_MagicCrystal, line 82")
 		set MagicCrystal_lightningTimer[this] = null
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -11223,8 +10196,8 @@ endfunction
 function destroyMagicCrystal takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call MagicCrystal_onDestroy(this, "when calling MagicCrystal_onDestroy in tm_MagicCrystal, line 74")
-	call dealloc_MagicCrystal(this, "when calling MagicCrystal in tm_MagicCrystal, line 74")
+	call MagicCrystal_onDestroy(this, "when calling MagicCrystal_onDestroy in tm_MagicCrystal, line 76")
+	call dealloc_MagicCrystal(this, "when calling MagicCrystal in tm_MagicCrystal, line 76")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -11238,16 +10211,16 @@ function dispatch_MagicCrystal_destroyMagicCrystal takes integer this, string st
 			call error("Called MagicCrystal.destroyMagicCrystal on invalid object.", "when calling error in ")
 		endif
 	endif
-	call destroyMagicCrystal(this, "when calling destroyMagicCrystal in tm_MagicCrystal, line 18")
+	call destroyMagicCrystal(this, "when calling destroyMagicCrystal in tm_MagicCrystal, line 20")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function MagicCrystal_clear takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[0], "when calling MagicCrystal in tm_MagicCrystal, line 86")
-	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[1], "when calling MagicCrystal in tm_MagicCrystal, line 87")
-	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[2], "when calling MagicCrystal in tm_MagicCrystal, line 88")
+	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[0], "when calling MagicCrystal in tm_MagicCrystal, line 88")
+	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[1], "when calling MagicCrystal in tm_MagicCrystal, line 89")
+	call dispatch_MagicCrystal_destroyMagicCrystal(MagicCrystal_crystals[2], "when calling MagicCrystal in tm_MagicCrystal, line 90")
 	call effect_destr(MagicCrystal_sfx_Shield)
 	call timer_pause(MagicCrystal_runTimer1)
 	call timer_pause(MagicCrystal_runTimer2)
@@ -11401,7 +10374,7 @@ function alloc_Table takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 706
+			set Table_typeId[this] = 717
 		else
 			call error("Out of memory: Could not create Table.", "when calling error in ")
 			set this = 0
@@ -11409,7 +10382,7 @@ function alloc_Table takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 706
+		set Table_typeId[this] = 717
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -11500,7 +10473,7 @@ function alloc_ArrayQueue takes string stackPos returns integer
 		if ArrayQueue_maxIndex < 32768 then
 			set ArrayQueue_maxIndex = ArrayQueue_maxIndex + 1
 			set this = ArrayQueue_maxIndex
-			set ArrayQueue_typeId[this] = 628
+			set ArrayQueue_typeId[this] = 629
 		else
 			call error("Out of memory: Could not create ArrayQueue.", "when calling error in ")
 			set this = 0
@@ -11508,7 +10481,7 @@ function alloc_ArrayQueue takes string stackPos returns integer
 	else
 		set ArrayQueue_firstFree = ArrayQueue_firstFree - 1
 		set this = ArrayQueue_nextFree[ArrayQueue_firstFree]
-		set ArrayQueue_typeId[this] = 628
+		set ArrayQueue_typeId[this] = 629
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -11787,7 +10760,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 		if InteractableObject_maxIndex < 32768 then
 			set InteractableObject_maxIndex = InteractableObject_maxIndex + 1
 			set this = InteractableObject_maxIndex
-			set InteractableObject_typeId[this] = 673
+			set InteractableObject_typeId[this] = 680
 		else
 			call error("Out of memory: Could not create InteractableObject.", "when calling error in ")
 			set this = 0
@@ -11795,7 +10768,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 	else
 		set InteractableObject_firstFree = InteractableObject_firstFree - 1
 		set this = InteractableObject_nextFree[InteractableObject_firstFree]
-		set InteractableObject_typeId[this] = 673
+		set InteractableObject_typeId[this] = 680
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -11969,8 +10942,8 @@ endfunction
 function init_LinkedList takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call alloc_Closure_3("when calling alloc_Closure in LinkedList, line 479")
-	call alloc_Closure_2("when calling alloc_Closure in LinkedList, line 483")
+	call alloc_Closure_2("when calling alloc_Closure in LinkedList, line 479")
+	call alloc_Closure_3("when calling alloc_Closure in LinkedList, line 483")
 	call realToIndex(0.)
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
@@ -12053,7 +11026,7 @@ function alloc_Closure_4 takes string stackPos returns integer
 		if CallbackSingle_maxIndex < 32768 then
 			set CallbackSingle_maxIndex = CallbackSingle_maxIndex + 1
 			set this = CallbackSingle_maxIndex
-			set CallbackSingle_typeId[this] = 641
+			set CallbackSingle_typeId[this] = 643
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in ")
 			set this = 0
@@ -12061,7 +11034,7 @@ function alloc_Closure_4 takes string stackPos returns integer
 	else
 		set CallbackSingle_firstFree = CallbackSingle_firstFree - 1
 		set this = CallbackSingle_nextFree[CallbackSingle_firstFree]
-		set CallbackSingle_typeId[this] = 641
+		set CallbackSingle_typeId[this] = 643
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12154,7 +11127,7 @@ function alloc_Closure_5 takes string stackPos returns integer
 		if CallbackSingle_maxIndex < 32768 then
 			set CallbackSingle_maxIndex = CallbackSingle_maxIndex + 1
 			set this = CallbackSingle_maxIndex
-			set CallbackSingle_typeId[this] = 642
+			set CallbackSingle_typeId[this] = 644
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in ")
 			set this = 0
@@ -12162,7 +11135,7 @@ function alloc_Closure_5 takes string stackPos returns integer
 	else
 		set CallbackSingle_firstFree = CallbackSingle_firstFree - 1
 		set this = CallbackSingle_nextFree[CallbackSingle_firstFree]
-		set CallbackSingle_typeId[this] = 642
+		set CallbackSingle_typeId[this] = 644
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12223,7 +11196,7 @@ function alloc_HashMap takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 707
+			set Table_typeId[this] = 718
 		else
 			call error("Out of memory: Could not create HashMap.", "when calling error in ")
 			set this = 0
@@ -12231,7 +11204,7 @@ function alloc_HashMap takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 707
+		set Table_typeId[this] = 718
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12575,21 +11548,21 @@ endfunction
 function init_bear_Attack takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call registerSpellEffectEvent(1093677633, ref_function_bridge_Attack_onHit, "when calling registerSpellEffectEvent in bear_Attack, line 13")
-	set Attack_hitSounds[0] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh1, false, true, "when calling new_SoundDefinition in bear_Attack, line 18")
-	set Attack_hitSounds[1] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh2, false, true, "when calling new_SoundDefinition in bear_Attack, line 19")
-	set Attack_hitSounds[2] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh3, false, true, "when calling new_SoundDefinition in bear_Attack, line 20")
+	set Attack_hitSounds[0] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh1, false, true, "when calling new_SoundDefinition in bear_Attack, line 27")
+	set Attack_hitSounds[1] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh2, false, true, "when calling new_SoundDefinition in bear_Attack, line 28")
+	set Attack_hitSounds[2] = new_SoundDefinition_2(Sounds_woodHeavyBashFlesh3, false, true, "when calling new_SoundDefinition in bear_Attack, line 29")
 	set Attack_ATTACKRANGE = 200.
 	set Attack_UPDATEMOVE_FREQ = 0.5
 	set Attack_onCooldown = false
 	set Attack_updateMove = false
+	call registerSpellEffectEvent(1093677633, ref_function_bridge_Attack_onHit, "when calling registerSpellEffectEvent in bear_Attack, line 109")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
 endfunction
 
 function bridge_init_bear_Attack takes nothing returns boolean
 	set wurst_stack_depth = 0
-	return init_bear_Attack("bear_Attack, line 1")
+	return init_bear_Attack("bear_Attack, line 2")
 endfunction
 
 function Log_trace takes string msg returns nothing
@@ -12689,64 +11662,9 @@ function bridge_init_bear_Frenzy takes nothing returns boolean
 	return init_bear_Frenzy("bear_Frenzy, line 2")
 endfunction
 
-function TheBear_gameInit takes nothing returns nothing
-	local trigger receiver = CreateTrigger()
-	local trigger receiver_2
-	local trigger receiver_3
-	local trigger receiver_4
-	local trigger receiver_5
-	call trigger_registerPlayerChatEvent(receiver, Player(0), "-thebear", true)
-	set receiver_2 = receiver
-	call trigger_addCondition(receiver_2, Condition(ref_function_bridge_TheBear_initEvent))
-	set receiver_3 = CreateTrigger()
-	call trigger_registerAnyUnitEvent(receiver_3, EVENT_PLAYER_UNIT_DEATH)
-	set receiver_4 = receiver_3
-	call trigger_addCondition(receiver_4, Condition(ref_function_TheBear_someoneDies))
-	set receiver_5 = receiver_4
-	call trigger_disable(receiver_5)
-	set TheBear_trg_Death = receiver_5
-	set receiver = null
-	set receiver_2 = null
-	set receiver_3 = null
-	set receiver_4 = null
-	set receiver_5 = null
-endfunction
-
-function init_bear_Main takes string stackPos returns boolean
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call TheBear_gameInit()
-	set TheBear_BOSSID = 1848651848
-	set TheBear_MAINLOOP_FREQ = 0.25
-	set TheBear_HP = 14000
-	set TheBear_ARMOR = 50.
-	set TheBear_MOVESPEED = 250.
-	set TheBear_ATTACKSPEED = 2.
-	set TheBear_ATTACKDMG = 225
-	set TheBear_currentAttackSpeed = TheBear_ATTACKSPEED
-	set TheBear_startRed = 150
-	set TheBear_startGreen = 150
-	set TheBear_startBlue = 150
-	set TheBear_startScale = 1.3
-	set TheBear_damageInc = 0.
-	set TheBear_isIdle = false
-	set TheBear_canAttack = false
-	set TheBear_mainLoopTimer = getTimer("when calling getTimer in bear_Main, line 46")
-	set TheBear_idleDelayTimer = getTimer("when calling getTimer in bear_Main, line 47")
-	set TheBear_camBounds = gg_rct_TheBear_CamBounds
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return true
-endfunction
-
-function bridge_init_bear_Main takes nothing returns boolean
-	set wurst_stack_depth = 0
-	return init_bear_Main("bear_Main, line 1")
-endfunction
-
 function init_bear_Shockwave takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call registerSpellEffectEvent(1093677634, ref_function_Shockwave_onCast, "when calling registerSpellEffectEvent in bear_Shockwave, line 8")
 	set Shockwave_ENABLED = true
 	set Shockwave_DAMAGE = 800.
 	set Shockwave_COOLDOWN = 5.
@@ -12760,6 +11678,7 @@ function init_bear_Shockwave takes string stackPos returns boolean
 	set Shockwave_isReady = false
 	set Shockwave_delayHasRun = false
 	set Shockwave_delayIsRunning = false
+	call registerSpellEffectEvent(1093677634, ref_function_Shockwave_onCast, "when calling registerSpellEffectEvent in bear_Shockwave, line 180")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
 endfunction
@@ -12856,7 +11775,7 @@ function init_tm_MagicCrystal takes string stackPos returns boolean
 	call trigger_registerAnyUnitEvent(receiver, EVENT_PLAYER_UNIT_DEATH)
 	set receiver_2 = receiver
 	call trigger_addAction(receiver_2, ref_function_bridge_MagicCrystal_dies)
-	call timer_start(getTimer("when calling getTimer in tm_MagicCrystal, line 15"), 0.1, ref_function_bridge_MagicCrystal_createBossInfo)
+	call timer_start(getTimer("when calling getTimer in tm_MagicCrystal, line 16"), 0.1, ref_function_bridge_MagicCrystal_createBossInfo)
 	set MagicCrystal_ABSORB_DUR = 10.
 	set MagicCrystal_CRYSTAL_HP = 400
 	set MagicCrystal_LIGHTNING_DMG = 90.
@@ -12869,14 +11788,14 @@ function init_tm_MagicCrystal takes string stackPos returns boolean
 	set MagicCrystal_spawnRect[2] = gg_rct_TM_MagicCrystal3
 	set MagicCrystal_placeholderId = 1966092353
 	set MagicCrystal_sfxId = 1966092355
-	set MagicCrystal_sound_AbsorbCrystal = new_SoundDefinition(Sounds_siphonManaLoop, false, "when calling new_SoundDefinition in tm_MagicCrystal, line 39")
+	set MagicCrystal_sound_AbsorbCrystal = new_SoundDefinition(Sounds_siphonManaLoop, false, "when calling new_SoundDefinition in tm_MagicCrystal, line 41")
 	set MagicCrystal_standardMoveSpeed = 350.
 	set MagicCrystal_hasRun[0] = false
 	set MagicCrystal_hasRun[1] = false
 	set MagicCrystal_hasRun[2] = false
-	set MagicCrystal_runTimer1 = getTimer("when calling getTimer in tm_MagicCrystal, line 66")
-	set MagicCrystal_runTimer2 = getTimer("when calling getTimer in tm_MagicCrystal, line 68")
-	set MagicCrystal_runTimer3 = getTimer("when calling getTimer in tm_MagicCrystal, line 70")
+	set MagicCrystal_runTimer1 = getTimer("when calling getTimer in tm_MagicCrystal, line 68")
+	set MagicCrystal_runTimer2 = getTimer("when calling getTimer in tm_MagicCrystal, line 70")
+	set MagicCrystal_runTimer3 = getTimer("when calling getTimer in tm_MagicCrystal, line 72")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
@@ -13014,7 +11933,7 @@ function BossEvent_leave takes code onFade, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set BossEvent_codeOnFade = onFade
-	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Leave, "when calling play in BossEvent, line 75")
+	call dispatch_SoundDefinition_SoundUtils_SoundDefinition_play_2(BossEvent_sound_Leave, "when calling play in BossEvent, line 76")
 	call timer_start(BossEvent_miscTimer, 0.5, ref_function_bridge_BossEvent_startFade_3)
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -13059,7 +11978,7 @@ function MagicCrystal_start takes integer crystalIndex, string stackPos returns 
 	set temp = tm_Main_theMonster
 	set tempIndex = MagicCrystal_crystals[crystalIndex]
 	call unit_issuePointOrder(temp, "move", MagicCrystal_pos[tempIndex], MagicCrystal_pos_2[tempIndex])
-	call timer_setData(MagicCrystal_runTimer1, crystalIndex, "when calling setData in tm_MagicCrystal, line 381")
+	call timer_setData(MagicCrystal_runTimer1, crystalIndex, "when calling setData in tm_MagicCrystal, line 383")
 	call timer_startPeriodic(MagicCrystal_runTimer1, 0.1, ref_function_bridge_MagicCrystal_checkDistance)
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set temp = null
@@ -13104,7 +12023,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 		if MagicCrystal_maxIndex < 32768 then
 			set MagicCrystal_maxIndex = MagicCrystal_maxIndex + 1
 			set this = MagicCrystal_maxIndex
-			set MagicCrystal_typeId[this] = 685
+			set MagicCrystal_typeId[this] = 693
 		else
 			call error("Out of memory: Could not create MagicCrystal.", "when calling error in ")
 			set this = 0
@@ -13112,7 +12031,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 	else
 		set MagicCrystal_firstFree = MagicCrystal_firstFree - 1
 		set this = MagicCrystal_nextFree[MagicCrystal_firstFree]
-		set MagicCrystal_typeId[this] = 685
+		set MagicCrystal_typeId[this] = 693
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -13182,7 +12101,7 @@ function new_MagicCrystal takes integer crystalIndex, string stackPos returns in
 	local integer this
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = alloc_MagicCrystal("when calling MagicCrystal in tm_MagicCrystal, line 385")
+	set this = alloc_MagicCrystal("when calling MagicCrystal in tm_MagicCrystal, line 387")
 	call construct_MagicCrystal(this, crystalIndex)
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -13191,9 +12110,9 @@ endfunction
 function MagicCrystal_onEventInit takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call new_MagicCrystal(0, "when calling new_MagicCrystal in tm_MagicCrystal, line 456")
-	call new_MagicCrystal(1, "when calling new_MagicCrystal in tm_MagicCrystal, line 457")
-	call new_MagicCrystal(2, "when calling new_MagicCrystal in tm_MagicCrystal, line 458")
+	call new_MagicCrystal(0, "when calling new_MagicCrystal in tm_MagicCrystal, line 458")
+	call new_MagicCrystal(1, "when calling new_MagicCrystal in tm_MagicCrystal, line 459")
+	call new_MagicCrystal(2, "when calling new_MagicCrystal in tm_MagicCrystal, line 460")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -13334,7 +12253,7 @@ function MagicCrystal_stop takes string stackPos returns nothing
 	set i = 0
 	loop
 		exitwhen i > 2
-		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_stopCrystal(MagicCrystal_crystals[i], "when calling stopCrystal in tm_MagicCrystal, line 128")
+		call dispatch_MagicCrystal_tm_MagicCrystal_MagicCrystal_stopCrystal(MagicCrystal_crystals[i], "when calling stopCrystal in tm_MagicCrystal, line 130")
 		set i = i + 1
 	endloop
 	set wurst_stack_depth = wurst_stack_depth - 1
@@ -13878,17 +12797,95 @@ function init_bear_Bleed takes nothing returns boolean
 	set Bleed_DMG_FREQ = 2.0
 	set Bleed_DURATION = 6.01
 	set Bleed_RESETFREQONSTACK = false
-	set Bleed_EFFECT = "Objects\\Spawnmodels\\Human\\HumanBlood\\HeroBloodElfBlood.mdl"
 	set Bleed_stacks = 0
+	set Bleed_EFFECT = "Objects\\Spawnmodels\\Human\\HumanBlood\\HeroBloodElfBlood.mdl"
 	return true
 endfunction
 
 function init_bear_Enrage takes nothing returns boolean
+	set Enrage_damageInc = 0.8
+	set Enrage_sizeInc = 0.25
 	set Enrage_greenPercReduc = 0.3
 	set Enrage_bluePercReduc = 0.3
-	set Enrage_sizeInc = 0.25
-	set Enrage_damageInc = 0.75
 	set Enrage_count = 0.
+	return true
+endfunction
+
+function TheBear_gameInit takes nothing returns nothing
+	local trigger receiver = CreateTrigger()
+	local trigger receiver_2
+	local trigger receiver_3
+	local trigger receiver_4
+	local trigger receiver_5
+	call trigger_registerPlayerChatEvent(receiver, Player(0), "-thebear", true)
+	set receiver_2 = receiver
+	call trigger_addCondition(receiver_2, Condition(ref_function_bridge_TheBear_initEvent))
+	set receiver_3 = CreateTrigger()
+	call trigger_registerAnyUnitEvent(receiver_3, EVENT_PLAYER_UNIT_DEATH)
+	set receiver_4 = receiver_3
+	call trigger_addCondition(receiver_4, Condition(ref_function_TheBear_someoneDies))
+	set receiver_5 = receiver_4
+	call trigger_disable(receiver_5)
+	set TheBear_trg_Death = receiver_5
+	set receiver = null
+	set receiver_2 = null
+	set receiver_3 = null
+	set receiver_4 = null
+	set receiver_5 = null
+endfunction
+
+function init_bear_Main takes nothing returns boolean
+	call TheBear_gameInit()
+	set TheBear_HP = 14000
+	set TheBear_ARMOR = 50.
+	set TheBear_MOVESPEED = 250.
+	set TheBear_ATTACKSPEED = 2.
+	set TheBear_ATTACKDMG = 225
+	set TheBear_MAINLOOP_FREQ = 0.25
+	set TheBear_BOSSID = 1848651848
+	set TheBear_startRed = 150
+	set TheBear_startGreen = 150
+	set TheBear_startBlue = 150
+	set TheBear_startScale = 1.3
+	set TheBear_currentAttackSpeed = TheBear_ATTACKSPEED
+	set TheBear_damageInc = 0.
+	set TheBear_isIdle = false
+	set TheBear_canAttack = false
+	set TheBear_camBounds = gg_rct_TheBear_CamBounds
+	return true
+endfunction
+
+function TheNecromancer_gameInit takes nothing returns nothing
+	local trigger receiver = CreateTrigger()
+	local trigger receiver_2
+	local trigger receiver_3
+	local trigger receiver_4
+	local trigger receiver_5
+	call trigger_registerPlayerChatEvent(receiver, Player(0), "-thenecromancer", true)
+	set receiver_2 = receiver
+	call trigger_addCondition(receiver_2, Condition(ref_function_bridge_TheNecromancer_initEvent))
+	set receiver_3 = CreateTrigger()
+	call trigger_registerAnyUnitEvent(receiver_3, EVENT_PLAYER_UNIT_DEATH)
+	set receiver_4 = receiver_3
+	call trigger_addCondition(receiver_4, Condition(ref_function_TheNecromancer_someoneDies))
+	set receiver_5 = receiver_4
+	call trigger_disable(receiver_5)
+	set receiver = null
+	set receiver_2 = null
+	set receiver_3 = null
+	set receiver_4 = null
+	set receiver_5 = null
+endfunction
+
+function init_nec_Main takes nothing returns boolean
+	local real temp_TheNecromancer_hunterSpawn_x
+	local real temp_TheNecromancer_hunterSpawn_y
+	call TheNecromancer_gameInit()
+	set temp_TheNecromancer_hunterSpawn_x = -13650.
+	set temp_TheNecromancer_hunterSpawn_y = 7600.
+	set TheNecromancer_hunterSpawn_x = temp_TheNecromancer_hunterSpawn_x
+	set TheNecromancer_hunterSpawn_y = temp_TheNecromancer_hunterSpawn_y
+	set TheNecromancer_camBounds = gg_rct_TheNec_CamBounds
 	return true
 endfunction
 
@@ -13930,21 +12927,14 @@ endfunction
 
 function initGlobals takes nothing returns nothing
 	set udg_tempPoint = null
-	set udg_NecroSFX = null
 	set udg_tempUnit = null
 	set udg_RedHero = null
-	set udg_MF_Ghost = null
-	set udg_AbsorbSoulUnit = null
 	set udg_TempInt = 0
 	set udg_TempReal = 0.
-	set udg_MFTimer = null
-	set udg_MF_TimerWindow = null
 	set udg_tempUGroup = null
 	set udg_tempPoint2 = null
-	set udg_MF_DnDPoint = null
 	set udg_tempInt = 0
 	set udg_ArcaneEmpower = false
-	set udg_Abom = null
 	set udg_BlizzardPoint = null
 	set udg_Blizzard_Dummy = null
 	set udg_tempBool = false
@@ -13960,19 +12950,11 @@ function initGlobals takes nothing returns nothing
 	set udg_IceLance_EnemyCheckCounter = 0
 	set udg_MagicWard_Running = false
 	set gg_rct_MorbentAttackZone = null
-	set gg_rct_GhostSpawn = null
 	set gg_rct_MF_Exit1 = null
-	set gg_rct_MF_Exit_2 = null
-	set gg_rct_MorbentFell_Ghost = null
 	set gg_rct_MorbentFel = null
 	set gg_rct_MF_Camp = null
-	set gg_rct_MF_Cam_Bounds = null
-	set gg_rct_MF_InvulnDestru = null
-	set gg_rct_MFForceWall = null
-	set gg_rct_MFGraveyard = null
-	set gg_rct_Region_012 = null
+	set gg_rct_TheNec_CamBounds = null
 	set gg_rct_Earthquake_TestRegion = null
-	set gg_rct_Oasis = null
 	set gg_rct_Region_014 = null
 	set gg_rct_Region_016 = null
 	set gg_rct_VisionZone_Hunters_Lair = null
@@ -14049,41 +13031,12 @@ function initGlobals takes nothing returns nothing
 	set gg_trg_Arcane_Barrage_End = null
 	set gg_trg_Unstable_Magic_Start = null
 	set gg_trg_Unstable_Magic_Stop = null
-	set gg_trg_Event_Init = null
-	set gg_trg_Morbent_Init_Trigger = null
-	set gg_trg_Time_runs_out = null
-	set gg_trg_Acolyte_Animation = null
 	set gg_trg_Ghoul_Spawn = null
 	set gg_trg_Plague_Zombie_Spawn = null
 	set gg_trg_Skeletal_Mages = null
 	set gg_trg_Skeleton_Spawns = null
-	set gg_trg_Zone_Exit = null
-	set gg_trg_MF_Phase_2_Init = null
-	set gg_trg_Necromancer_Death = null
-	set gg_trg_Cauldron_Dies = null
-	set gg_trg_Morbent_Eighty_Percent = null
-	set gg_trg_Acolyte_Dies = null
-	set gg_trg_Acolyte_Animation_reset = null
-	set gg_trg_Death_and_Decay = null
-	set gg_trg_Death_Coil = null
-	set gg_trg_Morbent_Dies = null
-	set gg_trg_Soul_Barrage = null
-	set gg_trg_Spawn_Soul = null
-	set gg_trg_Absorb_Soul = null
-	set gg_trg_Absorb_Soul_Dies = null
-	set gg_trg_MF_Dies = null
-	set gg_trg_MF_Create_Achievements = null
 	set gg_trg_Lightning_Enhancement_Effect = null
 	set gg_trg_Earthquake = null
-	set gg_unit_n002_0030 = null
-	set gg_unit_n002_0031 = null
-	set gg_unit_n002_0039 = null
-	set gg_unit_u004_0029 = null
-	set gg_unit_h007_0021 = null
-	set gg_unit_u000_0020 = null
-	set gg_unit_u006_0040 = null
-	set gg_unit_u006_0035 = null
-	set gg_dest_Dofw_0033 = null
 	set gg_dest_DTc2_2577 = null
 	set ClickableObject_firstFree = 0
 	set ClickableObject_maxIndex = 0
@@ -14197,47 +13150,10 @@ function initGlobals takes nothing returns nothing
 	set ref_function_Trig_Unstable_Magic_Start_Conditions = function Trig_Unstable_Magic_Start_Conditions
 	set ref_function_Trig_Unstable_Magic_Start_Actions = function Trig_Unstable_Magic_Start_Actions
 	set ref_function_Trig_Unstable_Magic_Stop_Actions = function Trig_Unstable_Magic_Stop_Actions
-	set ref_function_Trig_Event_Init_Func001002 = function Trig_Event_Init_Func001002
-	set ref_function_Trig_Event_Init_Actions = function Trig_Event_Init_Actions
-	set ref_function_Trig_Morbent_Init_Trigger_Actions = function Trig_Morbent_Init_Trigger_Actions
-	set ref_function_Trig_Time_runs_out_Actions = function Trig_Time_runs_out_Actions
-	set ref_function_Trig_Acolyte_Animation_Actions = function Trig_Acolyte_Animation_Actions
-	set ref_function_Trig_Ghoul_Spawn_Conditions = function Trig_Ghoul_Spawn_Conditions
 	set ref_function_Trig_Ghoul_Spawn_Actions = function Trig_Ghoul_Spawn_Actions
-	set ref_function_Trig_Plague_Zombie_Spawn_Conditions = function Trig_Plague_Zombie_Spawn_Conditions
 	set ref_function_Trig_Plague_Zombie_Spawn_Actions = function Trig_Plague_Zombie_Spawn_Actions
-	set ref_function_Trig_Skeletal_Mages_Conditions = function Trig_Skeletal_Mages_Conditions
 	set ref_function_Trig_Skeletal_Mages_Actions = function Trig_Skeletal_Mages_Actions
 	set ref_function_Trig_Skeleton_Spawns_Actions = function Trig_Skeleton_Spawns_Actions
-	set ref_function_Trig_Zone_Exit_Actions = function Trig_Zone_Exit_Actions
-	set ref_function_Trig_MF_Phase_2_Init_Func008002 = function Trig_MF_Phase_2_Init_Func008002
-	set ref_function_Trig_MF_Phase_2_Init_Conditions = function Trig_MF_Phase_2_Init_Conditions
-	set ref_function_Trig_MF_Phase_2_Init_Actions = function Trig_MF_Phase_2_Init_Actions
-	set ref_function_Trig_Necromancer_Death_Actions = function Trig_Necromancer_Death_Actions
-	set ref_function_Trig_Cauldron_Dies_Func001002002 = function Trig_Cauldron_Dies_Func001002002
-	set ref_function_Trig_Cauldron_Dies_Actions = function Trig_Cauldron_Dies_Actions
-	set ref_function_Trig_Morbent_Eighty_Percent_Conditions = function Trig_Morbent_Eighty_Percent_Conditions
-	set ref_function_Trig_Morbent_Eighty_Percent_Actions = function Trig_Morbent_Eighty_Percent_Actions
-	set ref_function_Trig_Acolyte_Dies_Conditions = function Trig_Acolyte_Dies_Conditions
-	set ref_function_Trig_Acolyte_Dies_Actions = function Trig_Acolyte_Dies_Actions
-	set ref_function_Trig_Acolyte_Animation_reset_Conditions = function Trig_Acolyte_Animation_reset_Conditions
-	set ref_function_Trig_Acolyte_Animation_reset_Actions = function Trig_Acolyte_Animation_reset_Actions
-	set ref_function_Trig_Death_and_Decay_Actions = function Trig_Death_and_Decay_Actions
-	set ref_function_Trig_Death_Coil_Actions = function Trig_Death_Coil_Actions
-	set ref_function_Trig_Morbent_Dies_Actions = function Trig_Morbent_Dies_Actions
-	set ref_function_Trig_Soul_Barrage_Actions = function Trig_Soul_Barrage_Actions
-	set ref_function_Trig_Spawn_Soul_Actions = function Trig_Spawn_Soul_Actions
-	set ref_function_Trig_Absorb_Soul_Func003001001003 = function Trig_Absorb_Soul_Func003001001003
-	set ref_function_Trig_Absorb_Soul_Func001001001001001002 = function Trig_Absorb_Soul_Func001001001001001002
-	set ref_function_Trig_Absorb_Soul_Func006002001003 = function Trig_Absorb_Soul_Func006002001003
-	set ref_function_Trig_Absorb_Soul_Conditions = function Trig_Absorb_Soul_Conditions
-	set ref_function_Trig_Absorb_Soul_Actions = function Trig_Absorb_Soul_Actions
-	set ref_function_Trig_Absorb_Soul_Dies_Conditions = function Trig_Absorb_Soul_Dies_Conditions
-	set ref_function_Trig_Absorb_Soul_Dies_Actions = function Trig_Absorb_Soul_Dies_Actions
-	set ref_function_Trig_MF_Dies_Func008002 = function Trig_MF_Dies_Func008002
-	set ref_function_Trig_MF_Dies_Conditions = function Trig_MF_Dies_Conditions
-	set ref_function_Trig_MF_Dies_Actions = function Trig_MF_Dies_Actions
-	set ref_function_Trig_MF_Create_Achievements_Actions = function Trig_MF_Create_Achievements_Actions
 	set ref_function_Trig_Lightning_Enhancement_Effect_Func001002002 = function Trig_Lightning_Enhancement_Effect_Func001002002
 	set ref_function_Trig_Lightning_Enhancement_Effect_Func002A = function Trig_Lightning_Enhancement_Effect_Func002A
 	set ref_function_Trig_Lightning_Enhancement_Effect_Func005002003 = function Trig_Lightning_Enhancement_Effect_Func005002003
@@ -14305,13 +13221,14 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_init_InteractableObjects = function bridge_init_InteractableObjects
 	set ref_function_init_UnitLightning = function init_UnitLightning
 	set ref_function_bridge_init_ZoneTransition = function bridge_init_ZoneTransition
-	set ref_function_bridge_init_bear_Main = function bridge_init_bear_Main
+	set ref_function_init_bear_Main = function init_bear_Main
 	set ref_function_init_bear_Bleed = function init_bear_Bleed
 	set ref_function_bridge_init_bear_Frenzy = function bridge_init_bear_Frenzy
 	set ref_function_bridge_init_bear_Attack = function bridge_init_bear_Attack
 	set ref_function_bridge_init_bear_Charge = function bridge_init_bear_Charge
 	set ref_function_init_bear_Enrage = function init_bear_Enrage
 	set ref_function_bridge_init_bear_Shockwave = function bridge_init_bear_Shockwave
+	set ref_function_init_nec_Main = function init_nec_Main
 	set ref_function_bridge_init_tm_MagicCrystal = function bridge_init_tm_MagicCrystal
 	set ref_function_bridge_init_tm_Main = function bridge_init_tm_Main
 	set ref_function_bridge_init_tm_ArcaneBeing = function bridge_init_tm_ArcaneBeing
@@ -14355,9 +13272,9 @@ function initGlobals takes nothing returns nothing
 	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 	set ref_function_bridge_DynamicSound_TimedLoop_onExpire = function bridge_DynamicSound_TimedLoop_onExpire
-	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound_2
+	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound
 	set ref_function_bridge_SoundDefinition_recycle = function bridge_SoundDefinition_recycle
-	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound
+	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound_2
 	set ref_function_Stats_train = function Stats_train
 	set ref_function_bridge_EffectDuration_destr = function bridge_EffectDuration_destr
 	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
@@ -14385,18 +13302,22 @@ function initGlobals takes nothing returns nothing
 	set ref_function_TheBear_idle = function TheBear_idle
 	set ref_function_bridge_TheBear_initEvent = function bridge_TheBear_initEvent
 	set ref_function_TheBear_someoneDies = function TheBear_someoneDies
+	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent_2
+	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent
+	set ref_function_bridge_TheBear_mainLoop = function bridge_TheBear_mainLoop
 	set ref_function_bridge_TheBear_onEventInit = function bridge_TheBear_onEventInit
 	set ref_function_TheBear_initFight = function TheBear_initFight
-	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent
-	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent_2
-	set ref_function_bridge_TheBear_mainLoop = function bridge_TheBear_mainLoop
 	set ref_function_Shockwave_onCast = function Shockwave_onCast
-	set ref_function_Shockwave_move = function Shockwave_move
-	set ref_function_Shockwave_finishCooldown = function Shockwave_finishCooldown
 	set ref_function_Shockwave_checkStatus = function Shockwave_checkStatus
 	set ref_function_Shockwave_endDelay = function Shockwave_endDelay
 	set ref_function_Shockwave_resetDelay = function Shockwave_resetDelay
+	set ref_function_Shockwave_move = function Shockwave_move
+	set ref_function_Shockwave_finishCooldown = function Shockwave_finishCooldown
 	set ref_function_Shockwave_dmgFilter = function Shockwave_dmgFilter
+	set ref_function_bridge_TheNecromancer_initEvent = function bridge_TheNecromancer_initEvent
+	set ref_function_TheNecromancer_someoneDies = function TheNecromancer_someoneDies
+	set ref_function_TheNecromancer_onEventInit = function TheNecromancer_onEventInit
+	set ref_function_TheNecromancer_initFight = function TheNecromancer_initFight
 	set ref_function_bridge_ArcaneBeing_createBossInfo = function bridge_ArcaneBeing_createBossInfo
 	set ref_function_bridge_ArcaneBeing_spawn = function bridge_ArcaneBeing_spawn
 	set ref_function_bridge_ArcaneBeing_onDeathDelay = function bridge_ArcaneBeing_onDeathDelay
@@ -14761,7 +13682,7 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package ZoneTransition.")
 	endif
 	call TriggerClearConditions(initTrig)
-	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_bear_Main))
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_bear_Main))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package bear_Main.")
 	endif
@@ -14794,6 +13715,11 @@ function main takes nothing returns nothing
 	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_bear_Shockwave))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package bear_Shockwave.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Main))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Main.")
 	endif
 	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_tm_MagicCrystal))

@@ -1,2 +1,9 @@
 package nec_DeathAndDecay
 
+class DeathAndDecay
+
+    function finish()
+
+    function damage()
+
+    static function cast()

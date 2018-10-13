@@ -1,0 +1,24 @@
+package nec_Necromancer
+
+
+class Necromancer
+
+    function castDeathAndDecay()
+    
+    function castDeathCoil()
+
+    function castDeathPact()
+    
+
+class NecromancerGhost extends Necromancer
+
+    function castSoulBarrage()
+
+    function castSoulDrain()
+
+    function decay()
+
+    construct()
+        // Spawns the Necromancer in ghost form
+    
+    
