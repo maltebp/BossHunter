@@ -1,0 +1,101 @@
+package nec_Main
+
+import BossEvent
+import DayCycle
+import public General
+import public TimerUtils
+
+unit theNecromancer
+
+init
+    TheNecromancer.gameInit()
+
+class TheNecromancer
+
+//========================================================================================================================================
+
+    // Fight Settings
+    
+
+    // Other Settings
+    static constant real MAINLOOP_FREQ = 0.25
+    static constant vec2 hunterSpawn = vec2(-13650, 7600)
+
+//========================================================================================================================================
+
+    // Some constants
+
+    static trigger  trg_Death
+    static boolean  isIdle      = false
+    static boolean  canAttack   = false
+
+    private static rect     camBounds = gg_rct_TheNec_CamBounds
+
+//______________________________________________________________________________________________________________________________________________________________________________
+
+
+// Phase 1 ______________________________________________
+    static function phase1()
+        // Spawn mobs
+
+
+// Phase 2 ______________________________________________
+
+    static function phase2()
+
+// Phase 3 ______________________________________________
+
+    static function phase3()
+
+       
+
+
+// Idle Functions______________________________________________
+    private static function idle()
+       
+    
+    static function setIdle(real delay)
+       
+
+        
+// Death Function_____________________________________________
+    static function someoneDies() returns boolean
+        skip
+        return false
+       
+
+
+// Event Initiation__________________________________________________________________________________
+    
+    // Start Fight
+    static function initFight()
+        hunter.unpause()
+
+    // Setup Fight
+    static function onEventInit()
+        moveHunter(hunterSpawn, camBounds, hunterSpawn)
+        
+        
+
+    // Event init
+    static function initEvent() returns boolean
+        BossEvent.initiate( function onEventInit, function initFight )
+        return false
+        
+
+// Clear Event _____________________________________________________________________
+    static function clearEvent()
+       
+
+
+
+// On Game Init ____________________________________________________________________
+    static function gameInit()
+        CreateTrigger()
+        ..registerPlayerChatEvent(Player(0), "-thenecromancer", true)
+        ..addCondition(Condition(function TheNecromancer.initEvent ))
+
+        trg_Death = CreateTrigger()
+        ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+        ..addCondition( Condition( function TheNecromancer.someoneDies ))
+        ..disable()

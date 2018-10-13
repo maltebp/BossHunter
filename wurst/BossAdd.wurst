@@ -1,0 +1,10 @@
+package BossAdd
+
+class BossAdd
+    
+    unit mob
+
+    function spawn()
+    
+    
+    
