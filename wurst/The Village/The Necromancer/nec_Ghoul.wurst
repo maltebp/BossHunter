@@ -15,7 +15,9 @@ public class Ghoul
     private static real MOVESPEED = 270
     private static real ATTACKSPEED = 2
     
-    private static real SPAWNFREQ = 10
+    private static real SPAWNFREQ = 5
+
+    private static constant DEBUGMSG = true
 
 //========================================================================================================================================
 
@@ -24,16 +26,11 @@ public class Ghoul
     static AddSpawner spawner
     static rect spawnRect = gg_rct_TheNec_MobSpawn 
 
-
-    static function spawn()
-
-
     static function stopSpawn()
-
+        spawner.stop()
 
     static function startSpawn()
         spawner.start()
-
 
     static function activate()
         spawner = new AddSpawner()
@@ -41,7 +38,6 @@ public class Ghoul
         ..setSpawnRandom(spawnRect, SPAWNFREQ)
         ..setTarget(hunter)
         ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-        
 
     static function deactivate()
         destroy spawner

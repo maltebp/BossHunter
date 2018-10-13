@@ -1,10 +1,12 @@
 package BossAdd
 import General
 import TimerUtils
+import LinkedList
+
+    
 
 public class AddSpawner
-    
-    static Add array adds
+    LinkedList<Add> adds = new LinkedList<Add>
 
     int spawnerId 
     timer timer_Spawn
@@ -46,9 +48,6 @@ public class AddSpawner
         this.spawnRect = spawnRect
         this.spawnFreq = spawnFreq
 
-    static function addToList(Add whichAdd)
-    static function removeFromList()
-
     static function spawnAdd()
         thistype spawner = GetExpiredTimer().getData() castTo thistype
         vec2 spawnPoint = spawner.spawnRect.randomPoint()
@@ -61,7 +60,12 @@ public class AddSpawner
             spawner.mana,
              spawner.moveSpeed,
               spawner.attackSpeed)
-        addToList(add)
+    
+        spawner.adds.add(add)
+
+        
+        print("Created add!")
+        
         add
         ..createSpawnEffect(spawner.spawnSfx)
         ..setTarget(spawner.target)
@@ -74,35 +78,63 @@ public class AddSpawner
 
 
     function stop()
+        timer_Spawn.pause()
     function activate()
-    function deactivate()
+        
+
+    ondestroy
+        removeAll()
+        destroy adds
+        timer_Spawn.release()
+
+
     function killAll()
+        for add in adds
+            adds.remove(add)
+            add.kill()
     
+    function removeAll()
+        for add in adds
+            adds.remove(add)
+            destroy add
 
 
 public class Add
-
-    AddSpawner spawner
 
     unit mob
     unit target
     timer timer_Attack
     vec2 spawnPoint
 
+    static real UPDATE_FREQ = 0.5
+        
+
     ondestroy
+        timer_Attack.release()
+        mob.remove()
         
 
     construct( int id, player owner, vec2 spawnPoint, int damage, real armor, int health, int mana, real moveSpeed, real attackSpeed)
         mob = createUnit( owner, id, spawnPoint, GetRandomAngle() )
         ..setMaxHP(health, true)
-        ..setMaxMana(mana, true)
         ..setBaseDamage(damage, 1)   
         ..setArmor(armor)
         ..setMoveSpeed(moveSpeed)
         ..setAttackCooldown(attackSpeed, 1)
 
+        if mana>0 and mob.getMaxMana()>0 
+            // If you change the max mana of a unit without mana
+            // the code stops - this is to prevent that from
+            // happening
+            mob.setMaxMana(mana, true)
+
+        print("Created mob")
+
         timer_Attack = getTimer()
         ..setData(this castTo int)
+        ..startPeriodic(UPDATE_FREQ, function attack)
+
+        print("Started timer!")
 
         this.spawnPoint = spawnPoint
 
@@ -117,6 +149,8 @@ public class Add
 
 
     private static function attack()
+        Add add = GetExpiredTimer().getData() castTo thistype
+        add.mob.issueTargetOrder("attack", add.target)
         
 
     static function startSpawn()

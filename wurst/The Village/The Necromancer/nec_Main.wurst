@@ -40,6 +40,8 @@ class TheNecromancer
 // Phase 1 ______________________________________________
     static function phase1()
         
+        Ghoul.deactivate()
+
         // Start Mob Spawn
         // Start Cauldron Timer
         
@@ -78,8 +80,8 @@ class TheNecromancer
     static function initFight()
         hunter.unpause()
 
-        timer_MainLoop.startPeriodic( MAINLOOP_FREQ, function phase1 )
-
+        //timer_MainLoop.startPeriodic( MAINLOOP_FREQ, function phase1 )
+        timer_MainLoop.start( 30, function phase1 )
 
 
     // Setup Fight
@@ -87,9 +89,9 @@ class TheNecromancer
         moveHunter(hunterSpawn, camBounds, hunterSpawn)
 
         // Creating Timers
-        timer_MainLoop.release()
-
+        timer_MainLoop = getTimer()
         Ghoul.activate()
+        Ghoul.startSpawn()
 
 
     
