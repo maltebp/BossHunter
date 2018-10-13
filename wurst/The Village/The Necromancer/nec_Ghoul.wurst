@@ -1,29 +1,50 @@
 package nec_Ghoul
 import BossAdd
+import TimerUtils
+import General
  
-public class Ghoul extends BossAdd
+public class Ghoul
 
 //========================================================================================================================================
 
     // Unit Stats
     private static int  DAMAGE = 10
     private static real ARMOR = 0
-    private static real HEALTH = 100
-    private static real MANA   = 100
+    private static int HEALTH = 100
+    private static int MANA   = 100
     private static real MOVESPEED = 270
     private static real ATTACKSPEED = 2
+    
     private static real SPAWNFREQ = 10
-    
-    int unitid = 'u001'
-    
 
 //========================================================================================================================================
 
     // Constants
     static integer ID = 'u001'
+    static AddSpawner spawner
+    static rect spawnRect = gg_rct_TheNec_MobSpawn 
 
-    //construct()
-    //    super(ID, DAMAGE, ARMOR, HEALTH, MOVESPEED, ATTACKSPEED)
+
+    static function spawn()
 
 
+    static function stopSpawn()
+
+
+    static function startSpawn()
+        spawner.start()
+
+
+    static function activate()
+        spawner = new AddSpawner()
+        ..setUnit(ID, Player(11), HEALTH, MANA, DAMAGE, ARMOR, ATTACKSPEED, MOVESPEED)
+        ..setSpawnRandom(spawnRect, SPAWNFREQ)
+        ..setTarget(hunter)
+        ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
+        
+
+    static function deactivate()
+        destroy spawner
+        
+         
     

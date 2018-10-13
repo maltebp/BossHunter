@@ -1,36 +1,123 @@
 package BossAdd
 import General
+import TimerUtils
 
-public class BossAdd
+public class AddSpawner
     
-    private static int  DAMAGE = 10
-    private static real HEALTH = 100
-    private static real MANA   = 100
-    private static real MOVESPEED = 270
-    private static real ATTACKSPEED = 2
-    private static real ARMOR = 0
+    static Add array adds
 
-    static int ID = 'hfoo'
-    private static player OWNER = Player(0)
-    private static vec2   SPAWNPOINT = vec2(0,0)
+    int spawnerId 
+    timer timer_Spawn
+    int  damage = 10
+    real armor = 0
+    int health = 100
+    int mana   = 100
+    real moveSpeed = 270
+    real attackSpeed = 2
+    real spawnFreq = 10
+    player owner
+    int addId
+    boolean randomSpawnPos
+    rect spawnRect
+    string spawnSfx
+    unit target
+    
+    construct()
+        timer_Spawn = getTimer()
+        ..setData(this castTo int)
+
+    function setUnit( int addId, player owner, int health, int mana, int damage, real armor, real attackSpeed, real moveSpeed ) 
+        this.addId = addId
+        this.owner = owner
+        this.health = health
+        this.mana = mana
+        this.damage = damage
+        this.armor = armor
+        this.attackSpeed = attackSpeed
+        this.moveSpeed = moveSpeed
+
+    function setSpawnSpecific()
+
+    function setTarget(unit target)
+        this.target = target
+        
+    
+    function setSpawnRandom( rect spawnRect, real spawnFreq )
+        this.spawnRect = spawnRect
+        this.spawnFreq = spawnFreq
+
+    static function addToList(Add whichAdd)
+    static function removeFromList()
+
+    static function spawnAdd()
+        thistype spawner = GetExpiredTimer().getData() castTo thistype
+        vec2 spawnPoint = spawner.spawnRect.randomPoint()
+        Add add = new Add(spawner.addId,
+        spawner.owner,
+         spawnPoint,
+          spawner.damage,
+           spawner.armor,
+            spawner.health,
+            spawner.mana,
+             spawner.moveSpeed,
+              spawner.attackSpeed)
+        addToList(add)
+        add
+        ..createSpawnEffect(spawner.spawnSfx)
+        ..setTarget(spawner.target)
+
+    function start()
+        timer_Spawn.startPeriodic(spawnFreq, function spawnAdd)
+
+    function setSpawnEffect( string sfx )
+        spawnSfx = sfx
+
+
+    function stop()
+    function activate()
+    function deactivate()
+    function killAll()
+    
+
+
+public class Add
+
+    AddSpawner spawner
 
     unit mob
-    int unitid = 'hf00'
+    unit target
+    timer timer_Attack
+    vec2 spawnPoint
 
     ondestroy
+        
 
-    construct()
-        mob = createUnit(OWNER, unitid, vec2(0,0), GetRandomAngle())
+    construct( int id, player owner, vec2 spawnPoint, int damage, real armor, int health, int mana, real moveSpeed, real attackSpeed)
+        mob = createUnit( owner, id, spawnPoint, GetRandomAngle() )
+        ..setMaxHP(health, true)
+        ..setMaxMana(mana, true)
+        ..setBaseDamage(damage, 1)   
+        ..setArmor(armor)
+        ..setMoveSpeed(moveSpeed)
+        ..setAttackCooldown(attackSpeed, 1)
 
-    construct( int id, int damage, real armor, real health, real movespeed, real attackspeed)
+        timer_Attack = getTimer()
+        ..setData(this castTo int)
+
+        this.spawnPoint = spawnPoint
 
     function kill()
 
+    function createSpawnEffect( string sfx)
+        addEffect(sfx, spawnPoint)
+        ..destr()
+
+    function setTarget(unit target)
+        this.target = target
 
 
-    static function getID() returns integer
-        return ID
-
+    private static function attack()
+        
 
     static function startSpawn()
         

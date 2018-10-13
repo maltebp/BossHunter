@@ -89,6 +89,9 @@ class TheNecromancer
         // Creating Timers
         timer_MainLoop.release()
 
+        Ghoul.activate()
+
+
     
     // Event init
     static function initEvent() returns boolean
@@ -104,10 +107,6 @@ class TheNecromancer
 
 // On Game Init ____________________________________________________________________
     static function gameInit()
-
-        Ghoul g = new Ghoul()
-
-        print(g.mob.getName())
 
         CreateTrigger()
         ..registerPlayerChatEvent(Player(0), "-thenecromancer", true)
