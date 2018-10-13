@@ -1355,7 +1355,7 @@ endfunction
 
 function CreateUnitsForPlayer0 takes nothing returns nothing
 	local player p = Player(0)
-	local unit u = CreateUnit(p, 1848651848,  - 13941.3,  - 13979.3, 228.220)
+	local unit u = CreateUnit(p, 1966092337,  - 14036.6,  - 14138.9, 257.492)
 	call SetUnitColor(u, ConvertPlayerColor(20))
 	set u = CreateUnit(p, 1848651845,  - 4463.4,  - 747.2, 224.611)
 	call SetUnitColor(u, ConvertPlayerColor(20))
@@ -1416,7 +1416,7 @@ function CreateRegions takes nothing returns nothing
 	set gg_rct_MF_Camp = Rect( - 14208.0, 5248.0,  - 13152.0, 6336.0)
 	set we = AddWeatherEffect(gg_rct_MF_Camp, 1280470369)
 	call EnableWeatherEffect(we, true)
-	set gg_rct_TheNec_CamBounds = Rect( - 14336.0, 7104.0,  - 13024.0, 12256.0)
+	set gg_rct_TheNec_CamBounds = Rect( - 14208.0, 7328.0,  - 13120.0, 12256.0)
 	call Rect( - 14464.0, 5376.0,  - 13152.0, 6464.0)
 	call Rect( - 13696.0, 12128.0,  - 13568.0, 12224.0)
 	call Rect( - 15648.0, 13344.0,  - 14688.0, 14080.0)
@@ -2436,14 +2436,14 @@ function GameTimer_closure_impl takes nothing returns nothing
 endfunction
 
 function Group_closure_impl takes nothing returns nothing
+	set Group_unitCounter = Group_unitCounter + 1
+endfunction
+
+function Group_closure_impl_2 takes nothing returns nothing
 	set Group_randomCounter = Group_randomCounter - 1
 	if Group_randomCounter == 0 then
 		set Group_randomSelected = GetEnumUnit()
 	endif
-endfunction
-
-function Group_closure_impl_2 takes nothing returns nothing
-	set Group_unitCounter = Group_unitCounter + 1
 endfunction
 
 function IceBlast_setReady takes nothing returns nothing
@@ -2610,11 +2610,15 @@ function OnUnitEnterLeave_closure_impl takes nothing returns nothing
 	call prepareUnit(GetEnumUnit())
 endfunction
 
+function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
+	call prepareUnit(GetFilterUnit())
+endfunction
+
 function trigger_execute takes trigger this returns nothing
 	call TriggerExecute(this)
 endfunction
 
-function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
+function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
 	local unit leavingUnit = GetTriggerUnit()
 	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
 		call pushUnit(leavingUnit)
@@ -2622,10 +2626,6 @@ function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 		call popUnit()
 	endif
 	set leavingUnit = null
-endfunction
-
-function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
-	call prepareUnit(GetFilterUnit())
 endfunction
 
 function unit_getCurrentOrder takes unit this returns integer
@@ -7105,12 +7105,12 @@ endfunction
 
 function bridge_Fade_fadeIn takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Fade_fadeIn("FadeAndFilters, line 134")
+	call Fade_fadeIn("FadeAndFilters, line 105")
 endfunction
 
 function bridge_Fade_fadeIn_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Fade_fadeIn("FadeAndFilters, line 105")
+	call Fade_fadeIn("FadeAndFilters, line 134")
 endfunction
 
 function Fade_fadeOut takes string stackPos returns nothing
@@ -9368,12 +9368,12 @@ endfunction
 
 function bridge_TheBear_clearEvent takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 137")
+	call TheBear_clearEvent("bear_Main, line 119")
 endfunction
 
 function bridge_TheBear_clearEvent_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 119")
+	call TheBear_clearEvent("bear_Main, line 137")
 endfunction
 
 function Fade_setEndDelay takes integer this, real duration returns nothing
@@ -10251,15 +10251,27 @@ endfunction
 
 function bridge_clear takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 159")
+	call clear("tm_Main, line 132")
 endfunction
 
 function bridge_clear_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 132")
+	call clear("tm_Main, line 159")
 endfunction
 
 function delayedInit takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_delayedInit takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit("ZoneTransition, line 13")
+endfunction
+
+function delayedInit_2 takes string stackPos returns nothing
 	local integer obj
 	local integer receiver
 	local integer receiver_2
@@ -10288,21 +10300,9 @@ function delayedInit takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_delayedInit takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit("tm_Main, line 69")
-endfunction
-
-function delayedInit_2 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function bridge_delayedInit_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit_2("ZoneTransition, line 13")
+	call delayedInit_2("tm_Main, line 69")
 endfunction
 
 function destructable_setAnimation takes destructable this, string anim returns nothing
@@ -10942,8 +10942,8 @@ endfunction
 function init_LinkedList takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call alloc_Closure_2("when calling alloc_Closure in LinkedList, line 479")
-	call alloc_Closure_3("when calling alloc_Closure in LinkedList, line 483")
+	call alloc_Closure_3("when calling alloc_Closure in LinkedList, line 479")
+	call alloc_Closure_2("when calling alloc_Closure in LinkedList, line 483")
 	call realToIndex(0.)
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return true
@@ -13249,11 +13249,11 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_DelayNode_recycle = function bridge_DelayNode_recycle
 	set ref_function_bridge_ExecutableEffect_stop = function bridge_ExecutableEffect_stop
 	set ref_function_bridge_Fade_OnFadeIn = function bridge_Fade_OnFadeIn
-	set ref_function_bridge_Fade_fadeIn = function bridge_Fade_fadeIn_2
+	set ref_function_bridge_Fade_fadeIn = function bridge_Fade_fadeIn
 	set ref_function_bridge_Fade_endFade = function bridge_Fade_endFade
 	set ref_function_bridge_Fade_OnFadeOut = function bridge_Fade_OnFadeOut
 	set ref_function_bridge_Fade_fadeOut = function bridge_Fade_fadeOut
-	set ref_function_bridge_Fade_fadeIn_2 = function bridge_Fade_fadeIn
+	set ref_function_bridge_Fade_fadeIn_2 = function bridge_Fade_fadeIn_2
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
 	set ref_function_checkCoordinates = function checkCoordinates
 	set ref_function_checkCoordinates2 = function checkCoordinates2
@@ -13261,14 +13261,14 @@ function initGlobals takes nothing returns nothing
 	set ref_function_getUnitIndex = function getUnitIndex
 	set ref_function_bridge_delayedInit = function bridge_delayedInit_3
 	set ref_function_selectionFilter = function selectionFilter
-	set ref_function_Group_closure_impl = function Group_closure_impl_2
-	set ref_function_Group_closure_impl_2 = function Group_closure_impl
+	set ref_function_Group_closure_impl = function Group_closure_impl
+	set ref_function_Group_closure_impl_2 = function Group_closure_impl_2
 	set ref_function_bridge_isOrdered = function bridge_isOrdered
 	set ref_function_InteractableObject_filter = function InteractableObject_filter
 	set ref_function_bridge_InteractableObject_checkDistance = function bridge_InteractableObject_checkDistance
 	set ref_function_replayMusic = function replayMusic
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_3
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
 	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 	set ref_function_bridge_DynamicSound_TimedLoop_onExpire = function bridge_DynamicSound_TimedLoop_onExpire
@@ -13281,7 +13281,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
 	set ref_function_bridge_UnitLightning_update = function bridge_UnitLightning_update
 	set ref_function_bridge_UnitLightning_kill = function bridge_UnitLightning_kill
-	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit_2
+	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit
 	set ref_function_bridge_Attack_onHit = function bridge_Attack_onHit
 	set ref_function_Attack_setUpdateMove = function Attack_setUpdateMove
 	set ref_function_Attack_cooldownFinished = function Attack_cooldownFinished
@@ -13302,8 +13302,8 @@ function initGlobals takes nothing returns nothing
 	set ref_function_TheBear_idle = function TheBear_idle
 	set ref_function_bridge_TheBear_initEvent = function bridge_TheBear_initEvent
 	set ref_function_TheBear_someoneDies = function TheBear_someoneDies
-	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent_2
-	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent
+	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent
+	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent_2
 	set ref_function_bridge_TheBear_mainLoop = function bridge_TheBear_mainLoop
 	set ref_function_bridge_TheBear_onEventInit = function bridge_TheBear_onEventInit
 	set ref_function_TheBear_initFight = function TheBear_initFight
@@ -13348,13 +13348,13 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_initEvent = function bridge_initEvent
 	set ref_function_bridge_someoneDies = function bridge_someoneDies
 	set ref_function_bridge_leaveEvent = function bridge_leaveEvent
-	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit
+	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit_2
 	set ref_function_idle = function idle
 	set ref_function_bridge_onEventInit = function bridge_onEventInit
 	set ref_function_initFight = function initFight
 	set ref_function_ambient = function ambient
-	set ref_function_bridge_clear = function bridge_clear_2
-	set ref_function_bridge_clear_2 = function bridge_clear
+	set ref_function_bridge_clear = function bridge_clear
+	set ref_function_bridge_clear_2 = function bridge_clear_2
 	set ref_function_bridge_mainLoop = function bridge_mainLoop
 endfunction
 

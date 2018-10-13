@@ -190,7 +190,7 @@ import ObjEditingNatives
 	let def = createObjectDefinition("w3u", 'u001', 'ugho')
 	..setUnreal("uhpr", 0.0)
 	..setInt("ufle", 0)
-	..setString("uabi", "A007")
+	..setString("uabi", "")
 	..setReal("usca", 1.2)
 	..setInt("uclg", 170)
 	..setInt("uclb", 170)
@@ -200,6 +200,11 @@ import ObjEditingNatives
 	..setString("utyp", "")
 	..setInt("udef", 20)
 	..setString("udty", "medium")
+	..setUnreal("uacq", 999.0)
+	..setInt("uspe", 1)
+	..setString("unsf", " (Necro)")
+	..setInt("utco", 20)
+	..setInt("uclr", 200)
 
 
 @compiletime function create_w3u_n001()
