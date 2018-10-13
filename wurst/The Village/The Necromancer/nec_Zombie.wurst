@@ -2,6 +2,8 @@ package nec_Zombie
 
 import BossAdd
 import General
+import LinkedList
+import TimerUtils
  
 public class Zombie
 
@@ -42,5 +44,69 @@ public class Zombie
     static function deactivate()
         destroy spawner
         
-         
+
+class Disease
+    // The class that maintains the Disease Ability
+    //----------------------------------------------
+
+    // Trigger: unit enters rect or unit learns ability
+
+    // If unit exits rect - remove from list
+
+    // Check if disease should damage anyone
+
+    // If unit dies: do disease cloud stuff
     
+
+class DiseaseCloud
+    // The class that maintains the disease clouds after unit death
+    
+    private static LinkedList<DiseaseCloud> allClouds = new LinkedList<DiseaseCloud>    
+    private static trigger trg_UnitDies
+
+    private static constant int ABILITYID = 'A02I'
+
+    timer timer_Damage
+    timer timer_EndEffect
+    real damagePerSecond
+    vec2 pos
+    
+
+    ondestroy
+        timer_Damage.release()
+        timer_EndEffect.release()
+
+    static function endEffect()
+
+    static function damage()
+
+    construct(vec2 pos, real damagePerSecond, real duration, real aoe)
+        //If duration = 0, it lasts forever
+
+
+    static function destroyAll()
+
+
+    static function unitDies() returns boolean
+        unit dyingUnit = GetDyingUnit()
+        
+        return false
+
+
+    static function setup()
+        trg_UnitDies = CreateTrigger()
+        ..addCondition(Condition(function unitDies))
+        ..disable()
+
+// ------------------------------ 
+// Functions specific for BossHunter Map
+
+    static function activate()
+        
+
+    static function deactivate()
+        destroyAll()
+
+
+init
+    DiseaseCloud.setup()
