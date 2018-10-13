@@ -1,72 +1,38 @@
 
 TO DO ____________________________________________________________
 
-1) Misc
-    [ ] 1.1 Create basic setup
-    [ ] 1.2 Create initializer
-    [ ] 1.3 Clear event system
-    [ ] 1.4 Create Loose/Win functions
+[ ] 1) Misc
+        [ ] 1.1 Create basic setup
+        [ ] 1.2 Create initializer
+        [ ] 1.3 Clear event system
+        [ ] 1.4 Create Loose/Win functions
 
-2) Phase 1
-    [ ] 2.1  Ghoul
-    [ ] 2.2  Archer
-    [ ] 2.3  Magician
-    [ ] 2.4  Zombie
-    [ ] 2.5  Create unit system (spawn, clear etc.)
-    [ ] 2.6  Acolytes (animations death registration etc.)
-    [ ] 2.7  Cauldron
+[ ] 2) Phase 1
+        [ ] 2.1  Ghoul
+        [ ] 2.2  Archer
+        [ ] 2.3  Magician
+        [ ] 2.4  Zombie
+        [ ] 2.5  Create unit system (spawn, clear etc.)
+        [ ] 2.6  Acolytes (animations death registration etc.)
+        [ ] 2.7  Cauldron
         [ ] 2.8  Transission from Lane to Graveyard
         [ ] 2.9  Create phase mechanics (acolyte deaths, make cauldron vulnerable)
         [ ] 2.10  Create timer and mechanics when timer runs out     
 
-3) Phase 2
-    [ ] 3.1  Morbent fell, move and cast mechanics
-    [ ] 3.2  Reannimated Acolytes
-    [ ] 3.3  Death and Decay
-    [ ] 3.4  Death Coil
-    [ ] 3.5  Death Pact on Acolytes
+[ ] 3) Phase 2
+        [ ] 3.1  Morbent fell, move and cast mechanics
+        [ ] 3.2  Reannimated Acolytes
+        [ ] 3.3  Death and Decay
+        [ ] 3.4  Death Coil
+        [ ] 3.5  Death Pact on Acolytes
 
-Phase 3
-    [ ] 
-    [ ]
-    [ ]
-    [ ]
-    [ ]
+[ ] 4) Phase 3
+        [ ] 3.1 The Necromancer as a ghost, respawn, move, attack, cast mechanics, life drain
+        [ ] 3.2 Ghost Spawns
+        [ ] 3.3 Drain Ghost
+        [ ] 3.4 Soul Barrage
+        [ ] 3.5 Ghost Explosion
 
-4) Environment 
-    [ ] 4.1 Quick fix to remove the intro (it'll come back later)
-    [ ] 4.2 Ensure pathing is right
-    
-Remove the first 2 necromancers
-New summons:
-    - Zombie: same
-    - Ghoul: gets the role of the swordsman (no more slow)
-    - Magician: gets slow and deals more damage - and become more rare, so they become higher priority
-    - Archer: same
-    - swordsman: Remove
-
-The 3 apprentices have to be killed before you destroy the cauldron
-
-Cauldron is destroyed: he ress the apprentices, but they don't have any special abilities
-He will however death pact them when he reaches 50% hp, so kill him them off
-Morbent still have DnD and DC
-
-3rd phase: Less ghosts, with more hp (picks the one with the most hp)
-He drains the ghosts instead of just "death pacting" them,
-Perhaps some aoe (like the dnd) here as well.
-Perhaps make the ghosts explode on death
-
-
-Hard mode??????
-
-
-Lore:
-A Necromancer who is pissed at the village, and thus he wishes to destroy it. He has picked up the magic of death,
-in order to do this. He has overtaken the graveyard, and performs wicked rituals.
-
-The Necromancer, perhaps have some merit for his opinion towards the village. 
-
-Magic of Death: Ordinarily undeads and spirits are not a evil beings, but very neutral and rarely inteferes with the living.
-However, Magic of Death is the art of controlling and harvesting these unused powers. It's a magic that is rare
-but usually used for communicating and honoring the dead. However, some use it for their own agenda and purpose,
-defying the dead, and controls them.
+[ ] 4) Environment 
+        [ ] 4.1 Quick fix to remove the intro (it'll come back later)
+        [ ] 4.2 Ensure pathing is right

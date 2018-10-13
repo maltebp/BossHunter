@@ -3,62 +3,53 @@ package bear_Main
 import BossEvent
 import DayCycle
 import public General
-import Music
-import TimerUtils
-import Orders
+import public TimerUtils
 import initlater bear_Attack
 import initlater bear_Bleed
 import initlater bear_Shockwave
 import initlater bear_Enrage
 import initlater bear_Frenzy
 import initlater bear_Charge
-
-
 init
     TheBear.gameInit()
-
 class TheBear
 
-    static constant int BOSSID = 'n00H'
-    static constant real MAINLOOP_FREQ = 0.25
+//========================================================================================================================================
 
-
-    // BOSS STATS   
+    // Fight Settings
     static constant int     HP             = 14000
     static constant real    ARMOR          = 50
     static constant real    MOVESPEED      = 250
     static constant real    ATTACKSPEED    = 2
     static constant int     ATTACKDMG      = 225
 
-    static real currentAttackSpeed = ATTACKSPEED
-    static constant int startRed = 150
-    static constant int startGreen = 150
-    static constant int startBlue = 150
-    static constant real startScale = 1.3
+    // Other Settings
+    static constant real MAINLOOP_FREQ = 0.25
 
-    static real damageInc = 0 // In percent
+//========================================================================================================================================
 
-    static trigger trg_Death
-    static boolean isIdle   = false
-    static boolean canAttack = false
+    // Some constants
+    static constant int     BOSSID      = 'n00H'
+    static constant int     startRed    = 150
+    static constant int     startGreen  = 150
+    static constant int     startBlue   = 150
+    static constant real    startScale  = 1.3
 
-    static unit theBear
-    private static timer mainLoopTimer = getTimer()
-    private static timer idleDelayTimer = getTimer()
+    static real     currentAttackSpeed = ATTACKSPEED
+    static real     damageInc   = 0 // In percent
+    static trigger  trg_Death
+    static boolean  isIdle      = false
+    static boolean  canAttack   = false
+    static unit     theBear
 
+    private static timer    mainLoopTimer
+    private static timer    idleDelayTimer
+    private static rect     camBounds = gg_rct_TheBear_CamBounds
 
-    static rect camBounds = gg_rct_TheBear_CamBounds
-
-
-    private static function idle()
-        idleDelayTimer.pause()
-        isIdle = true
-    
-
-    static function setIdle(real delay)
-        idleDelayTimer.start( delay, function idle )
+//______________________________________________________________________________________________________________________________________________________________________________
 
 
+//  Main Loop ----------------------------------------------
     static function mainLoop()
         
         Enrage.adjust()
@@ -99,31 +90,18 @@ class TheBear
 
         else if canAttack
             Attack.start()
+
+
+// Idle Functions______________________________________________
+    private static function idle()
+        idleDelayTimer.pause()
+        isIdle = true
+    
+    static function setIdle(real delay)
+        idleDelayTimer.start( delay, function idle )
+
         
-
-
-    static function clearEvent()
-        theBear.remove()
-        trg_Death.disable()
-        Attack.deactivate()
-        Bleed.deactivate()
-        Shockwave.deactivate()
-        Frenzy.deactivate()
-        Charge.deactivate()
-        
-        
-
-    static function gameInit()
-        CreateTrigger()
-        ..registerPlayerChatEvent(Player(0), "-thebear", true)
-        ..addCondition(Condition(function TheBear.initEvent ))
-
-        trg_Death = CreateTrigger()
-        ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
-        ..addCondition( Condition( function TheBear.someoneDies ))
-        ..disable()
-
-
+// Death Function_____________________________________________
     static function someoneDies() returns boolean
         unit dyingUnit = GetDyingUnit()
 
@@ -161,7 +139,9 @@ class TheBear
         return false
 
 
+// Event Initiation__________________________________________________________________________________
     
+    // Start Fight
     static function initFight()
         isIdle = true
         canAttack = true
@@ -171,11 +151,8 @@ class TheBear
         playMusic(Sounds.orcVictory)
         mainLoopTimer.startPeriodic(MAINLOOP_FREQ, function mainLoop )
 
-        
-
+    // Setup Fight
     static function onEventInit()
-
-
         moveHunter(vec2(-9900,12710), camBounds, vec2(-9900,12710.0+300))
 
         // Create The Boss
@@ -193,18 +170,40 @@ class TheBear
         DayCycle.setAlwaysDay()
         trg_Death.enable()
 
+        mainLoopTimer = getTimer()
+        idleDelayTimer = getTimer()
+
         Attack.activate()
         Bleed.activate()
         Shockwave.activate()
         Frenzy.activate()
         Charge.activate()
 
-
+    // Event init
     static function initEvent() returns boolean
-
         BossEvent.initiate( function onEventInit, function initFight )
-
         return false
         
 
+// Clear Event _____________________________________________________________________
+    static function clearEvent()
+        theBear.remove()
+        mainLoopTimer.release()
+        idleDelayTimer.release()
+        trg_Death.disable()
+        Attack.deactivate()
+        Bleed.deactivate()
+        Shockwave.deactivate()
+        Frenzy.deactivate()
+        Charge.deactivate()
 
+// On Game Init ____________________________________________________________________
+    static function gameInit()
+        CreateTrigger()
+        ..registerPlayerChatEvent(Player(0), "-thebear", true)
+        ..addCondition(Condition(function TheBear.initEvent ))
+
+        trg_Death = CreateTrigger()
+        ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+        ..addCondition( Condition( function TheBear.someoneDies ))
+        ..disable()

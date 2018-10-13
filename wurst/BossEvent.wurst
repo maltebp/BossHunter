@@ -22,6 +22,7 @@ public class BossEvent
     private static boolean isRunning = false
 
     private static function inShop()
+    
         
         if not hunter.isAliveTrick() or hunterIsDead
             hunter.revive(gg_rct_HunterStart.getCenter(), true)

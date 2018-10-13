@@ -2,9 +2,13 @@ package bear_Bleed
 import TimerUtils
 import bear_Main
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 public class Bleed
 
-// Settings
+//========================================================================================================================================
+    
+    // Mechanic Settings
     static  constant        boolean     ENABLED     = true
 
     private static constant real        DMG         = 16    // per stack
@@ -13,16 +17,17 @@ public class Bleed
 
     private static constant boolean     RESETFREQONSTACK    = false
 
-    private static constant string      EFFECT = "Objects\\Spawnmodels\\Human\\HumanBlood\\HeroBloodElfBlood.mdl"
+//========================================================================================================================================
 
-// Other Variables
+    // Other Variables
     private static int stacks = 0
     private static timer timer_UpdateText
     private static timer timer_Damage
     private static timer timer_Duration
     private static texttag text
+    private static constant string      EFFECT = "Objects\\Spawnmodels\\Human\\HumanBlood\\HeroBloodElfBlood.mdl"
         
-// -------------------------------------------------------------------------
+// _____________________________________________________________________________________________________________________________________________________________________________________________
     
 
 // ADD STACK _______________________________________________________________

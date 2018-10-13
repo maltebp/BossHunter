@@ -1,68 +1,83 @@
+
 package bear_Attack
 
 import bear_Main
 import Orders
-import TimerUtils
 import SoundUtils
 import bear_Bleed
 import RegisterEvents
 import bear_Frenzy
 import InstantDummyCaster
 
-init
-    registerSpellEffectEvent('A02A', function Attack.onHit)
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 public class Attack
 
+//========================================================================================================================================
+
+    // The attack is a Finger of Death spell, that is cast with regular frequency.
+    // 
+
+
+
+//========================================================================================================================================
+
+    // Sounds
     private static constant SoundDefinition array hitSounds = [
         new SoundDefinition(Sounds.woodHeavyBashFlesh1, false, true),
         new SoundDefinition(Sounds.woodHeavyBashFlesh2, false, true),
         new SoundDefinition(Sounds.woodHeavyBashFlesh3, false, true) ]
     
-    private static constant real ATTACKRANGE = 200
-    private static constant real UPDATEMOVE_FREQ = 0.5
+    // Technical Settings
+    private static constant real ATTACKRANGE        = 200
+    private static constant real UPDATEMOVE_FREQ    = 0.5
 
-    private static boolean isAttacking = true
-
+    // Other Variables
     private static boolean onCooldown = false
     private static boolean updateMove = false 
-
-    private static trigger trg_OnHit
     private static timer timer_UpdateMove
     private static timer timer_AttackCD
 
-
-    static function activate()
-        timer_AttackCD = getTimer()
-        timer_UpdateMove = getTimer()
-        updateMove = true
-
-    static function deactivate()
-        timer_AttackCD.release()
-        timer_UpdateMove.release()
+// _____________________________________________________________________________________________________________________________________________________________________________________________
 
 
+
+// Start ____________________________________________________________________________________
      static function start()
-     
+
+            // Finger of Death = Attack
+
         if TheBear.theBear.getCurrentOrder() != Orders.fingerofdeath
+
             if TheBear.theBear.getPos().distanceTo(hunter.getPos()) <= ATTACKRANGE
                 if not onCooldown
-                    print("Ordering finger of death")
+                    // Attack!
                     TheBear.theBear.issueTargetOrderById( Orders.fingerofdeath, hunter )
                 else if updateMove
+                    // Updates the facing of the bear, if he's in range, but attack
+                    // is on cooldown.
                     TheBear.theBear.setFacing(TheBear.theBear.getPos().angleTo(hunter.getPos()))
                     updateMove = false
                     timer_UpdateMove.start( UPDATEMOVE_FREQ, function setUpdateMove )
+
             else
                 if updateMove
                     TheBear.theBear.issuePointOrderById( Orders.move, hunter.getPos() )
+                    // Toggle the moving functionality off for UPDATEMOVE_FREQ
                     updateMove = false
                     timer_UpdateMove.start( UPDATEMOVE_FREQ, function setUpdateMove )
     
 
+// Update Move ____________________________________________________________________________________
     private static function setUpdateMove()
+        // In order to ensure that the Bear's not ordered to around all the time,
+        // and is stopped in his attack to move,there is a boolean var to toggle
+        // it on and off.
+
         updateMove = true
 
+
+// On Hit ____________________________________________________________________________________
     static function onHit()
         hitSounds[GetRandomInt(0, 2)].playOnPoint(hunter.getPos3Real())
         onCooldown = true
@@ -74,10 +89,24 @@ public class Attack
             InstantDummyCaster.castTarget(Player(11), 'A02D', 1, Orders.slow, hunter)
             
 
+// Cooldown ____________________________________________________________________________________
     private static function cooldownFinished()
         onCooldown = false
-        
 
+
+// ACTIVATE / DEACTIVE
+
+    static function activate()
+        timer_AttackCD = getTimer()
+        timer_UpdateMove = getTimer()
+        updateMove = true
+
+    static function deactivate()
+        timer_AttackCD.release()
+        timer_UpdateMove.release()
+    
+init
+    registerSpellEffectEvent('A02A', function Attack.onHit)
             
     
             

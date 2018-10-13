@@ -4,29 +4,31 @@ import TimerUtils
 import bear_Main
 import Orders
 
-init
-    registerSpellEffectEvent( 'A02B', function Shockwave.onCast )
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 public class Shockwave
 
-// Settings
+//========================================================================================================================================
+
+    // Mechanic Settings
     static constant boolean ENABLED     = true
 
-    private static constant boolean ONLYWHENOUTOFRANGE = true // Needs to be implemented
-
+    //private static constant boolean ONLYWHENOUTOFRANGE = true   <--- Needs to be implemented
 
     private static constant real    DAMAGE      = 800
     private static constant real    COOLDOWN    = 5
 
     private static constant real    WIDTH       = 200   //On each side
-    private static constant real    SPEED       = 1500  //Per Second
-    static constant         real    MIN_DIST    = 300
-
+    private static constant real    SPEED       = 1500  //Range Per Second
+    static constant         real    MIN_DIST    = 300   //The distance the bear has to have to the Hunter before it's cast (is ignored if !ONLYOUTOFRANGE)
     private static constant real    DISTANCE    = 2000
 
-    private static constant real    STARTDELAY  = 3
-    private static constant real    DELAYRESETTIME = 5 // Seconds
+    private static constant real    STARTDELAY  = 3     
+    private static constant real    DELAYRESETTIME = 5  // Seconds
 
     private static constant real    IDLE_DELAY  = 2.0
+
+//========================================================================================================================================
 
 
 // Other Variables
@@ -172,6 +174,10 @@ public class Shockwave
             timer_Cooldown.release()
             targetsHit.destr()
             tempGroup.destr()
+
+// ON GAME INIT ________________________________________________________________
+init
+    registerSpellEffectEvent( 'A02B', function Shockwave.onCast )
         
 
     
