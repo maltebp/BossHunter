@@ -223,12 +223,12 @@ import ObjEditingNatives
 	..setUnreal("ua1c", 2.0)
 	..setString("utyp", "")
 	..setInt("udef", 15)
+	..setInt("uspe", 1)
 
 
 @compiletime function create_w3u_u002()
 	let def = createObjectDefinition("w3u", 'u002', 'uskm')
 	..setInt("ufle", 0)
-	..setInt("uspe", 0)
 	..setUnreal("uhpr", 0.0)
 	..setInt("ua1b", 40)
 	..setString("utyp", "")
@@ -349,6 +349,9 @@ import ObjEditingNatives
 	..setInt("udef", 8)
 	..setString("udty", "medium")
 	..setUnreal("uacq", 500.0)
+	..setInt("uspe", 1)
+	..setReal("usca", 1.1)
+	..setInt("utco", 20)
 
 
 @compiletime function create_w3u_u007()

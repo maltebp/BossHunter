@@ -695,6 +695,16 @@ timer Shockwave_timer_DmgTimer=null
 timer Shockwave_timer_Cooldown=null
 timer Shockwave_timer_Status=null
 unit Shockwave_caster=null
+integer Archer_DAMAGE=0
+real Archer_ARMOR=0.
+integer Archer_HEALTH=0
+integer Archer_MANA=0
+real Archer_MOVESPEED=0.
+real Archer_ATTACKSPEED=0.
+real Archer_SPAWNFREQ=0.
+integer Archer_ID=0
+integer Archer_spawner=0
+rect Archer_spawnRect=null
 integer Ghoul_DAMAGE=0
 real Ghoul_ARMOR=0.
 integer Ghoul_HEALTH=0
@@ -705,10 +715,30 @@ real Ghoul_SPAWNFREQ=0.
 integer Ghoul_ID=0
 integer Ghoul_spawner=0
 rect Ghoul_spawnRect=null
+integer Mage_DAMAGE=0
+real Mage_ARMOR=0.
+integer Mage_HEALTH=0
+integer Mage_MANA=0
+real Mage_MOVESPEED=0.
+real Mage_ATTACKSPEED=0.
+real Mage_SPAWNFREQ=0.
+integer Mage_ID=0
+integer Mage_spawner=0
+rect Mage_spawnRect=null
 real TheNecromancer_hunterSpawn_x=0.
 real TheNecromancer_hunterSpawn_y=0.
 timer TheNecromancer_timer_MainLoop=null
 rect TheNecromancer_camBounds=null
+integer Zombie_DAMAGE=0
+real Zombie_ARMOR=0.
+integer Zombie_HEALTH=0
+integer Zombie_MANA=0
+real Zombie_MOVESPEED=0.
+real Zombie_ATTACKSPEED=0.
+real Zombie_SPAWNFREQ=0.
+integer Zombie_ID=0
+integer Zombie_spawner=0
+rect Zombie_spawnRect=null
 group ArcaneBeing_allMobs=null
 rect ArcaneBeing_SPAWNAREA=null
 integer ArcaneBeing_UNITID=0
@@ -1151,7 +1181,10 @@ code ref_function_bridge_init_bear_Attack=null
 code ref_function_bridge_init_bear_Charge=null
 code ref_function_init_bear_Enrage=null
 code ref_function_bridge_init_bear_Shockwave=null
+code ref_function_init_nec_Archer=null
 code ref_function_init_nec_Ghoul=null
+code ref_function_init_nec_Mage=null
+code ref_function_init_nec_Zombie=null
 code ref_function_init_nec_Main=null
 code ref_function_bridge_init_tm_MagicCrystal=null
 code ref_function_bridge_init_tm_Main=null
@@ -1414,6 +1447,7 @@ function CreateUnitsForPlayer0 takes nothing returns nothing
 	local player p = Player(0)
 	local unit u = CreateUnit(p, 1966092337,  - 14036.6,  - 14138.9, 257.492)
 	call SetUnitColor(u, ConvertPlayerColor(20))
+	set u = CreateUnit(p, 1966092343,  - 13862.9,  - 14175.8, 49.066)
 	set u = CreateUnit(p, 1848651845,  - 4463.4,  - 747.2, 224.611)
 	call SetUnitColor(u, ConvertPlayerColor(20))
 	set u = CreateUnit(p, 1848651846,  - 362.8, 820.3, 275.854)
@@ -2493,14 +2527,14 @@ function GameTimer_closure_impl takes nothing returns nothing
 endfunction
 
 function Group_closure_impl takes nothing returns nothing
+	set Group_unitCounter = Group_unitCounter + 1
+endfunction
+
+function Group_closure_impl_2 takes nothing returns nothing
 	set Group_randomCounter = Group_randomCounter - 1
 	if Group_randomCounter == 0 then
 		set Group_randomSelected = GetEnumUnit()
 	endif
-endfunction
-
-function Group_closure_impl_2 takes nothing returns nothing
-	set Group_unitCounter = Group_unitCounter + 1
 endfunction
 
 function IceBlast_setReady takes nothing returns nothing
@@ -2642,6 +2676,20 @@ function pushUnit takes unit u returns nothing
 	set OnUnitEnterLeave_tempUnitsCount = OnUnitEnterLeave_tempUnitsCount + 1
 endfunction
 
+function trigger_execute takes trigger this returns nothing
+	call TriggerExecute(this)
+endfunction
+
+function OnUnitEnterLeave_closure_impl takes nothing returns nothing
+	local unit leavingUnit = GetTriggerUnit()
+	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
+		call pushUnit(leavingUnit)
+		call trigger_execute(OnUnitEnterLeave_eventTrigger)
+		call popUnit()
+	endif
+	set leavingUnit = null
+endfunction
+
 function trigger_evaluate takes trigger this returns boolean
 	return TriggerEvaluate(this)
 endfunction
@@ -2663,26 +2711,12 @@ function prepareUnit takes unit u returns nothing
 	set receiver_2 = null
 endfunction
 
-function OnUnitEnterLeave_closure_impl takes nothing returns nothing
-	call prepareUnit(GetEnumUnit())
-endfunction
-
 function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 	call prepareUnit(GetFilterUnit())
 endfunction
 
-function trigger_execute takes trigger this returns nothing
-	call TriggerExecute(this)
-endfunction
-
 function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
-	local unit leavingUnit = GetTriggerUnit()
-	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
-		call pushUnit(leavingUnit)
-		call trigger_execute(OnUnitEnterLeave_eventTrigger)
-		call popUnit()
-	endif
-	set leavingUnit = null
+	call prepareUnit(GetEnumUnit())
 endfunction
 
 function unit_getCurrentOrder takes unit this returns integer
@@ -4309,7 +4343,7 @@ function alloc_LLEntry takes string stackPos returns integer
 		if LLEntry_maxIndex < 32768 then
 			set LLEntry_maxIndex = LLEntry_maxIndex + 1
 			set this = LLEntry_maxIndex
-			set LLEntry_typeId[this] = 683
+			set LLEntry_typeId[this] = 682
 		else
 			call error("Out of memory: Could not create LLEntry.", "when calling error in ")
 			set this = 0
@@ -4317,7 +4351,7 @@ function alloc_LLEntry takes string stackPos returns integer
 	else
 		set LLEntry_firstFree = LLEntry_firstFree - 1
 		set this = LLEntry_nextFree[LLEntry_firstFree]
-		set LLEntry_typeId[this] = 683
+		set LLEntry_typeId[this] = 682
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4515,8 +4549,8 @@ function construct_Add takes integer this, integer id, player owner, real spawnP
 	endif
 	call print("Created mob")
 	set temp_2 = this
-	set receiver_6 = getTimer("when calling getTimer in BossAdd, line 133")
-	call timer_setData(receiver_6, this, "when calling setData in BossAdd, line 134")
+	set receiver_6 = getTimer("when calling getTimer in BossAdd, line 132")
+	call timer_setData(receiver_6, this, "when calling setData in BossAdd, line 133")
 	set receiver_7 = receiver_6
 	call timer_startPeriodic(receiver_7, Add_UPDATE_FREQ, ref_function_bridge_Add_attack)
 	set Add_timer_Attack[temp_2] = receiver_7
@@ -4538,8 +4572,8 @@ function new_Add takes integer id, player owner, real spawnPoint_x, real spawnPo
 	local integer this
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = alloc_Add("when calling Add in BossAdd, line 117")
-	call construct_Add(this, id, owner, spawnPoint_x, spawnPoint_y, damage, armor, health, mana, moveSpeed, attackSpeed, "when calling construct_Add in BossAdd, line 117")
+	set this = alloc_Add("when calling Add in BossAdd, line 116")
+	call construct_Add(this, id, owner, spawnPoint_x, spawnPoint_y, damage, armor, health, mana, moveSpeed, attackSpeed, "when calling construct_Add in BossAdd, line 116")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
 endfunction
@@ -4606,38 +4640,38 @@ function AddSpawner_spawnAdd takes string stackPos returns nothing
 	local real temp_spawnPoint_y
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set spawner = timer_getData(GetExpiredTimer(), "when calling getData in BossAdd, line 52")
+	set spawner = timer_getData(GetExpiredTimer(), "when calling getData in BossAdd, line 51")
 	set temp_spawnPoint_x = rect_randomPoint(AddSpawner_spawnRect[spawner])
 	set temp_spawnPoint_y = rect_randomPoint_return_y
 	set spawnPoint_x = temp_spawnPoint_x
 	set spawnPoint_y = temp_spawnPoint_y
-	set add = new_Add(AddSpawner_addId[spawner], AddSpawner_owner[spawner], spawnPoint_x, spawnPoint_y, AddSpawner_damage[spawner], AddSpawner_armor[spawner], AddSpawner_health[spawner], AddSpawner_mana[spawner], AddSpawner_moveSpeed[spawner], AddSpawner_attackSpeed[spawner], "when calling new_Add in BossAdd, line 54")
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(AddSpawner_adds[spawner], add, "when calling add in BossAdd, line 64")
+	set add = new_Add(AddSpawner_addId[spawner], AddSpawner_owner[spawner], spawnPoint_x, spawnPoint_y, AddSpawner_damage[spawner], AddSpawner_armor[spawner], AddSpawner_health[spawner], AddSpawner_mana[spawner], AddSpawner_moveSpeed[spawner], AddSpawner_attackSpeed[spawner], "when calling new_Add in BossAdd, line 53")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(AddSpawner_adds[spawner], add, "when calling add in BossAdd, line 63")
 	call print("Created add!")
 	set receiver = add
-	call dispatch_Add_BossAdd_Add_createSpawnEffect(receiver, AddSpawner_spawnSfx[spawner], "when calling createSpawnEffect in BossAdd, line 70")
+	call dispatch_Add_BossAdd_Add_createSpawnEffect(receiver, AddSpawner_spawnSfx[spawner], "when calling createSpawnEffect in BossAdd, line 69")
 	set receiver_2 = receiver
-	call dispatch_Add_BossAdd_Add_setTarget(receiver_2, AddSpawner_target[spawner], "when calling setTarget in BossAdd, line 71")
+	call dispatch_Add_BossAdd_Add_setTarget(receiver_2, AddSpawner_target[spawner], "when calling setTarget in BossAdd, line 70")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_AddSpawner_spawnAdd takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call AddSpawner_spawnAdd("BossAdd, line 74")
+	call AddSpawner_spawnAdd("BossAdd, line 73")
 endfunction
 
 function Add_attack takes string stackPos returns nothing
 	local integer add
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set add = timer_getData(GetExpiredTimer(), "when calling getData in BossAdd, line 152")
+	set add = timer_getData(GetExpiredTimer(), "when calling getData in BossAdd, line 151")
 	call unit_issueTargetOrder(Add_mob[add], "attack", Add_target[add])
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_Add_attack takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Add_attack("BossAdd, line 133")
+	call Add_attack("BossAdd, line 132")
 endfunction
 
 function ClickableObject_setDescription takes integer this, string text returns string
@@ -4669,7 +4703,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 		if SoundDefinition_maxIndex < 32768 then
 			set SoundDefinition_maxIndex = SoundDefinition_maxIndex + 1
 			set this = SoundDefinition_maxIndex
-			set SoundDefinition_typeId[this] = 705
+			set SoundDefinition_typeId[this] = 704
 		else
 			call error("Out of memory: Could not create SoundDefinition.", "when calling error in ")
 			set this = 0
@@ -4677,7 +4711,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 	else
 		set SoundDefinition_firstFree = SoundDefinition_firstFree - 1
 		set this = SoundDefinition_nextFree[SoundDefinition_firstFree]
-		set SoundDefinition_typeId[this] = 705
+		set SoundDefinition_typeId[this] = 704
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4691,7 +4725,7 @@ function alloc_LinkedList takes string stackPos returns integer
 		if LinkedList_maxIndex < 32768 then
 			set LinkedList_maxIndex = LinkedList_maxIndex + 1
 			set this = LinkedList_maxIndex
-			set LinkedList_typeId[this] = 687
+			set LinkedList_typeId[this] = 686
 		else
 			call error("Out of memory: Could not create LinkedList.", "when calling error in ")
 			set this = 0
@@ -4699,7 +4733,7 @@ function alloc_LinkedList takes string stackPos returns integer
 	else
 		set LinkedList_firstFree = LinkedList_firstFree - 1
 		set this = LinkedList_nextFree[LinkedList_firstFree]
-		set LinkedList_typeId[this] = 687
+		set LinkedList_typeId[this] = 686
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4918,7 +4952,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 		if UnitIndex_maxIndex < 32768 then
 			set UnitIndex_maxIndex = UnitIndex_maxIndex + 1
 			set this = UnitIndex_maxIndex
-			set UnitIndex_typeId[this] = 730
+			set UnitIndex_typeId[this] = 729
 		else
 			call error("Out of memory: Could not create UnitIndex.", "when calling error in ")
 			set this = 0
@@ -4926,7 +4960,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 	else
 		set UnitIndex_firstFree = UnitIndex_firstFree - 1
 		set this = UnitIndex_nextFree[UnitIndex_firstFree]
-		set UnitIndex_typeId[this] = 730
+		set UnitIndex_typeId[this] = 729
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5312,7 +5346,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 		if SoundInstance_maxIndex < 32768 then
 			set SoundInstance_maxIndex = SoundInstance_maxIndex + 1
 			set this = SoundInstance_maxIndex
-			set SoundInstance_typeId[this] = 706
+			set SoundInstance_typeId[this] = 705
 		else
 			call error("Out of memory: Could not create SoundInstance.", "when calling error in ")
 			set this = 0
@@ -5320,7 +5354,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 	else
 		set SoundInstance_firstFree = SoundInstance_firstFree - 1
 		set this = SoundInstance_nextFree[SoundInstance_firstFree]
-		set SoundInstance_typeId[this] = 706
+		set SoundInstance_typeId[this] = 705
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5914,7 +5948,7 @@ function alloc_Fade takes string stackPos returns integer
 		if Fade_maxIndex < 32768 then
 			set Fade_maxIndex = Fade_maxIndex + 1
 			set this = Fade_maxIndex
-			set Fade_typeId[this] = 664
+			set Fade_typeId[this] = 663
 		else
 			call error("Out of memory: Could not create Fade.", "when calling error in ")
 			set this = 0
@@ -5922,7 +5956,7 @@ function alloc_Fade takes string stackPos returns integer
 	else
 		set Fade_firstFree = Fade_firstFree - 1
 		set this = Fade_nextFree[Fade_firstFree]
-		set Fade_typeId[this] = 664
+		set Fade_typeId[this] = 663
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6038,7 +6072,7 @@ function bridge_BossEvent_win_soundDelay takes nothing returns nothing
 endfunction
 
 function ClosureTimers_closure_impl takes integer this returns nothing
-	set ClosureTimers_x = ClosureTimers_x * 2
+	set ClosureTimers_x = ClosureTimers_x + 50
 endfunction
 
 function testFail takes string msg returns nothing
@@ -6056,7 +6090,7 @@ function ClosureTimers_closure_impl_2 takes integer this returns nothing
 endfunction
 
 function ClosureTimers_closure_impl_3 takes integer this returns nothing
-	set ClosureTimers_x = ClosureTimers_x + 50
+	set ClosureTimers_x = ClosureTimers_x * 2
 endfunction
 
 function group_destr takes group this returns nothing
@@ -6156,7 +6190,7 @@ function alloc_Closure takes string stackPos returns integer
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this] = 669
+			set ForGroupCallback_typeId[this] = 668
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in ")
 			set this = 0
@@ -6164,7 +6198,7 @@ function alloc_Closure takes string stackPos returns integer
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this] = 669
+		set ForGroupCallback_typeId[this] = 668
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6239,9 +6273,9 @@ function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call takes integer
 	if CallbackSingle_typeId[this] <= 643 then
 		if CallbackSingle_typeId[this] <= 642 then
 			if CallbackSingle_typeId[this] <= 641 then
-				call ClosureTimers_closure_impl_3(this)
-			else
 				call ClosureTimers_closure_impl(this)
+			else
+				call ClosureTimers_closure_impl_3(this)
 			endif
 		else
 			call ClosureTimers_closure_impl_2(this)
@@ -7371,12 +7405,12 @@ endfunction
 
 function bridge_Fade_fadeIn takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Fade_fadeIn("FadeAndFilters, line 134")
+	call Fade_fadeIn("FadeAndFilters, line 105")
 endfunction
 
 function bridge_Fade_fadeIn_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Fade_fadeIn("FadeAndFilters, line 105")
+	call Fade_fadeIn("FadeAndFilters, line 134")
 endfunction
 
 function Fade_fadeOut takes string stackPos returns nothing
@@ -7641,7 +7675,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 		if FlameStrike_maxIndex < 32768 then
 			set FlameStrike_maxIndex = FlameStrike_maxIndex + 1
 			set this = FlameStrike_maxIndex
-			set FlameStrike_typeId[this] = 665
+			set FlameStrike_typeId[this] = 664
 		else
 			call error("Out of memory: Could not create FlameStrike.", "when calling error in ")
 			set this = 0
@@ -7649,7 +7683,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 	else
 		set FlameStrike_firstFree = FlameStrike_firstFree - 1
 		set this = FlameStrike_nextFree[FlameStrike_firstFree]
-		set FlameStrike_typeId[this] = 665
+		set FlameStrike_typeId[this] = 664
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -7831,7 +7865,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 		if ExecutableEffect_maxIndex < 32768 then
 			set ExecutableEffect_maxIndex = ExecutableEffect_maxIndex + 1
 			set this = ExecutableEffect_maxIndex
-			set ExecutableEffect_typeId[this] = 663
+			set ExecutableEffect_typeId[this] = 662
 		else
 			call error("Out of memory: Could not create ExecutableEffect.", "when calling error in ")
 			set this = 0
@@ -7839,7 +7873,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 	else
 		set ExecutableEffect_firstFree = ExecutableEffect_firstFree - 1
 		set this = ExecutableEffect_nextFree[ExecutableEffect_firstFree]
-		set ExecutableEffect_typeId[this] = 663
+		set ExecutableEffect_typeId[this] = 662
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -8235,7 +8269,7 @@ function dispatch_HashMap_HashMap_HashMap_put takes integer this, integer key, i
 			call error("Called HashMap.HashMap_HashMap_put on invalid object.", "when calling error in ")
 		endif
 	endif
-	if Table_typeId[this] <= 719 then
+	if Table_typeId[this] <= 718 then
 		call HashMap_put(this, key, value, "when calling put in HashMap, line 15")
 	else
 		call IterableMap_put(this, key, value, "when calling put in HashMap, line 15")
@@ -8882,7 +8916,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 		if EffectDuration_maxIndex < 32768 then
 			set EffectDuration_maxIndex = EffectDuration_maxIndex + 1
 			set this = EffectDuration_maxIndex
-			set EffectDuration_typeId[this] = 661
+			set EffectDuration_typeId[this] = 660
 		else
 			call error("Out of memory: Could not create EffectDuration.", "when calling error in ")
 			set this = 0
@@ -8890,7 +8924,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 	else
 		set EffectDuration_firstFree = EffectDuration_firstFree - 1
 		set this = EffectDuration_nextFree[EffectDuration_firstFree]
-		set EffectDuration_typeId[this] = 661
+		set EffectDuration_typeId[this] = 660
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9073,12 +9107,12 @@ endfunction
 
 function bridge_MagicCrystal_finishAbsorb takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 311")
+	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 330")
 endfunction
 
 function bridge_MagicCrystal_finishAbsorb_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 330")
+	call MagicCrystal_finishAbsorb("tm_MagicCrystal, line 311")
 endfunction
 
 function MagicCrystal_loopSound takes string stackPos returns nothing
@@ -9124,7 +9158,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 		if UnitLightning_maxIndex < 32768 then
 			set UnitLightning_maxIndex = UnitLightning_maxIndex + 1
 			set this = UnitLightning_maxIndex
-			set UnitLightning_typeId[this] = 731
+			set UnitLightning_typeId[this] = 730
 		else
 			call error("Out of memory: Could not create UnitLightning.", "when calling error in ")
 			set this = 0
@@ -9132,7 +9166,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 	else
 		set UnitLightning_firstFree = UnitLightning_firstFree - 1
 		set this = UnitLightning_nextFree[UnitLightning_firstFree]
-		set UnitLightning_typeId[this] = 731
+		set UnitLightning_typeId[this] = 730
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9609,12 +9643,12 @@ endfunction
 
 function bridge_TheBear_clearEvent takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 119")
+	call TheBear_clearEvent("bear_Main, line 137")
 endfunction
 
 function bridge_TheBear_clearEvent_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheBear_clearEvent("bear_Main, line 137")
+	call TheBear_clearEvent("bear_Main, line 119")
 endfunction
 
 function Fade_setEndDelay takes integer this, real duration returns nothing
@@ -9872,7 +9906,7 @@ function alloc_Rock takes string stackPos returns integer
 		if Rock_maxIndex < 32768 then
 			set Rock_maxIndex = Rock_maxIndex + 1
 			set this = Rock_maxIndex
-			set Rock_typeId[this] = 701
+			set Rock_typeId[this] = 700
 		else
 			call error("Out of memory: Could not create Rock.", "when calling error in ")
 			set this = 0
@@ -9880,7 +9914,7 @@ function alloc_Rock takes string stackPos returns integer
 	else
 		set Rock_firstFree = Rock_firstFree - 1
 		set this = Rock_nextFree[Rock_firstFree]
-		set Rock_typeId[this] = 701
+		set Rock_typeId[this] = 700
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -10064,14 +10098,14 @@ endfunction
 function TheNecromancer_initEvent takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call BossEvent_initiate(ref_function_bridge_TheNecromancer_onEventInit, ref_function_TheNecromancer_initFight, "when calling initiate in nec_Main, line 100")
+	call BossEvent_initiate(ref_function_bridge_TheNecromancer_onEventInit, ref_function_TheNecromancer_initFight, "when calling initiate in nec_Main, line 110")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return false
 endfunction
 
 function bridge_TheNecromancer_initEvent takes nothing returns boolean
 	set wurst_stack_depth = 0
-	return TheNecromancer_initEvent("nec_Main, line 115")
+	return TheNecromancer_initEvent("nec_Main, line 125")
 endfunction
 
 function AddSpawner_setSpawnEffect takes integer this, string sfx returns nothing
@@ -10181,7 +10215,7 @@ function construct_AddSpawner takes integer this, string stackPos returns nothin
 	local integer temp
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set AddSpawner_adds[this] = new_LinkedList("when calling new_LinkedList in BossAdd, line 9")
+	set AddSpawner_adds[this] = new_LinkedList("when calling new_LinkedList in BossAdd, line 8")
 	set AddSpawner_damage[this] = 10
 	set AddSpawner_armor[this] = 0.
 	set AddSpawner_health[this] = 100
@@ -10190,8 +10224,8 @@ function construct_AddSpawner takes integer this, string stackPos returns nothin
 	set AddSpawner_attackSpeed[this] = 2.
 	set AddSpawner_spawnFreq[this] = 10.
 	set temp = this
-	set receiver = getTimer("when calling getTimer in BossAdd, line 28")
-	call timer_setData(receiver, this, "when calling setData in BossAdd, line 29")
+	set receiver = getTimer("when calling getTimer in BossAdd, line 27")
+	call timer_setData(receiver, this, "when calling setData in BossAdd, line 28")
 	set AddSpawner_timer_Spawn[temp] = receiver
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
@@ -10201,28 +10235,28 @@ function new_AddSpawner takes string stackPos returns integer
 	local integer this
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = alloc_AddSpawner("when calling AddSpawner in BossAdd, line 27")
-	call construct_AddSpawner(this, "when calling construct_AddSpawner in BossAdd, line 27")
+	set this = alloc_AddSpawner("when calling AddSpawner in BossAdd, line 26")
+	call construct_AddSpawner(this, "when calling construct_AddSpawner in BossAdd, line 26")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
 endfunction
 
-function Ghoul_activate takes string stackPos returns nothing
+function Archer_activate takes string stackPos returns nothing
 	local integer receiver
 	local integer receiver_2
 	local integer receiver_3
 	local integer receiver_4
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Ghoul, line 36")
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Ghoul_ID, Player(11), Ghoul_HEALTH, Ghoul_MANA, Ghoul_DAMAGE, Ghoul_ARMOR, Ghoul_ATTACKSPEED, Ghoul_MOVESPEED, "when calling setUnit in nec_Ghoul, line 37")
+	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Archer, line 36")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Archer_ID, Player(11), Archer_HEALTH, Archer_MANA, Archer_DAMAGE, Archer_ARMOR, Archer_ATTACKSPEED, Archer_MOVESPEED, "when calling setUnit in nec_Archer, line 37")
 	set receiver_2 = receiver
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Ghoul_spawnRect, Ghoul_SPAWNFREQ, "when calling setSpawnRandom in nec_Ghoul, line 38")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Archer_spawnRect, Archer_SPAWNFREQ, "when calling setSpawnRandom in nec_Archer, line 38")
 	set receiver_3 = receiver_2
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Ghoul, line 39")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Archer, line 39")
 	set receiver_4 = receiver_3
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Ghoul, line 40")
-	set Ghoul_spawner = receiver_4
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Archer, line 40")
+	set Archer_spawner = receiver_4
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10244,6 +10278,32 @@ function dispatch_AddSpawner_BossAdd_AddSpawner_start takes integer this, string
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function Archer_startSpawn takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_AddSpawner_BossAdd_AddSpawner_start(Archer_spawner, "when calling start in nec_Archer, line 33")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Ghoul_activate takes string stackPos returns nothing
+	local integer receiver
+	local integer receiver_2
+	local integer receiver_3
+	local integer receiver_4
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Ghoul, line 36")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Ghoul_ID, Player(11), Ghoul_HEALTH, Ghoul_MANA, Ghoul_DAMAGE, Ghoul_ARMOR, Ghoul_ATTACKSPEED, Ghoul_MOVESPEED, "when calling setUnit in nec_Ghoul, line 37")
+	set receiver_2 = receiver
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Ghoul_spawnRect, Ghoul_SPAWNFREQ, "when calling setSpawnRandom in nec_Ghoul, line 38")
+	set receiver_3 = receiver_2
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Ghoul, line 39")
+	set receiver_4 = receiver_3
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Ghoul, line 40")
+	set Ghoul_spawner = receiver_4
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function Ghoul_startSpawn takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -10251,19 +10311,77 @@ function Ghoul_startSpawn takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function Mage_activate takes string stackPos returns nothing
+	local integer receiver
+	local integer receiver_2
+	local integer receiver_3
+	local integer receiver_4
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Mage, line 36")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Mage_ID, Player(11), Mage_HEALTH, Mage_MANA, Mage_DAMAGE, Mage_ARMOR, Mage_ATTACKSPEED, Mage_MOVESPEED, "when calling setUnit in nec_Mage, line 37")
+	set receiver_2 = receiver
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Mage_spawnRect, Mage_SPAWNFREQ, "when calling setSpawnRandom in nec_Mage, line 38")
+	set receiver_3 = receiver_2
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Mage, line 39")
+	set receiver_4 = receiver_3
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Mage, line 40")
+	set Mage_spawner = receiver_4
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Mage_startSpawn takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_AddSpawner_BossAdd_AddSpawner_start(Mage_spawner, "when calling start in nec_Mage, line 33")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Zombie_activate takes string stackPos returns nothing
+	local integer receiver
+	local integer receiver_2
+	local integer receiver_3
+	local integer receiver_4
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Zombie, line 36")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Zombie_ID, Player(11), Zombie_HEALTH, Zombie_MANA, Zombie_DAMAGE, Zombie_ARMOR, Zombie_ATTACKSPEED, Zombie_MOVESPEED, "when calling setUnit in nec_Zombie, line 37")
+	set receiver_2 = receiver
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Zombie_spawnRect, Zombie_SPAWNFREQ, "when calling setSpawnRandom in nec_Zombie, line 38")
+	set receiver_3 = receiver_2
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Zombie, line 39")
+	set receiver_4 = receiver_3
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Zombie, line 40")
+	set Zombie_spawner = receiver_4
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function Zombie_startSpawn takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_AddSpawner_BossAdd_AddSpawner_start(Zombie_spawner, "when calling start in nec_Zombie, line 33")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function TheNecromancer_onEventInit takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call moveHunter(TheNecromancer_hunterSpawn_x, TheNecromancer_hunterSpawn_y, TheNecromancer_camBounds, TheNecromancer_hunterSpawn_x, TheNecromancer_hunterSpawn_y)
-	set TheNecromancer_timer_MainLoop = getTimer("when calling getTimer in nec_Main, line 92")
-	call Ghoul_activate("when calling activate in nec_Main, line 93")
-	call Ghoul_startSpawn("when calling startSpawn in nec_Main, line 94")
+	set TheNecromancer_timer_MainLoop = getTimer("when calling getTimer in nec_Main, line 95")
+	call Ghoul_activate("when calling activate in nec_Main, line 96")
+	call Archer_activate("when calling activate in nec_Main, line 97")
+	call Zombie_activate("when calling activate in nec_Main, line 98")
+	call Mage_activate("when calling activate in nec_Main, line 99")
+	call Ghoul_startSpawn("when calling startSpawn in nec_Main, line 101")
+	call Archer_startSpawn("when calling startSpawn in nec_Main, line 102")
+	call Zombie_startSpawn("when calling startSpawn in nec_Main, line 103")
+	call Mage_startSpawn("when calling startSpawn in nec_Main, line 104")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_TheNecromancer_onEventInit takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheNecromancer_onEventInit("nec_Main, line 100")
+	call TheNecromancer_onEventInit("nec_Main, line 110")
 endfunction
 
 function LLIterator_onDestroy takes integer this returns nothing
@@ -10330,7 +10448,7 @@ function alloc_LLIterator takes string stackPos returns integer
 		if LLIterator_maxIndex < 32768 then
 			set LLIterator_maxIndex = LLIterator_maxIndex + 1
 			set this = LLIterator_maxIndex
-			set LLIterator_typeId[this] = 684
+			set LLIterator_typeId[this] = 683
 		else
 			call error("Out of memory: Could not create LLIterator.", "when calling error in ")
 			set this = 0
@@ -10338,7 +10456,7 @@ function alloc_LLIterator takes string stackPos returns integer
 	else
 		set LLIterator_firstFree = LLIterator_firstFree - 1
 		set this = LLIterator_nextFree[LLIterator_firstFree]
-		set LLIterator_typeId[this] = 684
+		set LLIterator_typeId[this] = 683
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -10417,7 +10535,7 @@ endfunction
 function Add_onDestroy takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(Add_timer_Attack[this], "when calling release in BossAdd, line 113")
+	call timer_release(Add_timer_Attack[this], "when calling release in BossAdd, line 112")
 	call unit_remove(Add_mob[this])
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -10438,8 +10556,8 @@ endfunction
 function destroyAdd takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call Add_onDestroy(this, "when calling Add_onDestroy in BossAdd, line 112")
-	call dealloc_Add(this, "when calling Add in BossAdd, line 112")
+	call Add_onDestroy(this, "when calling Add_onDestroy in BossAdd, line 111")
+	call dealloc_Add(this, "when calling Add in BossAdd, line 111")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10453,7 +10571,7 @@ function dispatch_Add_destroyAdd takes integer this, string stackPos returns not
 			call error("Called Add.destroyAdd on invalid object.", "when calling error in ")
 		endif
 	endif
-	call destroyAdd(this, "when calling destroyAdd in BossAdd, line 102")
+	call destroyAdd(this, "when calling destroyAdd in BossAdd, line 101")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10493,14 +10611,14 @@ function AddSpawner_removeAll takes integer this, string stackPos returns nothin
 	local integer add
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set iterator = LinkedList_iterator(AddSpawner_adds[this], "when calling iterator in BossAdd, line 97")
+	set iterator = LinkedList_iterator(AddSpawner_adds[this], "when calling iterator in BossAdd, line 96")
 	loop
 		exitwhen  not LLIterator_hasNext(iterator)
 		set add = LLIterator_next(iterator)
-		call dispatch_LinkedList_LinkedList_LinkedList_remove(AddSpawner_adds[this], add, "when calling remove in BossAdd, line 98")
-		call dispatch_Add_destroyAdd(add, "when calling Add in BossAdd, line 99")
+		call dispatch_LinkedList_LinkedList_LinkedList_remove(AddSpawner_adds[this], add, "when calling remove in BossAdd, line 97")
+		call dispatch_Add_destroyAdd(add, "when calling Add in BossAdd, line 98")
 	endloop
-	call LLIterator_close(iterator, "when calling close in BossAdd, line 97")
+	call LLIterator_close(iterator, "when calling close in BossAdd, line 96")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10514,7 +10632,7 @@ function dispatch_AddSpawner_BossAdd_AddSpawner_removeAll takes integer this, st
 			call error("Called AddSpawner.BossAdd_AddSpawner_removeAll on invalid object.", "when calling error in ")
 		endif
 	endif
-	call AddSpawner_removeAll(this, "when calling removeAll in BossAdd, line 96")
+	call AddSpawner_removeAll(this, "when calling removeAll in BossAdd, line 95")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10613,9 +10731,9 @@ endfunction
 function AddSpawner_onDestroy takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_AddSpawner_BossAdd_AddSpawner_removeAll(this, "when calling removeAll in BossAdd, line 86")
-	call dispatch_LinkedList_destroyLinkedList(AddSpawner_adds[this], "when calling LinkedList in BossAdd, line 87")
-	call timer_release(AddSpawner_timer_Spawn[this], "when calling release in BossAdd, line 88")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_removeAll(this, "when calling removeAll in BossAdd, line 85")
+	call dispatch_LinkedList_destroyLinkedList(AddSpawner_adds[this], "when calling LinkedList in BossAdd, line 86")
+	call timer_release(AddSpawner_timer_Spawn[this], "when calling release in BossAdd, line 87")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10635,8 +10753,8 @@ endfunction
 function destroyAddSpawner takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call AddSpawner_onDestroy(this, "when calling AddSpawner_onDestroy in BossAdd, line 85")
-	call dealloc_AddSpawner(this, "when calling AddSpawner in BossAdd, line 85")
+	call AddSpawner_onDestroy(this, "when calling AddSpawner_onDestroy in BossAdd, line 84")
+	call dealloc_AddSpawner(this, "when calling AddSpawner in BossAdd, line 84")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10650,7 +10768,7 @@ function dispatch_AddSpawner_destroyAddSpawner takes integer this, string stackP
 			call error("Called AddSpawner.destroyAddSpawner on invalid object.", "when calling error in ")
 		endif
 	endif
-	call destroyAddSpawner(this, "when calling destroyAddSpawner in BossAdd, line 8")
+	call destroyAddSpawner(this, "when calling destroyAddSpawner in BossAdd, line 7")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10664,13 +10782,13 @@ endfunction
 function TheNecromancer_phase1 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call Ghoul_deactivate("when calling deactivate in nec_Main, line 43")
+	call Ghoul_deactivate("when calling deactivate in nec_Main, line 46")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_TheNecromancer_phase1 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call TheNecromancer_phase1("nec_Main, line 84")
+	call TheNecromancer_phase1("nec_Main, line 87")
 endfunction
 
 function getEnterLeaveUnit takes nothing returns unit
@@ -10679,6 +10797,20 @@ endfunction
 
 function shouldIndex takes unit w_u returns boolean
 	return true
+endfunction
+
+function UnitIndexer_closure_impl takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if shouldIndex(getEnterLeaveUnit()) then
+		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_UnitIndexer_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call UnitIndexer_closure_impl("UnitIndexer, line 179")
 endfunction
 
 function UnitIndex_onDestroy takes integer this returns nothing
@@ -10734,7 +10866,7 @@ function unit_deindex takes unit this, string stackPos returns boolean
 	endif
 endfunction
 
-function UnitIndexer_closure_impl takes string stackPos returns nothing
+function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if shouldIndex(getEnterLeaveUnit()) then
@@ -10743,23 +10875,9 @@ function UnitIndexer_closure_impl takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_UnitIndexer_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl("UnitIndexer, line 180")
-endfunction
-
-function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if shouldIndex(getEnterLeaveUnit()) then
-		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl_2("UnitIndexer, line 179")
+	call UnitIndexer_closure_impl_2("UnitIndexer, line 180")
 endfunction
 
 function lightning_destr takes lightning this returns boolean
@@ -11099,24 +11217,7 @@ function bridge_clear_2 takes nothing returns nothing
 	call clear("tm_Main, line 132")
 endfunction
 
-function destructable_setAnimation takes destructable this, string anim returns nothing
-	call SetDestructableAnimation(this, anim)
-endfunction
-
 function delayedInit takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in General, line 106")
-	call destructable_setAnimation(gg_dest_DTc2_2577, "death alternate")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_delayedInit takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit("General, line 102")
-endfunction
-
-function delayedInit_2 takes string stackPos returns nothing
 	local integer obj
 	local integer receiver
 	local integer receiver_2
@@ -11145,21 +11246,38 @@ function delayedInit_2 takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_delayedInit_2 takes nothing returns nothing
+function bridge_delayedInit takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit_2("tm_Main, line 69")
+	call delayedInit("tm_Main, line 69")
 endfunction
 
-function delayedInit_3 takes string stackPos returns nothing
+function delayedInit_2 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function bridge_delayedInit_2 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit_2("ZoneTransition, line 13")
+endfunction
+
+function destructable_setAnimation takes destructable this, string anim returns nothing
+	call SetDestructableAnimation(this, anim)
+endfunction
+
+function delayedInit_3 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in General, line 106")
+	call destructable_setAnimation(gg_dest_DTc2_2577, "death alternate")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function bridge_delayedInit_3 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit_3("ZoneTransition, line 13")
+	call delayedInit_3("General, line 102")
 endfunction
 
 function initEvent takes string stackPos returns boolean
@@ -11214,7 +11332,7 @@ function alloc_Table takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 718
+			set Table_typeId[this] = 717
 		else
 			call error("Out of memory: Could not create Table.", "when calling error in ")
 			set this = 0
@@ -11222,7 +11340,7 @@ function alloc_Table takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 718
+		set Table_typeId[this] = 717
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -11600,7 +11718,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 		if InteractableObject_maxIndex < 32768 then
 			set InteractableObject_maxIndex = InteractableObject_maxIndex + 1
 			set this = InteractableObject_maxIndex
-			set InteractableObject_typeId[this] = 681
+			set InteractableObject_typeId[this] = 680
 		else
 			call error("Out of memory: Could not create InteractableObject.", "when calling error in ")
 			set this = 0
@@ -11608,7 +11726,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 	else
 		set InteractableObject_firstFree = InteractableObject_firstFree - 1
 		set this = InteractableObject_nextFree[InteractableObject_firstFree]
-		set InteractableObject_typeId[this] = 681
+		set InteractableObject_typeId[this] = 680
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12036,7 +12154,7 @@ function alloc_HashMap takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 719
+			set Table_typeId[this] = 718
 		else
 			call error("Out of memory: Could not create HashMap.", "when calling error in ")
 			set this = 0
@@ -12044,7 +12162,7 @@ function alloc_HashMap takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 719
+		set Table_typeId[this] = 718
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12863,7 +12981,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 		if MagicCrystal_maxIndex < 32768 then
 			set MagicCrystal_maxIndex = MagicCrystal_maxIndex + 1
 			set this = MagicCrystal_maxIndex
-			set MagicCrystal_typeId[this] = 694
+			set MagicCrystal_typeId[this] = 693
 		else
 			call error("Out of memory: Could not create MagicCrystal.", "when calling error in ")
 			set this = 0
@@ -12871,7 +12989,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 	else
 		set MagicCrystal_firstFree = MagicCrystal_firstFree - 1
 		set this = MagicCrystal_nextFree[MagicCrystal_firstFree]
-		set MagicCrystal_typeId[this] = 694
+		set MagicCrystal_typeId[this] = 693
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -13700,6 +13818,19 @@ function init_bear_Main takes nothing returns boolean
 	return true
 endfunction
 
+function init_nec_Archer takes nothing returns boolean
+	set Archer_DAMAGE = 10
+	set Archer_ARMOR = 0.
+	set Archer_HEALTH = 100
+	set Archer_MANA = 100
+	set Archer_MOVESPEED = 270.
+	set Archer_ATTACKSPEED = 2.
+	set Archer_SPAWNFREQ = 5.
+	set Archer_ID = 1848651827
+	set Archer_spawnRect = gg_rct_TheNec_MobSpawn
+	return true
+endfunction
+
 function init_nec_Ghoul takes nothing returns boolean
 	set Ghoul_DAMAGE = 10
 	set Ghoul_ARMOR = 0.
@@ -13710,6 +13841,19 @@ function init_nec_Ghoul takes nothing returns boolean
 	set Ghoul_SPAWNFREQ = 5.
 	set Ghoul_ID = 1966092337
 	set Ghoul_spawnRect = gg_rct_TheNec_MobSpawn
+	return true
+endfunction
+
+function init_nec_Mage takes nothing returns boolean
+	set Mage_DAMAGE = 10
+	set Mage_ARMOR = 0.
+	set Mage_HEALTH = 100
+	set Mage_MANA = 100
+	set Mage_MOVESPEED = 270.
+	set Mage_ATTACKSPEED = 2.
+	set Mage_SPAWNFREQ = 9.
+	set Mage_ID = 1966092338
+	set Mage_spawnRect = gg_rct_TheNec_MobSpawn
 	return true
 endfunction
 
@@ -13744,6 +13888,19 @@ function init_nec_Main takes nothing returns boolean
 	set TheNecromancer_hunterSpawn_x = temp_TheNecromancer_hunterSpawn_x
 	set TheNecromancer_hunterSpawn_y = temp_TheNecromancer_hunterSpawn_y
 	set TheNecromancer_camBounds = gg_rct_TheNec_CamBounds
+	return true
+endfunction
+
+function init_nec_Zombie takes nothing returns boolean
+	set Zombie_DAMAGE = 10
+	set Zombie_ARMOR = 0.
+	set Zombie_HEALTH = 100
+	set Zombie_MANA = 100
+	set Zombie_MOVESPEED = 270.
+	set Zombie_ATTACKSPEED = 2.
+	set Zombie_SPAWNFREQ = 9.
+	set Zombie_ID = 1966092338
+	set Zombie_spawnRect = gg_rct_TheNec_MobSpawn
 	return true
 endfunction
 
@@ -14095,7 +14252,10 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_init_bear_Charge = function bridge_init_bear_Charge
 	set ref_function_init_bear_Enrage = function init_bear_Enrage
 	set ref_function_bridge_init_bear_Shockwave = function bridge_init_bear_Shockwave
+	set ref_function_init_nec_Archer = function init_nec_Archer
 	set ref_function_init_nec_Ghoul = function init_nec_Ghoul
+	set ref_function_init_nec_Mage = function init_nec_Mage
+	set ref_function_init_nec_Zombie = function init_nec_Zombie
 	set ref_function_init_nec_Main = function init_nec_Main
 	set ref_function_bridge_init_tm_MagicCrystal = function bridge_init_tm_MagicCrystal
 	set ref_function_bridge_init_tm_Main = function bridge_init_tm_Main
@@ -14119,27 +14279,27 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_DelayNode_recycle = function bridge_DelayNode_recycle
 	set ref_function_bridge_ExecutableEffect_stop = function bridge_ExecutableEffect_stop
 	set ref_function_bridge_Fade_OnFadeIn = function bridge_Fade_OnFadeIn
-	set ref_function_bridge_Fade_fadeIn = function bridge_Fade_fadeIn_2
+	set ref_function_bridge_Fade_fadeIn = function bridge_Fade_fadeIn
 	set ref_function_bridge_Fade_endFade = function bridge_Fade_endFade
 	set ref_function_bridge_Fade_OnFadeOut = function bridge_Fade_OnFadeOut
 	set ref_function_bridge_Fade_fadeOut = function bridge_Fade_fadeOut
-	set ref_function_bridge_Fade_fadeIn_2 = function bridge_Fade_fadeIn
+	set ref_function_bridge_Fade_fadeIn_2 = function bridge_Fade_fadeIn_2
 	set ref_function_GameTimer_closure_impl = function GameTimer_closure_impl
 	set ref_function_checkCoordinates = function checkCoordinates
 	set ref_function_checkCoordinates2 = function checkCoordinates2
 	set ref_function_pickup = function pickup
 	set ref_function_getUnitIndex = function getUnitIndex
-	set ref_function_bridge_delayedInit = function bridge_delayedInit
+	set ref_function_bridge_delayedInit = function bridge_delayedInit_3
 	set ref_function_selectionFilter = function selectionFilter
-	set ref_function_Group_closure_impl = function Group_closure_impl_2
-	set ref_function_Group_closure_impl_2 = function Group_closure_impl
+	set ref_function_Group_closure_impl = function Group_closure_impl
+	set ref_function_Group_closure_impl_2 = function Group_closure_impl_2
 	set ref_function_bridge_isOrdered = function bridge_isOrdered
 	set ref_function_InteractableObject_filter = function InteractableObject_filter
 	set ref_function_bridge_InteractableObject_checkDistance = function bridge_InteractableObject_checkDistance
 	set ref_function_replayMusic = function replayMusic
 	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
-	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl
+	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl_3
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 	set ref_function_bridge_DynamicSound_TimedLoop_onExpire = function bridge_DynamicSound_TimedLoop_onExpire
 	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound
@@ -14147,11 +14307,11 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound_2
 	set ref_function_Stats_train = function Stats_train
 	set ref_function_bridge_EffectDuration_destr = function bridge_EffectDuration_destr
-	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl_2
-	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
+	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
+	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
 	set ref_function_bridge_UnitLightning_update = function bridge_UnitLightning_update
 	set ref_function_bridge_UnitLightning_kill = function bridge_UnitLightning_kill
-	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit_3
+	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit_2
 	set ref_function_bridge_Attack_onHit = function bridge_Attack_onHit
 	set ref_function_Attack_setUpdateMove = function Attack_setUpdateMove
 	set ref_function_Attack_cooldownFinished = function Attack_cooldownFinished
@@ -14172,8 +14332,8 @@ function initGlobals takes nothing returns nothing
 	set ref_function_TheBear_idle = function TheBear_idle
 	set ref_function_bridge_TheBear_initEvent = function bridge_TheBear_initEvent
 	set ref_function_TheBear_someoneDies = function TheBear_someoneDies
-	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent
-	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent_2
+	set ref_function_bridge_TheBear_clearEvent = function bridge_TheBear_clearEvent_2
+	set ref_function_bridge_TheBear_clearEvent_2 = function bridge_TheBear_clearEvent
 	set ref_function_bridge_TheBear_mainLoop = function bridge_TheBear_mainLoop
 	set ref_function_bridge_TheBear_onEventInit = function bridge_TheBear_onEventInit
 	set ref_function_TheBear_initFight = function TheBear_initFight
@@ -14209,8 +14369,8 @@ function initGlobals takes nothing returns nothing
 	set ref_function_MagicCrystal_releaseBossDelay1 = function MagicCrystal_releaseBossDelay1
 	set ref_function_MagicCrystal_releaseBossDelay2 = function MagicCrystal_releaseBossDelay2
 	set ref_function_MagicCrystal_moveSFX = function MagicCrystal_moveSFX
-	set ref_function_bridge_MagicCrystal_finishAbsorb = function bridge_MagicCrystal_finishAbsorb
-	set ref_function_bridge_MagicCrystal_finishAbsorb_2 = function bridge_MagicCrystal_finishAbsorb_2
+	set ref_function_bridge_MagicCrystal_finishAbsorb = function bridge_MagicCrystal_finishAbsorb_2
+	set ref_function_bridge_MagicCrystal_finishAbsorb_2 = function bridge_MagicCrystal_finishAbsorb
 	set ref_function_bridge_MagicCrystal_loopSound = function bridge_MagicCrystal_loopSound
 	set ref_function_MagicCrystal_animation = function MagicCrystal_animation
 	set ref_function_bridge_MagicCrystal_lightning_Fire = function bridge_MagicCrystal_lightning_Fire
@@ -14219,7 +14379,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_initEvent = function bridge_initEvent
 	set ref_function_bridge_someoneDies = function bridge_someoneDies
 	set ref_function_bridge_leaveEvent = function bridge_leaveEvent
-	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit_2
+	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit
 	set ref_function_idle = function idle
 	set ref_function_bridge_onEventInit = function bridge_onEventInit
 	set ref_function_initFight = function initFight
@@ -14593,9 +14753,24 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package bear_Shockwave.")
 	endif
 	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Archer))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Archer.")
+	endif
+	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Ghoul))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Ghoul.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Mage))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Mage.")
+	endif
+	call TriggerClearConditions(initTrig)
+	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Zombie))
+	if  not TriggerEvaluate(initTrig) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Zombie.")
 	endif
 	call TriggerClearConditions(initTrig)
 	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Main))

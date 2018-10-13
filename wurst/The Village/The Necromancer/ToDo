@@ -2,14 +2,14 @@
 TO DO ____________________________________________________________
 
 [ ] 1) Misc
-        [ ] 1.1 Create basic setup
-        [ ] 1.2 Create initializer
+        [x] 1.1 Create basic setup
+        [x] 1.2 Create initializer
         [ ] 1.3 Clear event system
         [ ] 1.4 Create Loose/Win functions
 
 [ ] 2) Phase 1
-        [ ] 2.1  Ghoul
-        [ ] 2.2  Archer
+        [x] 2.1  Ghoul
+        [x] 2.2  Archer
         [ ] 2.3  Magician   
         [ ] 2.4  Zombie
         [ ] 2.5  Create unit system (spawn, clear etc.)

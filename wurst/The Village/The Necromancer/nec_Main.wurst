@@ -4,6 +4,9 @@ import BossEvent
 import DayCycle
 import public General
 import nec_Ghoul
+import nec_Archer
+import nec_Zombie
+import nec_Mage
 import public TimerUtils
 
 unit theNecromancer
@@ -91,7 +94,14 @@ class TheNecromancer
         // Creating Timers
         timer_MainLoop = getTimer()
         Ghoul.activate()
+        Archer.activate()
+        Zombie.activate()
+        Mage.activate()
+
         Ghoul.startSpawn()
+        Archer.startSpawn()
+        Zombie.startSpawn()
+        Mage.startSpawn()
 
 
     
