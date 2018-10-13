@@ -15,8 +15,9 @@ TO DO ____________________________________________________________
     [ ] 2.5  Create unit system (spawn, clear etc.)
     [ ] 2.6  Acolytes (animations death registration etc.)
     [ ] 2.7  Cauldron
-    [ ] 2.8  Create phase mechanics (acolyte deaths, make cauldron vulnerable)
-    [ ] 2.9  Create timer and mechanics when timer runs out    
+        [ ] 2.8  Transission from Lane to Graveyard
+        [ ] 2.9  Create phase mechanics (acolyte deaths, make cauldron vulnerable)
+        [ ] 2.10  Create timer and mechanics when timer runs out     
 
 3) Phase 2
     [ ] 3.1  Morbent fell, move and cast mechanics
