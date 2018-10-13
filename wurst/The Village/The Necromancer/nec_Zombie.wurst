@@ -1,7 +1,46 @@
 package nec_Zombie
 
+import BossAdd
+import General
+ 
+public class Mage
 
-class Zombie
+//========================================================================================================================================
 
+    // Unit Stats
+    private static int  DAMAGE = 10
+    private static real ARMOR = 0
+    private static int HEALTH = 100
+    private static int MANA   = 100
+    private static real MOVESPEED = 270
+    private static real ATTACKSPEED = 2
+    
+    private static real SPAWNFREQ = 9
 
-class DiseaseCloud
+    private static constant DEBUGMSG = true
+
+//========================================================================================================================================
+
+    // Constants
+    static integer ID = 'u002'
+    static AddSpawner spawner
+    static rect spawnRect = gg_rct_TheNec_MobSpawn 
+
+    static function stopSpawn()
+        spawner.stop()
+
+    static function startSpawn()
+        spawner.start()
+
+    static function activate()
+        spawner = new AddSpawner()
+        ..setUnit(ID, Player(11), HEALTH, MANA, DAMAGE, ARMOR, ATTACKSPEED, MOVESPEED)
+        ..setSpawnRandom(spawnRect, SPAWNFREQ)
+        ..setTarget(hunter)
+        ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
+
+    static function deactivate()
+        destroy spawner
+        
+         
+    

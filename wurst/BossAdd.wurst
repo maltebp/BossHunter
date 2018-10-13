@@ -3,7 +3,6 @@ import General
 import TimerUtils
 import LinkedList
 
-    
 
 public class AddSpawner
     LinkedList<Add> adds = new LinkedList<Add>
