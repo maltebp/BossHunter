@@ -7,6 +7,7 @@ import nec_Ghoul
 import nec_Archer
 import nec_Zombie
 import nec_Mage
+import nec_Cauldron
 import public TimerUtils
 
 unit theNecromancer
@@ -44,6 +45,7 @@ class TheNecromancer
     static function phase1()
         
         Ghoul.deactivate()
+
 
         // Start Mob Spawn
         // Start Cauldron Timer
@@ -85,6 +87,8 @@ class TheNecromancer
 
         //timer_MainLoop.startPeriodic( MAINLOOP_FREQ, function phase1 )
         timer_MainLoop.start( 30, function phase1 )
+        Cauldron.startCountdown()
+
 
 
     // Setup Fight
@@ -97,6 +101,7 @@ class TheNecromancer
         Archer.activate()
         Zombie.activate()
         Mage.activate()
+        Cauldron.activate()
 
         Ghoul.startSpawn()
         Archer.startSpawn()

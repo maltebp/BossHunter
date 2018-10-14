@@ -282,6 +282,7 @@ import ObjEditingNatives
 	..setInt("uhpm", 1000)
 	..setString("utyp", "")
 	..setString("utar", "ground")
+	..setReal("usca", 1.4)
 
 
 @compiletime function create_w3u_u005()

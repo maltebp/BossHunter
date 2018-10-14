@@ -27,12 +27,13 @@ public class Cauldron
     static function startCountdown()
         timer_Countdown.start(SUMMONTIME, function endCountDown)
         timerDialog_Countdown.display(true)
-        
+
 
     static function activate()
         timer_Countdown = getTimer()
-        timerDialog_Countdown.setTitle("Summoning")
         timerDialog_Countdown = timer_Countdown.createTimerDialog()
+        timerDialog_Countdown.setTitle("Summoning")
+        
 
         mob = createUnit(Player(11), ID, POS, angle(0))
         ..setMaxHP(HP, true)
