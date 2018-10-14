@@ -1,5 +1,6 @@
 package nec_Cauldron
 import TimerUtils
+import TimerDialog
 
 public class Cauldron
 
@@ -7,7 +8,7 @@ public class Cauldron
 
 //  Settings
 
-    private static constant real HP = 1000
+    private static constant int HP = 1000
     private static constant real SUMMONTIME = 120 // Seconds
     private static constant int  ID = 'u004'
     private static constant vec2 POS = vec2(-13630,13660)
@@ -16,6 +17,22 @@ public class Cauldron
 //========================================================================================================================================
 
     private static unit mob
+    private static timer timer_Countdown
+    private static timerdialog timerDialog_Countdown
+
+    private static function endCountDown()
+        timerDialog_Countdown.display(false)
+        
+
+    static function startCountdown()
+        timer_Countdown.start(SUMMONTIME, function endCountDown)
+        timerDialog_Countdown.display(true)
+        
 
     static function activate()
-        createUnit(Player(11), ID, POS, angle(0))
+        timer_Countdown = getTimer()
+        timerDialog_Countdown.setTitle("Summoning")
+        timerDialog_Countdown = timer_Countdown.createTimerDialog()
+
+        mob = createUnit(Player(11), ID, POS, angle(0))
+        ..setMaxHP(HP, true)
