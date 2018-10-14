@@ -2,9 +2,7 @@ package nec_Zombie
 
 import BossAdd
 import General
-import LinkedList
-import TimerUtils
-import HashMap
+import DiseaseCloud
  
 public class Zombie
 
