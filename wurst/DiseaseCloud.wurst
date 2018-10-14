@@ -1,90 +1,67 @@
-
-
-/** Hello
-*/
+//----------------------------------------------------------------------------------------------
 package DiseaseCloud
+//----------------------------------------------------------------------------------------------
 
 import HashMap
 import TimerUtils
 import LinkedList
 
 // ===============================================================================================
+/*
+    Description:
+    Functionality for regular Disease Ability (the one that Abominations has), with
+    Wurst adjustable stats (damage, duration etc.).
+    It has to functions: 1) the ability to deal damage to units surrounding a unit
+    carrying the disease, and 2) the ability to leave a cloud of disease behind
+    when the unit dies.
+    The two functions may be used seperately (you can create clouds with a unit 
+    to carry the disease, and you can carry disease without leaving a cloud).
 
-// Ability Constants
+    How to use:
+    You add disease to a unit with one of the addUnit...() methods from the Disease class.
+    This creates clouds automatically, but you may toggle it off. It auto-detects when
+    the unit dies.
+    
+    Clouds may be created seperately by creating using the DiseaseCloud constructor.
 
-constant boolean DEBUG = true
-constant real DAMAGEFREQ = 2
-constant boolean STACKDAMAGE = false
-constant string SFX = "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl"
+*/
+// ===============================================================================================
+/*
+
+    Settings
+    You can change these according to the use in your map */
+
+constant real       DAMAGEFREQ  = 1         
+/*  The frequency of the damage. The damage
+    is not auto adjusted, but is the damage
+    per tick.*/
+
+constant boolean    STACKDAMAGE = false 
+/*  Toggles whether multiple diseases
+    should be able to damage the same target
+    on their individual frequency*/  
+
+constant string     SFX         = "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl"
+/*  The unit disease and cloud SFX.
+    Can be changed, so that the package
+    may be used for different spells
+    with same functionality (i.e. a
+    flame ability).*/
 
 // ===============================================================================================
 
-unit array hitTargets
-int hitTargets_HighestIndex = 0
 
+//  Debugger_____________________________________________________________________________________
+constant boolean    DEBUG       = false
 
+/** Print a debugMsg, that is toggleable
+    with the DEBUG variable*/
 function debugMsg(string stringToPrint)
          if DEBUG
              print(stringToPrint)
 
 
-function unit.addToHitTargets()
-    if not STACKDAMAGE
-        int index = 0
 
-        while hitTargets[index] != null
-            index++
-        hitTargets[index] = this
-
-        getTimer()
-        ..setData(index)
-        ..start(DAMAGEFREQ-0.01, function removeFromHitTargets )
-
-        hitTargets_HighestIndex = (index > hitTargets_HighestIndex) ? index : hitTargets_HighestIndex
-
-function unit.isHit() returns boolean
-    if STACKDAMAGE
-        return false
-    for index=0 to hitTargets_HighestIndex
-        if hitTargets[index] == this
-            return true
-    return false
-
-function removeFromHitTargets()
-    timer t = GetExpiredTimer()
-    hitTargets[GetExpiredTimer().getData()] = null
-    t.release()
-
-
-function damage( unit source, real damage, real range )
-
-    group targets = ENUM_GROUP
-
-    debugMsg("Source: "+source.getName())
-
-    targets.enumUnitsInRange(source.getPos(), range)
-
-    //Filter Units
-    for u in targets
-        if( u == source or
-            not u.isAlive() or
-            u.getOwner().isAllyOf(source.getOwner()) or
-            u.isHit()
-            )
-
-            targets.removeUnit(u)
-
-
-    debugMsg("Filtered units!")
-
-    int i = 0
-    for u from targets
-        debugMsg(source.getName()+" damaged "+u.getName() )
-        source.damageTarget(u, damage)
-        u.addToHitTargets()
-        
-        i++
-        // Perhaps add a disease effect on the target
 
 
 class Disease
@@ -102,6 +79,7 @@ class Disease
     private static trigger trg_UnitIsRemoved
      
     private static boolean hasBeenInitialized = false
+    private boolean leaveCloud = true
     
     private real damageFrequency
     private real diseaseDamage
@@ -173,6 +151,10 @@ class Disease
         if instances.has(unitToRemove)
             destroy instances.get(unitToRemove)
     
+    /** Toggles whether a cloud should be left
+        on the the ground when the unit dies*/
+    function toggleCloud(boolean toggle)
+        leaveCloud = toggle
 
     private static function orderDamage()
         thistype instance = GetExpiredTimer().getData() castTo thistype
@@ -187,7 +169,8 @@ class Disease
         if instances.has(dyingUnit)
             debugMsg("Disease: Unit in instance died!")
             thistype instance = instances.get(dyingUnit)       
-            new DiseaseCloud(instance.unitWithAbility.getOwner(), instance.unitWithAbility.getPos(), instance.cloudDamage, instance.cloudDuration, instance.cloudRange)
+            if instance.leaveCloud
+                new DiseaseCloud(instance.unitWithAbility.getOwner(), instance.unitWithAbility.getPos(), instance.cloudDamage, instance.cloudDuration, instance.cloudRange)
             destroy instance
 
         return false
@@ -318,10 +301,74 @@ class DiseaseCloud
             instances = new LinkedList<thistype>
 
 
+
+unit array hitTargets
+int hitTargets_HighestIndex = 0
+
+function unit.addToHitTargets()
+    if not STACKDAMAGE
+        int index = 0
+
+        while hitTargets[index] != null
+            index++
+        hitTargets[index] = this
+
+        getTimer()
+        ..setData(index)
+        ..start(DAMAGEFREQ-0.01, function removeFromHitTargets )
+
+        hitTargets_HighestIndex = (index > hitTargets_HighestIndex) ? index : hitTargets_HighestIndex
+
+function unit.isHit() returns boolean
+    if STACKDAMAGE
+        return false
+    for index=0 to hitTargets_HighestIndex
+        if hitTargets[index] == this
+            return true
+    return false
+
+function removeFromHitTargets()
+    timer t = GetExpiredTimer()
+    hitTargets[GetExpiredTimer().getData()] = null
+    t.release()
+
+
+function damage( unit source, real damage, real range )
+
+    group targets = ENUM_GROUP
+
+    debugMsg("Source: "+source.getName())
+
+    targets.enumUnitsInRange(source.getPos(), range)
+
+    //Filter Units
+    for u in targets
+        if( u == source or
+            not u.isAlive() or
+            u.getOwner().isAllyOf(source.getOwner()) or
+            u.isHit()
+            )
+
+            targets.removeUnit(u)
+
+
+    debugMsg("Filtered units!")
+
+    int i = 0
+    for u from targets
+        debugMsg(source.getName()+" damaged "+u.getName() )
+        source.damageTarget(u, damage)
+        u.addToHitTargets()
+        
+        i++
+        // Perhaps add a disease effect on the target
+
+
 function delayedInit()
     GetExpiredTimer().release()
     unit u = createUnit(Player(0), 'hpea', vec2(-13935,-14250), angle(0))
     Disease.addUnit(u, 50, 10, 300)
+
 
 
 init
