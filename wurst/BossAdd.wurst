@@ -97,7 +97,8 @@ public class AddSpawner
     ondestroy
         removeAll()
         destroy adds
-        destroy funcOnSpawn
+        if funcOnSpawn != null
+            destroy funcOnSpawn
         timer_Spawn.release()
 
 

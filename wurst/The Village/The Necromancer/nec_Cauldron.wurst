@@ -1,0 +1,21 @@
+package nec_Cauldron
+import TimerUtils
+
+public class Cauldron
+
+//========================================================================================================================================
+
+//  Settings
+
+    private static constant real HP = 1000
+    private static constant real SUMMONTIME = 120 // Seconds
+    private static constant int  ID = 'u004'
+    private static constant vec2 POS = vec2(-13630,13660)
+
+
+//========================================================================================================================================
+
+    private static unit mob
+
+    static function activate()
+        createUnit(Player(11), ID, POS, angle(0))
