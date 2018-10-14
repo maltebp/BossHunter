@@ -262,6 +262,7 @@ trigger gg_trg_Skeleton_Spawns=null
 trigger gg_trg_Lightning_Enhancement_Effect=null
 trigger gg_trg_Earthquake=null
 destructable gg_dest_DTc2_2577=null
+trigger gg_trg_Untitled_Trigger_009=null
 string Abilities_farseerMissile=null
 string Abilities_forkedLightningTarget=null
 real Angle_DEGTORAD=0.
@@ -336,16 +337,20 @@ boolean DayCycle_enabled=false
 boolean DiseaseCloud_DEBUG=false
 real DiseaseCloud_DAMAGEFREQ=0.
 string DiseaseCloud_SFX=null
+unit array DiseaseCloud_hitTargets
+integer DiseaseCloud_hitTargets_HighestIndex=0
 integer DiseaseCloud_instances=0
 boolean DiseaseCloud_hasBeenInitialized=false
 timer array DiseaseCloud_timer_Damage
 timer array DiseaseCloud_timer_Duration
 real array DiseaseCloud_damage
+real array DiseaseCloud_pos
+real array DiseaseCloud_pos_2
 unit array DiseaseCloud_dummy
 real array DiseaseCloud_range
 effect array DiseaseCloud_sfx
-boolean Disease_DISABLETRIGGERSONINIT=false
 integer Disease_instances=0
+integer Disease_instanceCount=0
 trigger Disease_trg_UnitDies=null
 trigger Disease_trg_UnitIsRemoved=null
 boolean Disease_hasBeenInitialized=false
@@ -354,8 +359,9 @@ real array Disease_diseaseRange
 real array Disease_cloudDamage
 real array Disease_cloudDuration
 real array Disease_cloudRange
-player array Disease_owner
 unit array Disease_unitWithAbility
+effect array Disease_sfx
+timer array Disease_timer_Damage
 integer DummyRecycler_DUMMY_UNIT_ID=0
 integer DummyRecycler_DIFFERENT_ANGLES=0
 real DummyRecycler_ANGLE_DEGREE=0.
@@ -1150,6 +1156,7 @@ code ref_function_Trig_Lightning_Enhancement_Effect_Func005002003=null
 code ref_function_Trig_Lightning_Enhancement_Effect_Func006A=null
 code ref_function_Trig_Lightning_Enhancement_Effect_Actions=null
 code ref_function_Trig_Earthquake_Actions=null
+code ref_function_Trig_Untitled_Trigger_009_Actions=null
 code ref_function_init_Abilities=null
 code ref_function_init_AbilityIds=null
 code ref_function_init_Real=null
@@ -1245,6 +1252,7 @@ code ref_function_ClickableObject_stopAttack=null
 code ref_function_bridge_ClosureForGroups_closure_impl=null
 code ref_function_bridge_CallbackSingle_closure_impl=null
 code ref_function_bridge_delayedInit=null
+code ref_function_bridge_removeFromHitTargets=null
 code ref_function_bridge_DiseaseCloud_closure_impl=null
 code ref_function_bridge_DiseaseCloud_orderDamage=null
 code ref_function_bridge_Disease_unitDies=null
@@ -1978,6 +1986,12 @@ function InitTrig_Untitled_Trigger_008 takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Untitled_Trigger_008, ref_function_Trig_Untitled_Trigger_008_Actions)
 endfunction
 
+function InitTrig_Untitled_Trigger_009 takes nothing returns nothing
+	set gg_trg_Untitled_Trigger_009 = CreateTrigger()
+	call TriggerRegisterLeaveRectSimple(gg_trg_Untitled_Trigger_009, GetPlayableMapRect())
+	call TriggerAddAction(gg_trg_Untitled_Trigger_009, ref_function_Trig_Untitled_Trigger_009_Actions)
+endfunction
+
 function InitTrig_Volcano_Strike takes nothing returns nothing
 	set gg_trg_Volcano_Strike = CreateTrigger()
 	call TriggerRegisterAnyUnitEventBJ(gg_trg_Volcano_Strike, EVENT_PLAYER_UNIT_SPELL_EFFECT)
@@ -2036,6 +2050,7 @@ function InitCustomTriggers takes nothing returns nothing
 	call InitTrig_Skeleton_Spawns()
 	call InitTrig_Lightning_Enhancement_Effect()
 	call InitTrig_Earthquake()
+	call InitTrig_Untitled_Trigger_009()
 endfunction
 
 function InitGlobals takes nothing returns nothing
@@ -2807,6 +2822,20 @@ function pushUnit takes unit u returns nothing
 	set OnUnitEnterLeave_tempUnitsCount = OnUnitEnterLeave_tempUnitsCount + 1
 endfunction
 
+function trigger_execute takes trigger this returns nothing
+	call TriggerExecute(this)
+endfunction
+
+function OnUnitEnterLeave_closure_impl takes nothing returns nothing
+	local unit leavingUnit = GetTriggerUnit()
+	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
+		call pushUnit(leavingUnit)
+		call trigger_execute(OnUnitEnterLeave_eventTrigger)
+		call popUnit()
+	endif
+	set leavingUnit = null
+endfunction
+
 function trigger_evaluate takes trigger this returns boolean
 	return TriggerEvaluate(this)
 endfunction
@@ -2828,26 +2857,12 @@ function prepareUnit takes unit u returns nothing
 	set receiver_2 = null
 endfunction
 
-function OnUnitEnterLeave_closure_impl takes nothing returns nothing
+function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
 	call prepareUnit(GetFilterUnit())
 endfunction
 
-function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
-	call prepareUnit(GetEnumUnit())
-endfunction
-
-function trigger_execute takes trigger this returns nothing
-	call TriggerExecute(this)
-endfunction
-
 function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
-	local unit leavingUnit = GetTriggerUnit()
-	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
-		call pushUnit(leavingUnit)
-		call trigger_execute(OnUnitEnterLeave_eventTrigger)
-		call popUnit()
-	endif
-	set leavingUnit = null
+	call prepareUnit(GetEnumUnit())
 endfunction
 
 function unit_getCurrentOrder takes unit this returns integer
@@ -4267,6 +4282,9 @@ function Trig_Untitled_Trigger_007_Actions takes nothing returns nothing
 endfunction
 
 function Trig_Untitled_Trigger_008_Actions takes nothing returns nothing
+endfunction
+
+function Trig_Untitled_Trigger_009_Actions takes nothing returns nothing
 endfunction
 
 function Trig_Volcano_Strike_Actions takes nothing returns nothing
@@ -6180,12 +6198,12 @@ endfunction
 
 function bridge_BossEvent_startFade_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_startFade("BossEvent, line 60")
+	call BossEvent_startFade("BossEvent, line 77")
 endfunction
 
 function bridge_BossEvent_startFade_3 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call BossEvent_startFade("BossEvent, line 77")
+	call BossEvent_startFade("BossEvent, line 60")
 endfunction
 
 function BossEvent_win_soundDelay takes string stackPos returns nothing
@@ -6201,10 +6219,6 @@ function bridge_BossEvent_win_soundDelay takes nothing returns nothing
 	call BossEvent_win_soundDelay("BossEvent, line 71")
 endfunction
 
-function ClosureTimers_closure_impl takes integer this returns nothing
-	set ClosureTimers_x = ClosureTimers_x + 50
-endfunction
-
 function testFail takes string msg returns nothing
 endfunction
 
@@ -6214,9 +6228,13 @@ function int_assertEquals takes integer this, integer expected returns nothing
 	endif
 endfunction
 
-function ClosureTimers_closure_impl_2 takes integer this returns nothing
+function ClosureTimers_closure_impl takes integer this returns nothing
 	set ClosureTimers_x = ClosureTimers_x / 2
 	call int_assertEquals(ClosureTimers_x, 250)
+endfunction
+
+function ClosureTimers_closure_impl_2 takes integer this returns nothing
+	set ClosureTimers_x = ClosureTimers_x + 50
 endfunction
 
 function ClosureTimers_closure_impl_3 takes integer this returns nothing
@@ -6403,12 +6421,12 @@ function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call takes integer
 	if CallbackSingle_typeId[this] <= 643 then
 		if CallbackSingle_typeId[this] <= 642 then
 			if CallbackSingle_typeId[this] <= 641 then
-				call ClosureTimers_closure_impl(this)
+				call ClosureTimers_closure_impl_2(this)
 			else
 				call ClosureTimers_closure_impl_3(this)
 			endif
 		else
-			call ClosureTimers_closure_impl_2(this)
+			call ClosureTimers_closure_impl(this)
 		endif
 	elseif CallbackSingle_typeId[this] <= 644 then
 		call OnUnitEnterLeave_closure_impl_4(this)
@@ -7123,6 +7141,12 @@ function bridge_DelayNode_recycle takes nothing returns nothing
 	call DelayNode_recycle("DummyRecycler, line 127")
 endfunction
 
+function debugMsg takes string stringToPrint returns nothing
+	if DiseaseCloud_DEBUG then
+		call print(stringToPrint)
+	endif
+endfunction
+
 function LinkedList_remove takes integer this, integer elem, string stackPos returns nothing
 	local integer entry
 	set wurst_stack[wurst_stack_depth] = stackPos
@@ -7157,11 +7181,12 @@ endfunction
 function DiseaseCloud_onDestroy takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_LinkedList_LinkedList_LinkedList_remove(DiseaseCloud_instances, this, "when calling remove in DiseaseCloud, line 207")
+	call debugMsg("Destroying Cloud!")
+	call dispatch_LinkedList_LinkedList_LinkedList_remove(DiseaseCloud_instances, this, "when calling remove in DiseaseCloud, line 255")
 	call unit_remove(DiseaseCloud_dummy[this])
 	call effect_destr(DiseaseCloud_sfx[this])
-	call timer_release(DiseaseCloud_timer_Damage[this], "when calling release in DiseaseCloud, line 210")
-	call timer_release(DiseaseCloud_timer_Duration[this], "when calling release in DiseaseCloud, line 211")
+	call timer_release(DiseaseCloud_timer_Damage[this], "when calling release in DiseaseCloud, line 258")
+	call timer_release(DiseaseCloud_timer_Duration[this], "when calling release in DiseaseCloud, line 259")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7181,8 +7206,8 @@ endfunction
 function destroyDiseaseCloud takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call DiseaseCloud_onDestroy(this, "when calling DiseaseCloud_onDestroy in DiseaseCloud, line 206")
-	call dealloc_DiseaseCloud(this, "when calling DiseaseCloud in DiseaseCloud, line 206")
+	call DiseaseCloud_onDestroy(this, "when calling DiseaseCloud_onDestroy in DiseaseCloud, line 253")
+	call dealloc_DiseaseCloud(this, "when calling DiseaseCloud in DiseaseCloud, line 253")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7196,26 +7221,20 @@ function dispatch_DiseaseCloud_destroyDiseaseCloud takes integer this, string st
 			call error("Called DiseaseCloud.destroyDiseaseCloud on invalid object.", "when calling error in ")
 		endif
 	endif
-	call destroyDiseaseCloud(this, "when calling destroyDiseaseCloud in DiseaseCloud, line 188")
+	call destroyDiseaseCloud(this, "when calling destroyDiseaseCloud in DiseaseCloud, line 235")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function DiseaseCloud_closure_impl takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_DiseaseCloud_destroyDiseaseCloud(timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 242"), "when calling DiseaseCloud in DiseaseCloud, line 242")
+	call dispatch_DiseaseCloud_destroyDiseaseCloud(timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 292"), "when calling DiseaseCloud in DiseaseCloud, line 292")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_DiseaseCloud_closure_impl takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call DiseaseCloud_closure_impl("DiseaseCloud, line 240")
-endfunction
-
-function debugMsg takes string stringToPrint returns nothing
-	if DiseaseCloud_DEBUG then
-		call print(stringToPrint)
-	endif
+	call DiseaseCloud_closure_impl("DiseaseCloud, line 290")
 endfunction
 
 function group_close takes group this returns nothing
@@ -7237,26 +7256,69 @@ function player_isAllyOf takes player this, player p returns boolean
 	return IsPlayerAlly(this, p)
 endfunction
 
+function unit_addToHitTargets takes unit this, string stackPos returns nothing
+	local integer index
+	local timer receiver
+	local timer receiver_2
+	local integer cond_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set index = 0
+	loop
+		exitwhen  not (DiseaseCloud_hitTargets[index] != null)
+		set index = index + 1
+	endloop
+	set DiseaseCloud_hitTargets[index] = this
+	set receiver = getTimer("when calling getTimer in DiseaseCloud, line 34")
+	call timer_setData(receiver, index, "when calling setData in DiseaseCloud, line 35")
+	set receiver_2 = receiver
+	call timer_start(receiver_2, DiseaseCloud_DAMAGEFREQ - 0.01, ref_function_bridge_removeFromHitTargets)
+	if index > DiseaseCloud_hitTargets_HighestIndex then
+		set cond_result = index
+	else
+		set cond_result = DiseaseCloud_hitTargets_HighestIndex
+	endif
+	set DiseaseCloud_hitTargets_HighestIndex = cond_result
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set receiver = null
+	set receiver_2 = null
+endfunction
+
 function unit_getName takes unit this returns string
 	return GetUnitName(this)
 endfunction
 
-function damage takes unit source, real damage_2, real range returns nothing
-	local group targets = Group_ENUM_GROUP
+function unit_isHit takes unit this returns boolean
+	local integer index = 0
+	local integer temp = DiseaseCloud_hitTargets_HighestIndex
+	loop
+		exitwhen index > temp
+		if DiseaseCloud_hitTargets[index] == this then
+			return true
+		endif
+		set index = index + 1
+	endloop
+	return false
+endfunction
+
+function damage takes unit source, real damage_2, real range, string stackPos returns nothing
+	local group targets
 	local group iterator
 	local unit u
 	local integer i
 	local unit u_2
 	local group from
-	call debugMsg("Attempting to filter units!")
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set targets = Group_ENUM_GROUP
+	call debugMsg("Source: " + unit_getName(source))
 	call group_enumUnitsInRange_2(targets, unit_getPos(source), unit_getPos_return_y, range)
 	set iterator = group_iterator(targets)
 	loop
 		exitwhen  not group_hasNext(iterator)
 		set u = group_next(iterator)
-		if u == source or ( not unit_isAlive(u)) or player_isAllyOf(unit_getOwner(u), unit_getOwner(source)) then
+		if u == source or ( not unit_isAlive(u)) or player_isAllyOf(unit_getOwner(u), unit_getOwner(source)) or unit_isHit(u) then
 			call group_removeUnit_1(targets, u)
-			call debugMsg("Removed " + unit_getName(u))
 		endif
 	endloop
 	call group_close(iterator)
@@ -7266,10 +7328,12 @@ function damage takes unit source, real damage_2, real range returns nothing
 	loop
 		exitwhen  not group_hasNext(from)
 		set u_2 = group_next(from)
-		call debugMsg("Target " + int_toString(i) + ": " + unit_getName(u_2))
+		call debugMsg(unit_getName(source) + " damaged " + unit_getName(u_2))
 		call unit_damageTarget(source, u_2, damage_2)
+		call unit_addToHitTargets(u_2, "when calling addToHitTargets in DiseaseCloud, line 78")
 		set i = i + 1
 	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
 	set targets = null
 	set iterator = null
 	set u = null
@@ -7281,31 +7345,258 @@ function DiseaseCloud_orderDamage takes string stackPos returns nothing
 	local integer instance
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 214")
-	call damage(DiseaseCloud_dummy[instance], DiseaseCloud_damage[instance], DiseaseCloud_range[instance])
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 262")
+	call print("On orderDamage: " + unit_getName(DiseaseCloud_dummy[instance]))
+	call damage(DiseaseCloud_dummy[instance], DiseaseCloud_damage[instance], DiseaseCloud_range[instance], "when calling damage in DiseaseCloud, line 264")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_DiseaseCloud_orderDamage takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call DiseaseCloud_orderDamage("DiseaseCloud, line 244")
+	call DiseaseCloud_orderDamage("DiseaseCloud, line 294")
 endfunction
 
 function Disease_orderDamage takes string stackPos returns nothing
 	local integer instance
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set instance = timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 128")
-	call damage(Disease_unitWithAbility[instance], Disease_diseaseDamage[instance], Disease_diseaseRange[instance])
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 173")
+	call damage(Disease_unitWithAbility[instance], Disease_diseaseDamage[instance], Disease_diseaseRange[instance], "when calling damage in DiseaseCloud, line 174")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function bridge_Disease_orderDamage takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call Disease_orderDamage("DiseaseCloud, line 97")
+	call Disease_orderDamage("DiseaseCloud, line 145")
 endfunction
 
-function Disease_onDestroy takes integer this returns nothing
+function trigger_disable takes trigger this returns nothing
+	call DisableTrigger(this)
+endfunction
+
+function Disease_deactivateTriggers takes nothing returns nothing
+	call trigger_disable(Disease_trg_UnitDies)
+	call trigger_disable(Disease_trg_UnitIsRemoved)
+endfunction
+
+function Table_removeInt takes integer this, integer parentKey returns nothing
+	call RemoveSavedInteger(Table_ht, this, parentKey)
+endfunction
+
+function dispatch_Table_Table_Table_removeInt takes integer this, integer parentKey, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling Table.Table_Table_removeInt", "when calling error in ")
+		else
+			call error("Called Table.Table_Table_removeInt on invalid object.", "when calling error in ")
+		endif
+	endif
+	call Table_removeInt(this, parentKey)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashMap_remove takes integer this, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_Table_Table_Table_removeInt(this, key, "when calling removeInt in HashMap, line 24")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_count takes integer this, integer elem returns integer
+	return hashtable_loadInt(HashList_occurences, this, elem)
+endfunction
+
+function dispatch_HashList_HashList_HashList_count takes integer this, integer elem, string stackPos returns integer
+	local integer HashList_HashList_count_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashList.HashList_HashList_count", "when calling error in ")
+		else
+			call error("Called HashList.HashList_HashList_count on invalid object.", "when calling error in ")
+		endif
+	endif
+	set HashList_HashList_count_result = HashList_count(this, elem)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_count_result
+endfunction
+
+function HashList_decrOccurences takes integer this, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call hashtable_saveInt(HashList_occurences, this, elem, dispatch_HashList_HashList_HashList_count(this, elem, "when calling count in HashList, line 17") - 1)
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_decrOccurences takes integer this, integer elem, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashList.HashList_HashList_decrOccurences", "when calling error in ")
+		else
+			call error("Called HashList.HashList_HashList_decrOccurences on invalid object.", "when calling error in ")
+		endif
+	endif
+	call HashList_decrOccurences(this, elem, "when calling decrOccurences in HashList, line 16")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_removeAt takes integer this, integer index, string stackPos returns nothing
+	local integer i
+	local integer temp
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call dispatch_HashList_HashList_HashList_decrOccurences(this, hashtable_loadInt(HashList_ht, this, index), "when calling decrOccurences in HashList, line 49")
+	set i = index
+	set temp = HashList_size[this]
+	loop
+		exitwhen i > temp
+		call hashtable_saveInt(HashList_ht, this, i, hashtable_loadInt(HashList_ht, this, i + 1))
+		set i = i + 1
+	endloop
+	set HashList_size[this] = HashList_size[this] - 1
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_removeAt takes integer this, integer index, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashList.HashList_HashList_removeAt", "when calling error in ")
+		else
+			call error("Called HashList.HashList_HashList_removeAt on invalid object.", "when calling error in ")
+		endif
+	endif
+	call HashList_removeAt(this, index, "when calling removeAt in HashList, line 48")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_remove takes integer this, integer t, string stackPos returns nothing
+	local integer i
+	local integer temp
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set i = 0
+	set temp = HashList_size[this] - 1
+	loop
+		exitwhen i > temp
+		if t == hashtable_loadInt(HashList_ht, this, i) then
+			call dispatch_HashList_HashList_HashList_removeAt(this, i, "when calling removeAt in HashList, line 58")
+			exitwhen true
+		endif
+		set i = i + 1
+	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_HashList_HashList_HashList_remove takes integer this, integer t, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashList.HashList_HashList_remove", "when calling error in ")
+		else
+			call error("Called HashList.HashList_HashList_remove on invalid object.", "when calling error in ")
+		endif
+	endif
+	call HashList_remove(this, t, "when calling remove in HashList, line 55")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashList_has takes integer this, integer elem, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_count(this, elem, "when calling count in HashList, line 83") > 0
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_HashList_HashList_HashList_has takes integer this, integer elem, string stackPos returns boolean
+	local boolean HashList_HashList_has_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashList.HashList_HashList_has", "when calling error in ")
+		else
+			call error("Called HashList.HashList_HashList_has on invalid object.", "when calling error in ")
+		endif
+	endif
+	set HashList_HashList_has_result = HashList_has(this, elem, "when calling has in HashList, line 82")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashList_HashList_has_result
+endfunction
+
+function IterableMap_hasKey takes integer this, integer key, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_has(IterableMap_keys[this], key, "when calling has in HashMap, line 44")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_IterableMap_HashMap_IterableMap_hasKey takes integer this, integer key, string stackPos returns boolean
+	local boolean HashMap_IterableMap_hasKey_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling IterableMap.HashMap_IterableMap_hasKey", "when calling error in ")
+		else
+			call error("Called IterableMap.HashMap_IterableMap_hasKey on invalid object.", "when calling error in ")
+		endif
+	endif
+	set HashMap_IterableMap_hasKey_result = IterableMap_hasKey(this, key, "when calling hasKey in HashMap, line 43")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashMap_IterableMap_hasKey_result
+endfunction
+
+function IterableMap_remove takes integer this, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call HashMap_remove(this, key, "when calling remove in HashMap, line 48")
+	if dispatch_IterableMap_HashMap_IterableMap_hasKey(this, key, "when calling hasKey in HashMap, line 49") then
+		call dispatch_HashList_HashList_HashList_remove(IterableMap_keys[this], key, "when calling remove in HashMap, line 50")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_IterableMap_HashMap_IterableMap_remove takes integer this, integer key, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling IterableMap.HashMap_IterableMap_remove", "when calling error in ")
+		else
+			call error("Called IterableMap.HashMap_IterableMap_remove on invalid object.", "when calling error in ")
+		endif
+	endif
+	call IterableMap_remove(this, key, "when calling remove in HashMap, line 47")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function unitToIndex takes unit object returns integer
+	return handle_getHandleId(object)
+endfunction
+
+function Disease_onDestroy takes integer this, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set Disease_instanceCount = Disease_instanceCount - 1
+	if Disease_instanceCount == 0 then
+		call Disease_deactivateTriggers()
+	endif
+	call dispatch_IterableMap_HashMap_IterableMap_remove(Disease_instances, unitToIndex(Disease_unitWithAbility[this]), "when calling remove in DiseaseCloud, line 116")
+	call effect_destr(Disease_sfx[this])
+	call timer_release(Disease_timer_Damage[this], "when calling release in DiseaseCloud, line 119")
+	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
 function dealloc_Disease takes integer obj, string stackPos returns nothing
@@ -7324,8 +7615,8 @@ endfunction
 function destroyDisease takes integer this, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call Disease_onDestroy(this)
-	call dealloc_Disease(this, "when calling Disease in DiseaseCloud, line 72")
+	call Disease_onDestroy(this, "when calling Disease_onDestroy in DiseaseCloud, line 112")
+	call dealloc_Disease(this, "when calling Disease in DiseaseCloud, line 112")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7339,7 +7630,7 @@ function dispatch_Disease_destroyDisease takes integer this, string stackPos ret
 			call error("Called Disease.destroyDisease on invalid object.", "when calling error in ")
 		endif
 	endif
-	call destroyDisease(this, "when calling destroyDisease in DiseaseCloud, line 44")
+	call destroyDisease(this, "when calling destroyDisease in DiseaseCloud, line 84")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -7441,7 +7732,7 @@ function DiseaseCloud_initialize takes string stackPos returns nothing
 	call debugMsg("Initializing DiseaseCloud class")
 	if  not DiseaseCloud_hasBeenInitialized then
 		set DiseaseCloud_hasBeenInitialized = true
-		set DiseaseCloud_instances = new_LinkedList("when calling new_LinkedList in DiseaseCloud, line 263")
+		set DiseaseCloud_instances = new_LinkedList("when calling new_LinkedList in DiseaseCloud, line 313")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -7464,27 +7755,37 @@ function construct_DiseaseCloud takes integer this, player owner, real pos_x, re
 	local timer receiver_3
 	local timer receiver_4
 	local integer temp
+	local integer tempIndex
+	local integer tempIndex_2
+	local player temp_2
+	local integer temp_3
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call debugMsg("Creating new cloud! Stats: " + "Player" + int_toString(player_getId(owner)) + ", Position:" + vec2_toString(pos_x, pos_y) + ", Damage: " + real_toString_2(damage_2) + ", Duration: " + real_toString_2(duration) + ", Range: " + real_toString_2(range))
 	if  not DiseaseCloud_hasBeenInitialized then
-		call DiseaseCloud_initialize("when calling initialize in DiseaseCloud, line 226")
+		call DiseaseCloud_initialize("when calling initialize in DiseaseCloud, line 275")
 	endif
-	call dispatch_LinkedList_LinkedList_LinkedList_add_1(DiseaseCloud_instances, this, "when calling add in DiseaseCloud, line 228")
+	call dispatch_LinkedList_LinkedList_LinkedList_add_1(DiseaseCloud_instances, this, "when calling add in DiseaseCloud, line 277")
+	set tempIndex = this
+	set DiseaseCloud_pos[tempIndex] = pos_x
+	set DiseaseCloud_pos_2[tempIndex] = pos_y
 	set DiseaseCloud_damage[this] = damage_2
 	set DiseaseCloud_range[this] = range
 	set DiseaseCloud_sfx[this] = addEffect_2(DiseaseCloud_SFX, vec2_withTerrainZ(pos_x, pos_y, 100.), vec2_withTerrainZ_return_y, vec2_withTerrainZ_return_z)
-	set DiseaseCloud_dummy[this] = createUnit(owner, 1747988532, pos_x, pos_y, 0.)
-	set DiseaseCloud_timer_Duration[this] = getTimer("when calling getTimer in DiseaseCloud, line 238")
+	set temp_3 = this
+	set temp_2 = owner
+	set tempIndex_2 = this
+	set DiseaseCloud_dummy[temp_3] = createUnit(temp_2, 1747988532, DiseaseCloud_pos[tempIndex_2], DiseaseCloud_pos_2[tempIndex_2], 0.)
+	set DiseaseCloud_timer_Duration[this] = getTimer("when calling getTimer in DiseaseCloud, line 288")
 	if duration > 0. then
 		set receiver = DiseaseCloud_timer_Duration[this]
-		call timer_setData(receiver, this, "when calling setData in DiseaseCloud, line 241")
+		call timer_setData(receiver, this, "when calling setData in DiseaseCloud, line 291")
 		set receiver_2 = receiver
 		call timer_start(receiver_2, duration + 0.1, ref_function_bridge_DiseaseCloud_closure_impl)
 	endif
 	set temp = this
-	set receiver_3 = getTimer("when calling getTimer in DiseaseCloud, line 244")
-	call timer_setData(receiver_3, this, "when calling setData in DiseaseCloud, line 245")
+	set receiver_3 = getTimer("when calling getTimer in DiseaseCloud, line 294")
+	call timer_setData(receiver_3, this, "when calling setData in DiseaseCloud, line 295")
 	set receiver_4 = receiver_3
 	call timer_startPeriodic(receiver_4, DiseaseCloud_DAMAGEFREQ, ref_function_bridge_DiseaseCloud_orderDamage)
 	set DiseaseCloud_timer_Damage[temp] = receiver_4
@@ -7493,20 +7794,17 @@ function construct_DiseaseCloud takes integer this, player owner, real pos_x, re
 	set receiver_2 = null
 	set receiver_3 = null
 	set receiver_4 = null
+	set temp_2 = null
 endfunction
 
 function new_DiseaseCloud takes player owner, real pos_x, real pos_y, real damage_2, real duration, real range, string stackPos returns integer
 	local integer this
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = alloc_DiseaseCloud("when calling DiseaseCloud in DiseaseCloud, line 218")
-	call construct_DiseaseCloud(this, owner, pos_x, pos_y, damage_2, duration, range, "when calling construct_DiseaseCloud in DiseaseCloud, line 218")
+	set this = alloc_DiseaseCloud("when calling DiseaseCloud in DiseaseCloud, line 267")
+	call construct_DiseaseCloud(this, owner, pos_x, pos_y, damage_2, duration, range, "when calling construct_DiseaseCloud in DiseaseCloud, line 267")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
-endfunction
-
-function unitToIndex takes unit object returns integer
-	return handle_getHandleId(object)
 endfunction
 
 function Disease_unitDies takes string stackPos returns boolean
@@ -7515,10 +7813,11 @@ function Disease_unitDies takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set dyingUnit = GetDyingUnit()
-	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(dyingUnit), "when calling has in DiseaseCloud, line 138") then
-		set instance = dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(dyingUnit), "when calling get in DiseaseCloud, line 139")
-		call new_DiseaseCloud(Disease_owner[instance], unit_getPos(Disease_unitWithAbility[instance]), unit_getPos_return_y, Disease_cloudDamage[instance], Disease_cloudDuration[instance], Disease_cloudRange[instance], "when calling new_DiseaseCloud in DiseaseCloud, line 140")
-		call dispatch_Disease_destroyDisease(instance, "when calling Disease in DiseaseCloud, line 141")
+	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(dyingUnit), "when calling has in DiseaseCloud, line 182") then
+		call debugMsg("Disease: Unit in instance died!")
+		set instance = dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(dyingUnit), "when calling get in DiseaseCloud, line 184")
+		call new_DiseaseCloud(unit_getOwner(Disease_unitWithAbility[instance]), unit_getPos(Disease_unitWithAbility[instance]), unit_getPos_return_y, Disease_cloudDamage[instance], Disease_cloudDuration[instance], Disease_cloudRange[instance], "when calling new_DiseaseCloud in DiseaseCloud, line 185")
+		call dispatch_Disease_destroyDisease(instance, "when calling Disease in DiseaseCloud, line 186")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set dyingUnit = null
@@ -7527,7 +7826,7 @@ endfunction
 
 function bridge_Disease_unitDies takes nothing returns boolean
 	set wurst_stack_depth = 0
-	return Disease_unitDies("DiseaseCloud, line 177")
+	return Disease_unitDies("DiseaseCloud, line 225")
 endfunction
 
 function Disease_unitIsRemoved takes string stackPos returns boolean
@@ -7535,8 +7834,8 @@ function Disease_unitIsRemoved takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set removedUnit = GetLeavingUnit()
-	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(removedUnit), "when calling has in DiseaseCloud, line 151") then
-		call dispatch_Disease_destroyDisease(dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(removedUnit), "when calling get in DiseaseCloud, line 152"), "when calling Disease in DiseaseCloud, line 152")
+	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(removedUnit), "when calling has in DiseaseCloud, line 196") then
+		call dispatch_Disease_destroyDisease(dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(removedUnit), "when calling get in DiseaseCloud, line 197"), "when calling Disease in DiseaseCloud, line 197")
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set removedUnit = null
@@ -7545,7 +7844,7 @@ endfunction
 
 function bridge_Disease_unitIsRemoved takes nothing returns boolean
 	set wurst_stack_depth = 0
-	return Disease_unitIsRemoved("DiseaseCloud, line 180")
+	return Disease_unitIsRemoved("DiseaseCloud, line 230")
 endfunction
 
 function DynamicSound_TimedLoop_stopTimedLoopAndDestroy takes integer this returns nothing
@@ -8620,26 +8919,6 @@ function HashMap_put takes integer this, integer key, integer value, string stac
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function HashList_count takes integer this, integer elem returns integer
-	return hashtable_loadInt(HashList_occurences, this, elem)
-endfunction
-
-function dispatch_HashList_HashList_HashList_count takes integer this, integer elem, string stackPos returns integer
-	local integer HashList_HashList_count_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling HashList.HashList_HashList_count", "when calling error in ")
-		else
-			call error("Called HashList.HashList_HashList_count on invalid object.", "when calling error in ")
-		endif
-	endif
-	set HashList_HashList_count_result = HashList_count(this, elem)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_count_result
-endfunction
-
 function HashList_incrOccurences takes integer this, integer elem, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -8682,56 +8961,6 @@ function dispatch_HashList_HashList_HashList_add_1 takes integer this, integer e
 	endif
 	call HashList_add_1(this, elems_0, "when calling add in HashList, line 20")
 	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function HashList_has takes integer this, integer elem, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_count(this, elem, "when calling count in HashList, line 83") > 0
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_HashList_HashList_HashList_has takes integer this, integer elem, string stackPos returns boolean
-	local boolean HashList_HashList_has_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if HashList_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling HashList.HashList_HashList_has", "when calling error in ")
-		else
-			call error("Called HashList.HashList_HashList_has on invalid object.", "when calling error in ")
-		endif
-	endif
-	set HashList_HashList_has_result = HashList_has(this, elem, "when calling has in HashList, line 82")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashList_HashList_has_result
-endfunction
-
-function IterableMap_hasKey takes integer this, integer key, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_HashList_HashList_HashList_has(IterableMap_keys[this], key, "when calling has in HashMap, line 44")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_IterableMap_HashMap_IterableMap_hasKey takes integer this, integer key, string stackPos returns boolean
-	local boolean HashMap_IterableMap_hasKey_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling IterableMap.HashMap_IterableMap_hasKey", "when calling error in ")
-		else
-			call error("Called IterableMap.HashMap_IterableMap_hasKey on invalid object.", "when calling error in ")
-		endif
-	endif
-	set HashMap_IterableMap_hasKey_result = IterableMap_hasKey(this, key, "when calling hasKey in HashMap, line 43")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashMap_IterableMap_hasKey_result
 endfunction
 
 function IterableMap_put takes integer this, integer key, integer value, string stackPos returns nothing
@@ -9902,12 +10131,12 @@ endfunction
 
 function bridge_SoundDefinition_playSound takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call SoundDefinition_playSound("SoundUtils, line 90")
+	call SoundDefinition_playSound("SoundUtils, line 118")
 endfunction
 
 function bridge_SoundDefinition_playSound_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call SoundDefinition_playSound("SoundUtils, line 118")
+	call SoundDefinition_playSound("SoundUtils, line 90")
 endfunction
 
 function LinkedList_push takes integer this, integer elem, string stackPos returns nothing
@@ -10105,10 +10334,6 @@ function Shockwave_deactivate takes string stackPos returns nothing
 		call group_destr(Shockwave_tempGroup)
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function trigger_disable takes trigger this returns nothing
-	call DisableTrigger(this)
 endfunction
 
 function TheBear_clearEvent takes string stackPos returns nothing
@@ -11253,20 +11478,6 @@ function shouldIndex takes unit w_u returns boolean
 	return true
 endfunction
 
-function UnitIndexer_closure_impl takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if shouldIndex(getEnterLeaveUnit()) then
-		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_UnitIndexer_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl("UnitIndexer, line 179")
-endfunction
-
 function UnitIndex_onDestroy takes integer this returns nothing
 	call trigger_evaluate(UnitIndexer_onDeindexTrigger)
 	call unit_setUserData(UnitIndex__unit[this], 0)
@@ -11320,7 +11531,7 @@ function unit_deindex takes unit this, string stackPos returns boolean
 	endif
 endfunction
 
-function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
+function UnitIndexer_closure_impl takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if shouldIndex(getEnterLeaveUnit()) then
@@ -11329,9 +11540,23 @@ function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function bridge_UnitIndexer_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call UnitIndexer_closure_impl("UnitIndexer, line 180")
+endfunction
+
+function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if shouldIndex(getEnterLeaveUnit()) then
+		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl_2("UnitIndexer, line 180")
+	call UnitIndexer_closure_impl_2("UnitIndexer, line 179")
 endfunction
 
 function lightning_destr takes lightning this returns boolean
@@ -11663,19 +11888,65 @@ endfunction
 
 function bridge_clear takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 159")
+	call clear("tm_Main, line 132")
 endfunction
 
 function bridge_clear_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 132")
+	call clear("tm_Main, line 159")
+endfunction
+
+function delayedInit takes string stackPos returns nothing
+	local integer obj
+	local integer receiver
+	local integer receiver_2
+	local integer receiver_3
+	local integer receiver_4
+	local integer receiver_5
+	local integer receiver_6
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in tm_Main, line 74")
+	set receiver = new_UnitObject("The Monster", tm_Main_bossId, 11840., 14788., 315., "when calling new_UnitObject in tm_Main, line 76")
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver, Sounds_koboldWhat2, "when calling setSoundOnClick in tm_Main, line 77")
+	set receiver_2 = receiver
+	call dispatch_UnitObject_BossInformation_UnitObject_setAttackDmg(receiver_2, tm_Main_THEMONSTER_DAMAGE, "when calling setAttackDmg in tm_Main, line 78")
+	set receiver_3 = receiver_2
+	call dispatch_UnitObject_BossInformation_UnitObject_setAttackSpeed(receiver_3, tm_Main_THEMONSTER_ATTACKSPEED, "when calling setAttackSpeed in tm_Main, line 79")
+	set receiver_4 = receiver_3
+	call dispatch_UnitObject_BossInformation_UnitObject_setHP(receiver_4, tm_Main_THEMONSTER_HP, "when calling setHP in tm_Main, line 80")
+	set receiver_5 = receiver_4
+	call dispatch_UnitObject_BossInformation_UnitObject_setMoveSpeed(receiver_5, tm_Main_THEMONSTER_MOVESPEED, "when calling setMoveSpeed in tm_Main, line 81")
+	set receiver_6 = receiver_5
+	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_6, "" + "Will be present during the entire fight, and frequently\n" + "cast Flame Strikes and Ice Blasts. Occasionally he'll\n" + "attemtp to consume Magic Crystals", "when calling setDescription in tm_Main, line 83")
+	set obj = receiver_6
+	set ClickableObject_objectAnimation[obj] = "attack"
+	set ClickableObject_objType[obj] = "The Boss"
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_delayedInit takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit("tm_Main, line 69")
+endfunction
+
+function delayedInit_2 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_delayedInit_2 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit_2("ZoneTransition, line 13")
 endfunction
 
 function destructable_setAnimation takes destructable this, string anim returns nothing
 	call SetDestructableAnimation(this, anim)
 endfunction
 
-function delayedInit takes string stackPos returns nothing
+function delayedInit_3 takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call timer_release(GetExpiredTimer(), "when calling release in General, line 106")
@@ -11683,9 +11954,9 @@ function delayedInit takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_delayedInit takes nothing returns nothing
+function bridge_delayedInit_3 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit("General, line 102")
+	call delayedInit_3("General, line 102")
 endfunction
 
 function alloc_Disease takes string stackPos returns integer
@@ -11708,6 +11979,12 @@ function alloc_Disease takes string stackPos returns integer
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
+endfunction
+
+function Disease_activateTriggers takes nothing returns nothing
+	call debugMsg("Disease: Activating triggers!")
+	call trigger_enable(Disease_trg_UnitDies)
+	call trigger_enable(Disease_trg_UnitIsRemoved)
 endfunction
 
 function alloc_IterableMap takes string stackPos returns integer
@@ -11793,29 +12070,57 @@ function new_IterableMap takes string stackPos returns integer
 	return this
 endfunction
 
+function region_addRect takes region this, rect rct returns nothing
+	call RegionAddRect(this, rct)
+endfunction
+
+function trigger_registerAnyUnitEvent takes trigger this, playerunitevent whichEvent returns nothing
+	call TriggerRegisterAnyUnitEventBJ(this, whichEvent)
+endfunction
+
+function trigger_registerLeaveRegion takes trigger this, region whichRegion, boolexpr filter returns nothing
+	call TriggerRegisterLeaveRegion(this, whichRegion, filter)
+endfunction
+
 function Disease_initialize takes string stackPos returns nothing
 	local trigger receiver
 	local trigger receiver_2
+	local trigger receiver_3
+	local region map
+	local region receiver_4
+	local trigger receiver_5
+	local trigger receiver_6
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if  not Disease_hasBeenInitialized then
+		call debugMsg("Disease: Initializing Class")
 		set Disease_hasBeenInitialized = true
-		set Disease_instances = new_IterableMap("when calling new_IterableMap in DiseaseCloud, line 173")
-		call new_IterableMap("when calling new_IterableMap in DiseaseCloud, line 174")
+		set Disease_instances = new_IterableMap("when calling new_IterableMap in DiseaseCloud, line 220")
+		call new_IterableMap("when calling new_IterableMap in DiseaseCloud, line 221")
 		set receiver = CreateTrigger()
-		call trigger_addCondition(receiver, Condition(ref_function_bridge_Disease_unitDies))
-		set Disease_trg_UnitDies = receiver
-		set receiver_2 = CreateTrigger()
-		call trigger_addCondition(receiver_2, Condition(ref_function_bridge_Disease_unitIsRemoved))
-		set Disease_trg_UnitIsRemoved = receiver_2
-		if Disease_DISABLETRIGGERSONINIT then
-			call trigger_disable(Disease_trg_UnitDies)
-			call trigger_disable(Disease_trg_UnitIsRemoved)
-		endif
+		call trigger_registerAnyUnitEvent(receiver, EVENT_PLAYER_UNIT_DEATH)
+		set receiver_2 = receiver
+		call trigger_addCondition(receiver_2, Condition(ref_function_bridge_Disease_unitDies))
+		set receiver_3 = receiver_2
+		call trigger_disable(receiver_3)
+		set Disease_trg_UnitDies = receiver_3
+		set receiver_4 = CreateRegion()
+		call region_addRect(receiver_4, GetPlayableMapRect())
+		set map = receiver_4
+		set receiver_5 = CreateTrigger()
+		call trigger_registerLeaveRegion(receiver_5, map, Filter(ref_function_bridge_Disease_unitIsRemoved))
+		set receiver_6 = receiver_5
+		call trigger_disable(receiver_6)
+		set Disease_trg_UnitIsRemoved = receiver_6
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
+	set receiver_3 = null
+	set map = null
+	set receiver_4 = null
+	set receiver_5 = null
+	set receiver_6 = null
 endfunction
 
 function dispatch_IterableMap_HashMap_IterableMap_put takes integer this, integer key, integer value, string stackPos returns nothing
@@ -11832,40 +12137,46 @@ function dispatch_IterableMap_HashMap_IterableMap_put takes integer this, intege
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function construct_Disease takes integer this, unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency, string stackPos returns nothing
+function construct_Disease takes integer this, unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, string stackPos returns nothing
 	local timer receiver
 	local timer receiver_2
+	local integer temp
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if  not Disease_hasBeenInitialized then
-		call debugMsg("Initializing Disease Class")
-		call Disease_initialize("when calling initialize in DiseaseCloud, line 84")
+		call Disease_initialize("when calling initialize in DiseaseCloud, line 129")
 	endif
+	if Disease_instanceCount == 0 then
+		call Disease_activateTriggers()
+	endif
+	set Disease_instanceCount = Disease_instanceCount + 1
 	call debugMsg("Adding Disease to " + unit_getName(whichUnit) + "...")
-	call dispatch_IterableMap_HashMap_IterableMap_put(Disease_instances, unitToIndex(whichUnit), this, "when calling put in DiseaseCloud, line 87")
+	call dispatch_IterableMap_HashMap_IterableMap_put(Disease_instances, unitToIndex(whichUnit), this, "when calling put in DiseaseCloud, line 136")
 	set Disease_unitWithAbility[this] = whichUnit
 	set Disease_diseaseDamage[this] = diseaseDamage
 	set Disease_cloudDamage[this] = cloudDamage
 	set Disease_cloudRange[this] = cloudRange
 	set Disease_diseaseRange[this] = diseaseRange
 	set Disease_cloudDuration[this] = cloudDuration
-	call widget_addEffect(Disease_unitWithAbility[this], DiseaseCloud_SFX, "origin")
-	set receiver = getTimer("when calling getTimer in DiseaseCloud, line 97")
-	call timer_setData(receiver, this, "when calling setData in DiseaseCloud, line 98")
+	set Disease_sfx[this] = widget_addEffect(Disease_unitWithAbility[this], DiseaseCloud_SFX, "origin")
+	set temp = this
+	set receiver = getTimer("when calling getTimer in DiseaseCloud, line 145")
+	call timer_setData(receiver, this, "when calling setData in DiseaseCloud, line 146")
 	set receiver_2 = receiver
-	call timer_startPeriodic(receiver_2, damageFrequency, ref_function_bridge_Disease_orderDamage)
+	call timer_startPeriodic(receiver_2, DiseaseCloud_DAMAGEFREQ, ref_function_bridge_Disease_orderDamage)
+	set Disease_timer_Damage[temp] = receiver_2
 	call debugMsg("Finished adding Disease to unit")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
 endfunction
 
-function new_Disease takes unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency, string stackPos returns integer
+function new_Disease takes unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, string stackPos returns integer
 	local integer this
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set this = alloc_Disease("when calling Disease in DiseaseCloud, line 81")
-	call construct_Disease(this, whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, damageFrequency, "when calling construct_Disease in DiseaseCloud, line 81")
+	set this = alloc_Disease("when calling Disease in DiseaseCloud, line 127")
+	call construct_Disease(this, whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, "when calling construct_Disease in DiseaseCloud, line 127")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
 endfunction
@@ -11874,70 +12185,24 @@ function Disease_addUnit takes unit whichUnit, real damage_2, real cloudDuration
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	call debugMsg("Disease: addUnit() called")
-	call new_Disease(whichUnit, damage_2, damage_2, range, range, cloudDuration, 1., "when calling new_Disease in DiseaseCloud, line 110")
+	call new_Disease(whichUnit, damage_2, damage_2, range, range, cloudDuration, "when calling new_Disease in DiseaseCloud, line 158")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function delayedInit_2 takes string stackPos returns nothing
+function delayedInit_4 takes string stackPos returns nothing
 	local unit u
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in DiseaseCloud, line 267")
-	set u = createUnit(Player(0), 1751543663, -13935., -14250., 0.)
-	call Disease_addUnit(u, 50., 10., 300., "when calling addUnit in DiseaseCloud, line 269")
+	call timer_release(GetExpiredTimer(), "when calling release in DiseaseCloud, line 317")
+	set u = createUnit(Player(0), 1752196449, -13935., -14250., 0.)
+	call Disease_addUnit(u, 50., 10., 300., "when calling addUnit in DiseaseCloud, line 319")
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set u = null
 endfunction
 
-function bridge_delayedInit_2 takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit_2("DiseaseCloud, line 273")
-endfunction
-
-function delayedInit_3 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_delayedInit_3 takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit_3("ZoneTransition, line 13")
-endfunction
-
-function delayedInit_4 takes string stackPos returns nothing
-	local integer obj
-	local integer receiver
-	local integer receiver_2
-	local integer receiver_3
-	local integer receiver_4
-	local integer receiver_5
-	local integer receiver_6
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in tm_Main, line 74")
-	set receiver = new_UnitObject("The Monster", tm_Main_bossId, 11840., 14788., 315., "when calling new_UnitObject in tm_Main, line 76")
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setSoundOnClick(receiver, Sounds_koboldWhat2, "when calling setSoundOnClick in tm_Main, line 77")
-	set receiver_2 = receiver
-	call dispatch_UnitObject_BossInformation_UnitObject_setAttackDmg(receiver_2, tm_Main_THEMONSTER_DAMAGE, "when calling setAttackDmg in tm_Main, line 78")
-	set receiver_3 = receiver_2
-	call dispatch_UnitObject_BossInformation_UnitObject_setAttackSpeed(receiver_3, tm_Main_THEMONSTER_ATTACKSPEED, "when calling setAttackSpeed in tm_Main, line 79")
-	set receiver_4 = receiver_3
-	call dispatch_UnitObject_BossInformation_UnitObject_setHP(receiver_4, tm_Main_THEMONSTER_HP, "when calling setHP in tm_Main, line 80")
-	set receiver_5 = receiver_4
-	call dispatch_UnitObject_BossInformation_UnitObject_setMoveSpeed(receiver_5, tm_Main_THEMONSTER_MOVESPEED, "when calling setMoveSpeed in tm_Main, line 81")
-	set receiver_6 = receiver_5
-	call dispatch_ClickableObject_BossInformation_ClickableObject_setDescription(receiver_6, "" + "Will be present during the entire fight, and frequently\n" + "cast Flame Strikes and Ice Blasts. Occasionally he'll\n" + "attemtp to consume Magic Crystals", "when calling setDescription in tm_Main, line 83")
-	set obj = receiver_6
-	set ClickableObject_objectAnimation[obj] = "attack"
-	set ClickableObject_objType[obj] = "The Boss"
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function bridge_delayedInit_4 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit_4("tm_Main, line 69")
+	call delayedInit_4("DiseaseCloud, line 325")
 endfunction
 
 function initEvent takes string stackPos returns boolean
@@ -12059,15 +12324,21 @@ function bridge_init_Colors takes nothing returns boolean
 endfunction
 
 function init_DiseaseCloud takes string stackPos returns boolean
+	local unit u
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set DiseaseCloud_DEBUG = true
-	set DiseaseCloud_DAMAGEFREQ = 1.
+	set DiseaseCloud_DAMAGEFREQ = 2.
 	set DiseaseCloud_SFX = "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl"
-	set Disease_DISABLETRIGGERSONINIT = true
+	set DiseaseCloud_hitTargets_HighestIndex = 0
+	set Disease_instanceCount = 0
 	set Disease_hasBeenInitialized = false
-	call timer_start(getTimer("when calling getTimer in DiseaseCloud, line 273"), 1., ref_function_bridge_delayedInit)
+	set u = createUnit(Player(0), 1751543663, -13935., -14250., 0.)
+	call Disease_addUnit(u, 50., 10., 300., "when calling addUnit in DiseaseCloud, line 324")
+	call timer_start(getTimer("when calling getTimer in DiseaseCloud, line 325"), 0.75, ref_function_bridge_delayedInit)
+	call new_LinkedList("when calling new_LinkedList in DiseaseCloud, line 328")
 	set wurst_stack_depth = wurst_stack_depth - 1
+	set u = null
 	return true
 endfunction
 
@@ -12200,10 +12471,6 @@ endfunction
 
 function player_setName takes player this, string name returns nothing
 	call SetPlayerName(this, name)
-endfunction
-
-function trigger_registerAnyUnitEvent takes trigger this, playerunitevent whichEvent returns nothing
-	call TriggerRegisterAnyUnitEventBJ(this, whichEvent)
 endfunction
 
 function trigger_registerPlayerChatEvent takes trigger this, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns nothing
@@ -13789,6 +14056,22 @@ function bridge_onEventInit takes nothing returns nothing
 	call onEventInit("tm_Main, line 249")
 endfunction
 
+function removeFromHitTargets takes string stackPos returns nothing
+	local timer t
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set t = GetExpiredTimer()
+	set DiseaseCloud_hitTargets[timer_getData(GetExpiredTimer(), "when calling getData in DiseaseCloud, line 48")] = null
+	call timer_release(t, "when calling release in DiseaseCloud, line 49")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set t = null
+endfunction
+
+function bridge_removeFromHitTargets takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call removeFromHitTargets("DiseaseCloud, line 34")
+endfunction
+
 function ArcaneBeing_stopSpawn takes nothing returns nothing
 	call timer_pause(ArcaneBeing_cooldownTimer)
 endfunction
@@ -14149,10 +14432,6 @@ endfunction
 function init_MagicFunctions takes nothing returns boolean
 	set MagicFunctions_compiletime = false
 	return true
-endfunction
-
-function region_addRect takes region this, rect rct returns nothing
-	call RegionAddRect(this, rct)
 endfunction
 
 function initMapBounds takes nothing returns nothing
@@ -14722,6 +15001,7 @@ function initGlobals takes nothing returns nothing
 	set gg_trg_Lightning_Enhancement_Effect = null
 	set gg_trg_Earthquake = null
 	set gg_dest_DTc2_2577 = null
+	set gg_trg_Untitled_Trigger_009 = null
 	set Add_firstFree = 0
 	set Add_maxIndex = 0
 	set AddSpawner_firstFree = 0
@@ -14858,6 +15138,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_Trig_Lightning_Enhancement_Effect_Func006A = function Trig_Lightning_Enhancement_Effect_Func006A
 	set ref_function_Trig_Lightning_Enhancement_Effect_Actions = function Trig_Lightning_Enhancement_Effect_Actions
 	set ref_function_Trig_Earthquake_Actions = function Trig_Earthquake_Actions
+	set ref_function_Trig_Untitled_Trigger_009_Actions = function Trig_Untitled_Trigger_009_Actions
 	set ref_function_init_Abilities = function init_Abilities
 	set ref_function_init_AbilityIds = function init_AbilityIds
 	set ref_function_init_Real = function init_Real
@@ -14943,16 +15224,17 @@ function initGlobals takes nothing returns nothing
 	set ref_function_BossEvent_toShop = function BossEvent_toShop
 	set ref_function_BossEvent_inShop = function BossEvent_inShop
 	set ref_function_bridge_BossEvent_failed_soundDelay = function bridge_BossEvent_failed_soundDelay
-	set ref_function_bridge_BossEvent_startFade = function bridge_BossEvent_startFade_2
+	set ref_function_bridge_BossEvent_startFade = function bridge_BossEvent_startFade_3
 	set ref_function_bridge_BossEvent_startFade_2 = function bridge_BossEvent_startFade
 	set ref_function_bridge_BossEvent_win_soundDelay = function bridge_BossEvent_win_soundDelay
-	set ref_function_bridge_BossEvent_startFade_3 = function bridge_BossEvent_startFade_3
+	set ref_function_bridge_BossEvent_startFade_3 = function bridge_BossEvent_startFade_2
 	set ref_function_BossEvent_onFade = function BossEvent_onFade
 	set ref_function_bridge_ClickableObject_registerClick = function bridge_ClickableObject_registerClick
 	set ref_function_ClickableObject_stopAttack = function ClickableObject_stopAttack
 	set ref_function_bridge_ClosureForGroups_closure_impl = function bridge_ClosureForGroups_closure_impl
 	set ref_function_bridge_CallbackSingle_closure_impl = function bridge_CallbackSingle_closure_impl
-	set ref_function_bridge_delayedInit = function bridge_delayedInit_2
+	set ref_function_bridge_delayedInit = function bridge_delayedInit_4
+	set ref_function_bridge_removeFromHitTargets = function bridge_removeFromHitTargets
 	set ref_function_bridge_DiseaseCloud_closure_impl = function bridge_DiseaseCloud_closure_impl
 	set ref_function_bridge_DiseaseCloud_orderDamage = function bridge_DiseaseCloud_orderDamage
 	set ref_function_bridge_Disease_unitDies = function bridge_Disease_unitDies
@@ -14971,7 +15253,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_checkCoordinates2 = function checkCoordinates2
 	set ref_function_pickup = function pickup
 	set ref_function_getUnitIndex = function getUnitIndex
-	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit
+	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit_3
 	set ref_function_selectionFilter = function selectionFilter
 	set ref_function_Group_closure_impl = function Group_closure_impl_3
 	set ref_function_Group_closure_impl_2 = function Group_closure_impl_2
@@ -14980,21 +15262,21 @@ function initGlobals takes nothing returns nothing
 	set ref_function_InteractableObject_filter = function InteractableObject_filter
 	set ref_function_bridge_InteractableObject_checkDistance = function bridge_InteractableObject_checkDistance
 	set ref_function_replayMusic = function replayMusic
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_3
-	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl
+	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl_3
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 	set ref_function_bridge_DynamicSound_TimedLoop_onExpire = function bridge_DynamicSound_TimedLoop_onExpire
-	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound
+	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound_2
 	set ref_function_bridge_SoundDefinition_recycle = function bridge_SoundDefinition_recycle
-	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound_2
+	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound
 	set ref_function_Stats_train = function Stats_train
 	set ref_function_bridge_EffectDuration_destr = function bridge_EffectDuration_destr
-	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
-	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
+	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl_2
+	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
 	set ref_function_bridge_UnitLightning_update = function bridge_UnitLightning_update
 	set ref_function_bridge_UnitLightning_kill = function bridge_UnitLightning_kill
-	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit_3
+	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit_2
 	set ref_function_bridge_Attack_onHit = function bridge_Attack_onHit
 	set ref_function_Attack_setUpdateMove = function Attack_setUpdateMove
 	set ref_function_Attack_cooldownFinished = function Attack_cooldownFinished
@@ -15062,13 +15344,13 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_initEvent = function bridge_initEvent
 	set ref_function_bridge_someoneDies = function bridge_someoneDies
 	set ref_function_bridge_leaveEvent = function bridge_leaveEvent
-	set ref_function_bridge_delayedInit_4 = function bridge_delayedInit_4
+	set ref_function_bridge_delayedInit_4 = function bridge_delayedInit
 	set ref_function_idle = function idle
 	set ref_function_bridge_onEventInit = function bridge_onEventInit
 	set ref_function_initFight = function initFight
 	set ref_function_ambient = function ambient
-	set ref_function_bridge_clear = function bridge_clear_2
-	set ref_function_bridge_clear_2 = function bridge_clear
+	set ref_function_bridge_clear = function bridge_clear
+	set ref_function_bridge_clear_2 = function bridge_clear_2
 	set ref_function_bridge_mainLoop = function bridge_mainLoop
 endfunction
 

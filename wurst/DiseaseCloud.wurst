@@ -4,39 +4,79 @@ import HashMap
 import TimerUtils
 import LinkedList
 
+
+// ===============================================================================================
+
+// Ability Constants
+
 constant boolean DEBUG = true
-constant real DAMAGEFREQ = 1
+constant real DAMAGEFREQ = 2
 constant string SFX = "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl"
+
+// ===============================================================================================
+
+unit array hitTargets
+int hitTargets_HighestIndex = 0
+
 
 function debugMsg(string stringToPrint)
          if DEBUG
              print(stringToPrint)
 
 
+function unit.addToHitTargets()
+    int index = 0
+
+    while hitTargets[index] != null
+        index++
+    hitTargets[index] = this
+
+    getTimer()
+    ..setData(index)
+    ..start(DAMAGEFREQ-0.01, function removeFromHitTargets )
+
+    hitTargets_HighestIndex = (index > hitTargets_HighestIndex) ? index : hitTargets_HighestIndex
+
+function unit.isHit() returns boolean
+    for index=0 to hitTargets_HighestIndex
+        if hitTargets[index] == this
+            return true
+    return false
+
+function removeFromHitTargets()
+    timer t = GetExpiredTimer()
+    hitTargets[GetExpiredTimer().getData()] = null
+    t.release()
+
+
 function damage( unit source, real damage, real range )
 
     group targets = ENUM_GROUP
 
-    debugMsg("Attempting to filter units!")
+    debugMsg("Source: "+source.getName())
+
     targets.enumUnitsInRange(source.getPos(), range)
 
     //Filter Units
     for u in targets
         if( u == source or
             not u.isAlive() or
-            u.getOwner().isAllyOf(source.getOwner()) 
+            u.getOwner().isAllyOf(source.getOwner()) or
+            u.isHit() 
             )
 
             targets.removeUnit(u)
-            debugMsg("Removed "+u.getName())
+            //debugMsg("Removed "+u.getName())
 
 
     debugMsg("Filtered units!")
 
     int i = 0
     for u from targets
-        debugMsg("Target "+i.toString()+": "+ u.getName() )
+        debugMsg(source.getName()+" damaged "+u.getName() )
         source.damageTarget(u, damage)
+        u.addToHitTargets()
+        
         i++
         // Perhaps add a disease effect on the target
 
@@ -44,12 +84,13 @@ function damage( unit source, real damage, real range )
 class Disease
     // The class that maintains the Disease Ability
     //----------------------------------------------
-    private static constant boolean DISABLETRIGGERSONINIT = true
     private static constant boolean DAMAGESTACKS = false
 
     private static IterableMap<unit, timer> hitTargets
 
     private static IterableMap<unit, thistype> instances
+
+    private static int instanceCount = 0
 
     private static trigger trg_UnitDies
     private static trigger trg_UnitIsRemoved
@@ -62,7 +103,6 @@ class Disease
     private real cloudDamage
     private real cloudDuration
     private real cloudRange
-    private player owner
 
 
     private unit unitWithAbility
@@ -70,7 +110,13 @@ class Disease
     private timer timer_Damage
 
     ondestroy
+        instanceCount--
+        if instanceCount == 0
+            deactivateTriggers()
+        instances.remove(unitWithAbility)
 
+        sfx.destr()
+        timer_Damage.release()
     
 
     static function unitHasBeenHit( unit whichUnit) returns boolean
@@ -78,10 +124,13 @@ class Disease
             return hitTargets.has(whichUnit)
         return false
 
-    private construct(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
+    private construct(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration)
         if not hasBeenInitialized
-            debugMsg("Initializing Disease Class") 
             initialize()
+
+        if instanceCount==0
+            activateTriggers()
+        instanceCount++
     
         debugMsg("Adding Disease to "+whichUnit.getName()+"...") 
         instances.put(whichUnit, this)
@@ -91,12 +140,11 @@ class Disease
         this.cloudRange = cloudRange
         this.diseaseRange = diseaseRange
         this.cloudDuration = cloudDuration
-        this.damageFrequency = damageFrequency
 
         sfx = unitWithAbility.addEffect(SFX, "origin")
         timer_Damage = getTimer()
         ..setData(this castTo int)
-        ..startPeriodic(damageFrequency, function orderDamage)
+        ..startPeriodic(DAMAGEFREQ, function orderDamage)
 
         
 
@@ -107,21 +155,18 @@ class Disease
     /** A simple addUnit. The parameters are for both the disease and the cloud. Damage frequency is 1 second. */
     static function addUnit(unit whichUnit, real damage, real cloudDuration, real range)
         debugMsg("Disease: addUnit() called")
-        new Disease(whichUnit, damage, damage, range, range, cloudDuration, 1)
+        new Disease(whichUnit, damage, damage, range, range, cloudDuration)
 
     /** A custom addUnit. Full control over the disease and the cloud.*/
-    static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
+    static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration)
         debugMsg("Disease: addUnit() called")
-        new Disease(whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, damageFrequency)
+        new Disease(whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration)
 
     /** Removes the unit from the Disease stack
      (basically removing the Disease ) from the unit*/
     static function removeUnit(unit unitToRemove)
         if instances.has(unitToRemove)
             destroy instances.get(unitToRemove)
-
-    private static function targetFilter()
-
     
 
     private static function orderDamage()
@@ -130,14 +175,14 @@ class Disease
         
 
 
-        
 
     private static function unitDies() returns boolean
         unit dyingUnit = GetDyingUnit()
         
         if instances.has(dyingUnit)
+            debugMsg("Disease: Unit in instance died!")
             thistype instance = instances.get(dyingUnit)       
-            new DiseaseCloud(instance.owner, instance.unitWithAbility.getPos(), instance.cloudDamage, instance.cloudDuration, instance.cloudRange)
+            new DiseaseCloud(instance.unitWithAbility.getOwner(), instance.unitWithAbility.getPos(), instance.cloudDamage, instance.cloudDuration, instance.cloudRange)
             destroy instance
 
         return false
@@ -155,12 +200,13 @@ class Disease
 
 
     /** Activates Unit death and removal detection (the triggers)  */
-    static function activate()
+    static function activateTriggers()
+        debugMsg("Disease: Activating triggers!")
         trg_UnitDies.enable()
-        trg_UnitIsRemoved.disable()
+        trg_UnitIsRemoved.enable()
 
     /** Deactivates Unit death and removal detection (the triggers)  */
-    static function deactivate()
+    static function deactivateTriggers()
         trg_UnitDies.disable()
         trg_UnitIsRemoved.disable()
         
@@ -168,20 +214,21 @@ class Disease
     private static function initialize()
         
         if not hasBeenInitialized
+            debugMsg("Disease: Initializing Class")
             hasBeenInitialized = true
 
             instances = new IterableMap<unit, thistype>
             hitTargets = new IterableMap<unit, timer>
 
             trg_UnitDies = CreateTrigger()
+            ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
             ..addCondition(Condition(function unitDies))
+            ..disable()
 
+            region map = CreateRegion()..addRect(GetPlayableMapRect())
             trg_UnitIsRemoved = CreateTrigger()
-            ..addCondition(Condition(function unitIsRemoved))
-
-            if( DISABLETRIGGERSONINIT )
-                trg_UnitDies.disable()
-                trg_UnitIsRemoved.disable()
+            ..registerLeaveRegion(map, Filter(function unitIsRemoved))
+            ..disable()
 
 
 
@@ -204,6 +251,7 @@ class DiseaseCloud
     
 
     ondestroy
+        debugMsg("Destroying Cloud!")
         instances.remove(this)
         dummy.remove()
         sfx.destr()
@@ -212,6 +260,7 @@ class DiseaseCloud
 
     static function orderDamage()
         thistype instance = GetExpiredTimer().getData() castTo thistype
+        print("On orderDamage: "+instance.dummy.getName())
         damage(instance.dummy, instance.damage, instance.range)
 
 
@@ -233,7 +282,8 @@ class DiseaseCloud
         this.range = range
 
         sfx = addEffect(SFX, pos.withTerrainZ(100) ) 
-        dummy = createUnit(owner, 'h004', pos, angle(0) )
+        dummy = createUnit(owner, 'h004', this.pos, angle(0) )
+
         
         timer_Duration = getTimer()
         if duration>0
@@ -265,12 +315,19 @@ class DiseaseCloud
 
 function delayedInit()
     GetExpiredTimer().release()
-    unit u = createUnit(Player(0), 'hfoo', vec2(-13935,-14250), angle(0))
+    unit u = createUnit(Player(0), 'hpea', vec2(-13935,-14250), angle(0))
     Disease.addUnit(u, 50, 10, 300)
 
 
 init
-    getTimer().start(1, function delayedInit )
+    unit u = createUnit(Player(0), 'hfoo', vec2(-13935,-14250), angle(0))
+    Disease.addUnit(u, 50, 10, 300)
+    getTimer().start(0.75, function delayedInit )
+
+    // Testing LinkedList Index
+    LinkedList<unit> testList = new LinkedList<unit>
+    
+
     
 
     
