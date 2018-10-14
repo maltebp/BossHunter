@@ -11,7 +11,7 @@ import DayCycle
 // SETTINGS
 
 constant boolean    PRESETHERO      =   true
-constant boolean    LOCKCAMONINIT   =   true 
+constant boolean    LOCKCAMONINIT   =   false 
 
 
 //_________________________________________________________________

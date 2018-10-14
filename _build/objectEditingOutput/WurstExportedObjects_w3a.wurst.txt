@@ -1607,6 +1607,24 @@ import ObjEditingNatives
 	..setLvlDataUnreal("isr2", 10, 2, -0.09)
 
 
+@compiletime function create_w3a_A02I()
+	let def = createObjectDefinition("w3a", 'A02I', 'AHad')
+	..setLvlDataInt("alev", 0, 0, 1)
+	..setLvlDataInt("aher", 0, 0, 0)
+	..setLvlDataString("arac", 0, 0, "undead")
+	..setLvlDataString("anam", 0, 0, "Disease Cloud")
+	..setLvlDataString("atp1", 1, 0, "Disease Cloud")
+	..setLvlDataString("ansf", 0, 0, "(The Nec)")
+	..setLvlDataString("aub1", 1, 0, "")
+	..setLvlDataString("atat", 0, 0, "")
+	..setLvlDataString("ata0", 0, 0, "")
+	..setLvlDataString("atar", 1, 0, "air,invulnerable,none,self,vulnerable")
+	..setLvlDataUnreal("aare", 1, 0, 0.0)
+	..setLvlDataUnreal("Had1", 1, 1, 0.0)
+	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\PassiveButtons\\PASBTNPlagueCloud.blp")
+	..setLvlDataInt("abpx", 0, 0, 0)
+
+
 @compiletime function create_w3a_AM01()
 	let def = createObjectDefinition("w3a", 'AM01', 'Adef')
 	..setLvlDataInt("wurs", 0, 0, 42)

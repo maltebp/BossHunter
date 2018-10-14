@@ -215,6 +215,15 @@ import ObjEditingNatives
 	..setString("fta0", "overhead")
 
 
+@compiletime function create_w3h_B00M()
+	let def = createObjectDefinition("w3h", 'B00M', 'BHad')
+	..setString("fube", "")
+	..setString("ftip", "Disease Cloud (Placeholder)")
+	..setString("ftat", "")
+	..setString("fta0", "")
+	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNPlagueCloud.blp")
+
+
 // Original Table (contains all modified default objects)
 // Wurst does not support modifying default objects
 // but you can copy these functions and replace 'xxxx' with a new, custom id.

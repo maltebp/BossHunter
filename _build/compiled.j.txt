@@ -191,6 +191,7 @@ rect gg_rct_HunterStart=null
 rect gg_rct_TM_Fog_Zone=null
 rect gg_rct_TheBear_CamBounds=null
 rect gg_rct_TheBear_Effect1=null
+rect gg_rct_TheNec_MobSpawn=null
 sound gg_snd_Error=null
 sound gg_snd_BlizzardLoop1=null
 sound gg_snd_Hint=null
@@ -253,6 +254,7 @@ trigger gg_trg_Arcane_Barrage_Damage=null
 trigger gg_trg_Arcane_Barrage_End=null
 trigger gg_trg_Unstable_Magic_Start=null
 trigger gg_trg_Unstable_Magic_Stop=null
+trigger gg_trg_Untitled_Trigger_008=null
 trigger gg_trg_Ghoul_Spawn=null
 trigger gg_trg_Plague_Zombie_Spawn=null
 trigger gg_trg_Skeletal_Mages=null
@@ -260,7 +262,6 @@ trigger gg_trg_Skeleton_Spawns=null
 trigger gg_trg_Lightning_Enhancement_Effect=null
 trigger gg_trg_Earthquake=null
 destructable gg_dest_DTc2_2577=null
-rect gg_rct_TheNec_MobSpawn=null
 string Abilities_farseerMissile=null
 string Abilities_forkedLightningTarget=null
 real Angle_DEGTORAD=0.
@@ -382,9 +383,11 @@ unit General_hero=null
 unit General_hunter=null
 boolean General_doCheckCoordinates=false
 boolean General_hunterIsDead=false
+group Group_ENUM_GROUP=null
 integer Group_unitCounter=0
 integer Group_randomCounter=0
 unit Group_randomSelected=null
+group Group_iterGroup=null
 hashtable HashList_ht=null
 hashtable HashList_occurences=null
 integer array HashList_size
@@ -729,6 +732,18 @@ real TheNecromancer_hunterSpawn_x=0.
 real TheNecromancer_hunterSpawn_y=0.
 timer TheNecromancer_timer_MainLoop=null
 rect TheNecromancer_camBounds=null
+boolean Disease_DEBUG=false
+boolean Disease_DISABLETRIGGERSONINIT=false
+integer Disease_instances=0
+trigger Disease_trg_UnitDies=null
+trigger Disease_trg_UnitIsRemoved=null
+boolean Disease_hasBeenInitialized=false
+real array Disease_diseaseDamage
+real array Disease_diseaseRange
+real array Disease_cloudDamage
+real array Disease_cloudDuration
+real array Disease_cloudRange
+unit array Disease_unitWithAbility
 integer Zombie_DAMAGE=0
 real Zombie_ARMOR=0.
 integer Zombie_HEALTH=0
@@ -875,6 +890,9 @@ integer array Fade_nextFree
 integer Fade_firstFree=0
 integer Fade_maxIndex=0
 integer array Fade_typeId
+integer array HashList_nextFree
+integer HashList_firstFree=0
+integer HashList_maxIndex=0
 integer array HashList_typeId
 integer array Table_nextFree
 integer Table_firstFree=0
@@ -932,6 +950,13 @@ integer array Rock_nextFree
 integer Rock_firstFree=0
 integer Rock_maxIndex=0
 integer array Rock_typeId
+integer array Disease_nextFree
+integer Disease_firstFree=0
+integer Disease_maxIndex=0
+integer array Disease_typeId
+integer array DiseaseCloud_nextFree
+integer DiseaseCloud_firstFree=0
+integer DiseaseCloud_maxIndex=0
 integer array ArcaneBeing_nextFree
 integer ArcaneBeing_firstFree=0
 integer ArcaneBeing_maxIndex=0
@@ -1102,6 +1127,7 @@ code ref_function_Trig_Arcane_Barrage_End_Actions=null
 code ref_function_Trig_Unstable_Magic_Start_Conditions=null
 code ref_function_Trig_Unstable_Magic_Start_Actions=null
 code ref_function_Trig_Unstable_Magic_Stop_Actions=null
+code ref_function_Trig_Untitled_Trigger_008_Actions=null
 code ref_function_Trig_Ghoul_Spawn_Actions=null
 code ref_function_Trig_Plague_Zombie_Spawn_Actions=null
 code ref_function_Trig_Skeletal_Mages_Actions=null
@@ -1184,7 +1210,7 @@ code ref_function_bridge_init_bear_Shockwave=null
 code ref_function_init_nec_Archer=null
 code ref_function_init_nec_Ghoul=null
 code ref_function_init_nec_Mage=null
-code ref_function_init_nec_Zombie=null
+code ref_function_bridge_init_nec_Zombie=null
 code ref_function_init_nec_Main=null
 code ref_function_bridge_init_tm_MagicCrystal=null
 code ref_function_bridge_init_tm_Main=null
@@ -1222,6 +1248,7 @@ code ref_function_bridge_delayedInit=null
 code ref_function_selectionFilter=null
 code ref_function_Group_closure_impl=null
 code ref_function_Group_closure_impl_2=null
+code ref_function_Group_closure_impl_3=null
 code ref_function_bridge_isOrdered=null
 code ref_function_InteractableObject_filter=null
 code ref_function_bridge_InteractableObject_checkDistance=null
@@ -1278,6 +1305,10 @@ code ref_function_TheNecromancer_someoneDies=null
 code ref_function_bridge_TheNecromancer_phase1=null
 code ref_function_bridge_TheNecromancer_onEventInit=null
 code ref_function_TheNecromancer_initFight=null
+code ref_function_bridge_delayedInit_3=null
+code ref_function_bridge_Disease_unitDies=null
+code ref_function_bridge_Disease_unitIsRemoved=null
+code ref_function_bridge_Disease_damage=null
 code ref_function_bridge_ArcaneBeing_createBossInfo=null
 code ref_function_bridge_ArcaneBeing_spawn=null
 code ref_function_bridge_ArcaneBeing_onDeathDelay=null
@@ -1308,7 +1339,7 @@ code ref_function_bridge_MagicCrystal_checkDistance=null
 code ref_function_bridge_initEvent=null
 code ref_function_bridge_someoneDies=null
 code ref_function_bridge_leaveEvent=null
-code ref_function_bridge_delayedInit_3=null
+code ref_function_bridge_delayedInit_4=null
 code ref_function_idle=null
 code ref_function_bridge_onEventInit=null
 code ref_function_initFight=null
@@ -1356,7 +1387,7 @@ function CreateNeutralHostile takes nothing returns nothing
 	call CreateUnit(p, 1865429040,  - 7463.7,  - 646.8, 22.204)
 	call CreateUnit(p, 1865429040,  - 7340.0,  - 682.3, 22.204)
 	call CreateUnit(p, 1865429040,  - 7302.1,  - 824.3, 22.204)
-	call CreateUnit(p, 1865429040,  - 14660.9,  - 15107.1, 187.015)
+	call CreateUnit(p, 1865429040,  - 14643.6,  - 15223.7, 203.457)
 	call CreateUnit(p, 1865429040,  - 7447.7,  - 778.9, 22.204)
 	call CreateUnit(p, 1851941230,  - 8719.4, 9699.1, 210.395)
 	call CreateUnit(p, 1865429040,  - 14960.9,  - 15077.5, 315.614)
@@ -1364,9 +1395,9 @@ function CreateNeutralHostile takes nothing returns nothing
 	call CreateUnit(p, 1865429040,  - 14962.8,  - 15436.3, 45.946)
 	call CreateUnit(p, 1865429040,  - 14747.8,  - 15529.2, 15.162)
 	call CreateUnit(p, 1865429040,  - 14552.3,  - 15447.4, 167.085)
-	call CreateUnit(p, 1865429040,  - 14518.1,  - 15364.3, 288.235)
-	call CreateUnit(p, 1865429040,  - 14623.2,  - 15211.4, 30.719)
-	call CreateUnit(p, 1865429040,  - 14784.8,  - 15255.3, 339.136)
+	call CreateUnit(p, 1865429040,  - 14678.2,  - 15208.4, 288.235)
+	call CreateUnit(p, 1865429040,  - 14670.7,  - 15245.8, 81.895)
+	call CreateUnit(p, 1865429040,  - 14745.8,  - 15074.0, 14.280)
 	call CreateUnit(p, 1865429040,  - 14820.0,  - 15327.6, 299.529)
 	call CreateUnit(p, 1851945575,  - 8738.5, 9601.5, 354.584)
 	call CreateUnit(p, 1865429040,  - 14825.9,  - 15414.0, 73.545)
@@ -1447,7 +1478,8 @@ function CreateUnitsForPlayer0 takes nothing returns nothing
 	local player p = Player(0)
 	local unit u = CreateUnit(p, 1966092337,  - 14036.6,  - 14138.9, 257.492)
 	call SetUnitColor(u, ConvertPlayerColor(20))
-	set u = CreateUnit(p, 1966092343,  - 13862.9,  - 14175.8, 49.066)
+	set u = CreateUnit(p, 1966092338,  - 13931.3,  - 14147.1, 137.421)
+	set u = CreateUnit(p, 1848651825,  - 14267.1,  - 13983.5, 187.993)
 	set u = CreateUnit(p, 1848651845,  - 4463.4,  - 747.2, 224.611)
 	call SetUnitColor(u, ConvertPlayerColor(20))
 	set u = CreateUnit(p, 1848651846,  - 362.8, 820.3, 275.854)
@@ -1479,10 +1511,21 @@ function CreateUnitsForPlayer11 takes nothing returns nothing
 	set u = null
 endfunction
 
+function CreateUnitsForPlayer12 takes nothing returns nothing
+	local player p = Player(12)
+	call CreateUnit(p, 1751543663,  - 13411.0,  - 14867.8, 274.502)
+	call CreateUnit(p, 1751543663,  - 13464.1,  - 15049.7, 2.725)
+	call CreateUnit(p, 1751543663,  - 13542.4,  - 14898.9, 121.864)
+	call CreateUnit(p, 1751543663,  - 13372.4,  - 14950.1, 224.567)
+	call CreateUnit(p, 1751543663,  - 13242.7,  - 14904.2, 186.136)
+	set p = null
+endfunction
+
 function CreatePlayerUnits takes nothing returns nothing
 	call CreateUnitsForPlayer0()
 	call CreateUnitsForPlayer1()
 	call CreateUnitsForPlayer11()
+	call CreateUnitsForPlayer12()
 endfunction
 
 function CreateAllUnits takes nothing returns nothing
@@ -1856,6 +1899,11 @@ function InitTrig_Untitled_Trigger_007 takes nothing returns nothing
 	call TriggerAddAction(gg_trg_Untitled_Trigger_007, ref_function_Trig_Untitled_Trigger_007_Actions)
 endfunction
 
+function InitTrig_Untitled_Trigger_008 takes nothing returns nothing
+	set gg_trg_Untitled_Trigger_008 = CreateTrigger()
+	call TriggerAddAction(gg_trg_Untitled_Trigger_008, ref_function_Trig_Untitled_Trigger_008_Actions)
+endfunction
+
 function InitTrig_Volcano_Strike takes nothing returns nothing
 	set gg_trg_Volcano_Strike = CreateTrigger()
 	call TriggerRegisterAnyUnitEventBJ(gg_trg_Volcano_Strike, EVENT_PLAYER_UNIT_SPELL_EFFECT)
@@ -1907,6 +1955,7 @@ function InitCustomTriggers takes nothing returns nothing
 	call InitTrig_Arcane_Barrage_End()
 	call InitTrig_Unstable_Magic_Start()
 	call InitTrig_Unstable_Magic_Stop()
+	call InitTrig_Untitled_Trigger_008()
 	call InitTrig_Ghoul_Spawn()
 	call InitTrig_Plague_Zombie_Spawn()
 	call InitTrig_Skeletal_Mages()
@@ -2527,14 +2576,22 @@ function GameTimer_closure_impl takes nothing returns nothing
 endfunction
 
 function Group_closure_impl takes nothing returns nothing
-	set Group_unitCounter = Group_unitCounter + 1
-endfunction
-
-function Group_closure_impl_2 takes nothing returns nothing
 	set Group_randomCounter = Group_randomCounter - 1
 	if Group_randomCounter == 0 then
 		set Group_randomSelected = GetEnumUnit()
 	endif
+endfunction
+
+function group_addUnit_1 takes group this, unit units_0 returns nothing
+	call GroupAddUnit(this, units_0)
+endfunction
+
+function Group_closure_impl_2 takes nothing returns nothing
+	call group_addUnit_1(Group_iterGroup, GetEnumUnit())
+endfunction
+
+function Group_closure_impl_3 takes nothing returns nothing
+	set Group_unitCounter = Group_unitCounter + 1
 endfunction
 
 function IceBlast_setReady takes nothing returns nothing
@@ -2676,20 +2733,6 @@ function pushUnit takes unit u returns nothing
 	set OnUnitEnterLeave_tempUnitsCount = OnUnitEnterLeave_tempUnitsCount + 1
 endfunction
 
-function trigger_execute takes trigger this returns nothing
-	call TriggerExecute(this)
-endfunction
-
-function OnUnitEnterLeave_closure_impl takes nothing returns nothing
-	local unit leavingUnit = GetTriggerUnit()
-	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
-		call pushUnit(leavingUnit)
-		call trigger_execute(OnUnitEnterLeave_eventTrigger)
-		call popUnit()
-	endif
-	set leavingUnit = null
-endfunction
-
 function trigger_evaluate takes trigger this returns boolean
 	return TriggerEvaluate(this)
 endfunction
@@ -2711,12 +2754,26 @@ function prepareUnit takes unit u returns nothing
 	set receiver_2 = null
 endfunction
 
+function OnUnitEnterLeave_closure_impl takes nothing returns nothing
+	call prepareUnit(GetEnumUnit())
+endfunction
+
+function trigger_execute takes trigger this returns nothing
+	call TriggerExecute(this)
+endfunction
+
 function OnUnitEnterLeave_closure_impl_2 takes nothing returns nothing
-	call prepareUnit(GetFilterUnit())
+	local unit leavingUnit = GetTriggerUnit()
+	if unit_getAbilityLevel(leavingUnit, OnUnitEnterLeave_ABILITY_ID) == 0 then
+		call pushUnit(leavingUnit)
+		call trigger_execute(OnUnitEnterLeave_eventTrigger)
+		call popUnit()
+	endif
+	set leavingUnit = null
 endfunction
 
 function OnUnitEnterLeave_closure_impl_3 takes nothing returns nothing
-	call prepareUnit(GetEnumUnit())
+	call prepareUnit(GetFilterUnit())
 endfunction
 
 function unit_getCurrentOrder takes unit this returns integer
@@ -2773,10 +2830,6 @@ function Shockwave_stop takes nothing returns nothing
 		set Shockwave_dist = 0.
 		call CameraClearNoiseForPlayer(Player(0))
 	endif
-endfunction
-
-function group_addUnit_1 takes group this, unit units_0 returns nothing
-	call GroupAddUnit(this, units_0)
 endfunction
 
 function group_enumUnitsInRange takes group this, real pos_x, real pos_y, real range, boolexpr filter returns nothing
@@ -4139,6 +4192,9 @@ function Trig_Untitled_Trigger_007_Actions takes nothing returns nothing
 	call SetTimeOfDayScalePercentBJ(0.00)
 endfunction
 
+function Trig_Untitled_Trigger_008_Actions takes nothing returns nothing
+endfunction
+
 function Trig_Volcano_Strike_Actions takes nothing returns nothing
 	call AddSpecialEffectLocBJ(GetSpellTargetLoc(), "Abilities\\Spells\\Human\\FlameStrike\\FlameStrike1.mdl")
 	call AddSpecialEffectLocBJ(GetSpellTargetLoc(), "Objects\\Spawnmodels\\Other\\NeutralBuildingExplosion\\NeutralBuildingExplosion.mdl")
@@ -4343,7 +4399,7 @@ function alloc_LLEntry takes string stackPos returns integer
 		if LLEntry_maxIndex < 32768 then
 			set LLEntry_maxIndex = LLEntry_maxIndex + 1
 			set this = LLEntry_maxIndex
-			set LLEntry_typeId[this] = 682
+			set LLEntry_typeId[this] = 684
 		else
 			call error("Out of memory: Could not create LLEntry.", "when calling error in ")
 			set this = 0
@@ -4351,7 +4407,7 @@ function alloc_LLEntry takes string stackPos returns integer
 	else
 		set LLEntry_firstFree = LLEntry_firstFree - 1
 		set this = LLEntry_nextFree[LLEntry_firstFree]
-		set LLEntry_typeId[this] = 682
+		set LLEntry_typeId[this] = 684
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4703,7 +4759,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 		if SoundDefinition_maxIndex < 32768 then
 			set SoundDefinition_maxIndex = SoundDefinition_maxIndex + 1
 			set this = SoundDefinition_maxIndex
-			set SoundDefinition_typeId[this] = 704
+			set SoundDefinition_typeId[this] = 706
 		else
 			call error("Out of memory: Could not create SoundDefinition.", "when calling error in ")
 			set this = 0
@@ -4711,7 +4767,7 @@ function alloc_SoundDefinition takes string stackPos returns integer
 	else
 		set SoundDefinition_firstFree = SoundDefinition_firstFree - 1
 		set this = SoundDefinition_nextFree[SoundDefinition_firstFree]
-		set SoundDefinition_typeId[this] = 704
+		set SoundDefinition_typeId[this] = 706
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4725,7 +4781,7 @@ function alloc_LinkedList takes string stackPos returns integer
 		if LinkedList_maxIndex < 32768 then
 			set LinkedList_maxIndex = LinkedList_maxIndex + 1
 			set this = LinkedList_maxIndex
-			set LinkedList_typeId[this] = 686
+			set LinkedList_typeId[this] = 688
 		else
 			call error("Out of memory: Could not create LinkedList.", "when calling error in ")
 			set this = 0
@@ -4733,7 +4789,7 @@ function alloc_LinkedList takes string stackPos returns integer
 	else
 		set LinkedList_firstFree = LinkedList_firstFree - 1
 		set this = LinkedList_nextFree[LinkedList_firstFree]
-		set LinkedList_typeId[this] = 686
+		set LinkedList_typeId[this] = 688
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -4952,7 +5008,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 		if UnitIndex_maxIndex < 32768 then
 			set UnitIndex_maxIndex = UnitIndex_maxIndex + 1
 			set this = UnitIndex_maxIndex
-			set UnitIndex_typeId[this] = 729
+			set UnitIndex_typeId[this] = 731
 		else
 			call error("Out of memory: Could not create UnitIndex.", "when calling error in ")
 			set this = 0
@@ -4960,7 +5016,7 @@ function alloc_UnitIndex takes string stackPos returns integer
 	else
 		set UnitIndex_firstFree = UnitIndex_firstFree - 1
 		set this = UnitIndex_nextFree[UnitIndex_firstFree]
-		set UnitIndex_typeId[this] = 729
+		set UnitIndex_typeId[this] = 731
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5346,7 +5402,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 		if SoundInstance_maxIndex < 32768 then
 			set SoundInstance_maxIndex = SoundInstance_maxIndex + 1
 			set this = SoundInstance_maxIndex
-			set SoundInstance_typeId[this] = 705
+			set SoundInstance_typeId[this] = 707
 		else
 			call error("Out of memory: Could not create SoundInstance.", "when calling error in ")
 			set this = 0
@@ -5354,7 +5410,7 @@ function alloc_SoundInstance takes string stackPos returns integer
 	else
 		set SoundInstance_firstFree = SoundInstance_firstFree - 1
 		set this = SoundInstance_nextFree[SoundInstance_firstFree]
-		set SoundInstance_typeId[this] = 705
+		set SoundInstance_typeId[this] = 707
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -5948,7 +6004,7 @@ function alloc_Fade takes string stackPos returns integer
 		if Fade_maxIndex < 32768 then
 			set Fade_maxIndex = Fade_maxIndex + 1
 			set this = Fade_maxIndex
-			set Fade_typeId[this] = 663
+			set Fade_typeId[this] = 665
 		else
 			call error("Out of memory: Could not create Fade.", "when calling error in ")
 			set this = 0
@@ -5956,7 +6012,7 @@ function alloc_Fade takes string stackPos returns integer
 	else
 		set Fade_firstFree = Fade_firstFree - 1
 		set this = Fade_nextFree[Fade_firstFree]
-		set Fade_typeId[this] = 663
+		set Fade_typeId[this] = 665
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6072,6 +6128,10 @@ function bridge_BossEvent_win_soundDelay takes nothing returns nothing
 endfunction
 
 function ClosureTimers_closure_impl takes integer this returns nothing
+	set ClosureTimers_x = ClosureTimers_x * 2
+endfunction
+
+function ClosureTimers_closure_impl_2 takes integer this returns nothing
 	set ClosureTimers_x = ClosureTimers_x + 50
 endfunction
 
@@ -6084,13 +6144,9 @@ function int_assertEquals takes integer this, integer expected returns nothing
 	endif
 endfunction
 
-function ClosureTimers_closure_impl_2 takes integer this returns nothing
+function ClosureTimers_closure_impl_3 takes integer this returns nothing
 	set ClosureTimers_x = ClosureTimers_x / 2
 	call int_assertEquals(ClosureTimers_x, 250)
-endfunction
-
-function ClosureTimers_closure_impl_3 takes integer this returns nothing
-	set ClosureTimers_x = ClosureTimers_x * 2
 endfunction
 
 function group_destr takes group this returns nothing
@@ -6190,7 +6246,7 @@ function alloc_Closure takes string stackPos returns integer
 		if ForGroupCallback_maxIndex < 32768 then
 			set ForGroupCallback_maxIndex = ForGroupCallback_maxIndex + 1
 			set this = ForGroupCallback_maxIndex
-			set ForGroupCallback_typeId[this] = 668
+			set ForGroupCallback_typeId[this] = 670
 		else
 			call error("Out of memory: Could not create Closure.", "when calling error in ")
 			set this = 0
@@ -6198,7 +6254,7 @@ function alloc_Closure takes string stackPos returns integer
 	else
 		set ForGroupCallback_firstFree = ForGroupCallback_firstFree - 1
 		set this = ForGroupCallback_nextFree[ForGroupCallback_firstFree]
-		set ForGroupCallback_typeId[this] = 668
+		set ForGroupCallback_typeId[this] = 670
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -6273,12 +6329,12 @@ function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call takes integer
 	if CallbackSingle_typeId[this] <= 643 then
 		if CallbackSingle_typeId[this] <= 642 then
 			if CallbackSingle_typeId[this] <= 641 then
-				call ClosureTimers_closure_impl(this)
+				call ClosureTimers_closure_impl_2(this)
 			else
-				call ClosureTimers_closure_impl_3(this)
+				call ClosureTimers_closure_impl(this)
 			endif
 		else
-			call ClosureTimers_closure_impl_2(this)
+			call ClosureTimers_closure_impl_3(this)
 		endif
 	elseif CallbackSingle_typeId[this] <= 644 then
 		call OnUnitEnterLeave_closure_impl_4(this)
@@ -6993,6 +7049,270 @@ function bridge_DelayNode_recycle takes nothing returns nothing
 	call DelayNode_recycle("DummyRecycler, line 127")
 endfunction
 
+function Disease_debugMsg takes string stringToPrint returns nothing
+	if Disease_DEBUG then
+		call print(stringToPrint)
+	endif
+endfunction
+
+function group_close takes group this returns nothing
+	call group_clear(this)
+	call group_destr(this)
+endfunction
+
+function group_enumUnitsInRange_2 takes group this, real pos_x, real pos_y, real range returns nothing
+	call GroupEnumUnitsInRange(this, pos_x, pos_y, range, null)
+endfunction
+
+function group_iterator takes group this returns group
+	set Group_iterGroup = CreateGroup()
+	call ForGroup(this, ref_function_Group_closure_impl_3)
+	return Group_iterGroup
+endfunction
+
+function player_isAllyOf takes player this, player p returns boolean
+	return IsPlayerAlly(this, p)
+endfunction
+
+function unit_getName takes unit this returns string
+	return GetUnitName(this)
+endfunction
+
+function Disease_damage takes string stackPos returns nothing
+	local integer instance
+	local group targets
+	local group iterator
+	local unit u
+	local integer i
+	local unit u_2
+	local group from
+	local effect receiver
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set instance = timer_getData(GetExpiredTimer(), "when calling getData in nec_Zombie, line 131")
+	set targets = Group_ENUM_GROUP
+	call Disease_debugMsg("Attempting to filter units!")
+	call group_enumUnitsInRange_2(targets, unit_getPos(Disease_unitWithAbility[instance]), unit_getPos_return_y, Disease_diseaseRange[instance])
+	set iterator = group_iterator(targets)
+	loop
+		exitwhen  not group_hasNext(iterator)
+		set u = group_next(iterator)
+		if u == Disease_unitWithAbility[instance] or ( not unit_isAlive(u)) or player_isAllyOf(unit_getOwner(u), unit_getOwner(Disease_unitWithAbility[instance])) then
+			call group_removeUnit_1(targets, u)
+			call Disease_debugMsg("Removed " + unit_getName(u))
+		endif
+	endloop
+	call group_close(iterator)
+	call Disease_debugMsg("Filtered units!")
+	set i = 0
+	set from = targets
+	loop
+		exitwhen  not group_hasNext(from)
+		set u_2 = group_next(from)
+		call Disease_debugMsg("Target " + int_toString(i) + ": " + unit_getName(u_2))
+		call unit_damageTarget(Disease_unitWithAbility[instance], u_2, Disease_diseaseDamage[instance])
+		set receiver = widget_addEffect(u_2, "Units\\Undead\\PlagueCloud\\PlagueCloudtarget.mdl", "head")
+		call effect_destr(receiver)
+		set i = i + 1
+	endloop
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set targets = null
+	set iterator = null
+	set u = null
+	set u_2 = null
+	set from = null
+	set receiver = null
+endfunction
+
+function bridge_Disease_damage takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call Disease_damage("nec_Zombie, line 100")
+endfunction
+
+function Disease_onDestroy takes integer this returns nothing
+endfunction
+
+function dealloc_Disease takes integer obj, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Disease_typeId[obj] == 0 then
+		call error("Double free: object of type Disease", "when calling error in ")
+	else
+		set Disease_nextFree[Disease_firstFree] = obj
+		set Disease_firstFree = Disease_firstFree + 1
+		set Disease_typeId[obj] = 0
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function destroyDisease takes integer this, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call Disease_onDestroy(this)
+	call dealloc_Disease(this, "when calling Disease in nec_Zombie, line 78")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function dispatch_Disease_destroyDisease takes integer this, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Disease_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling Disease.destroyDisease", "when calling error in ")
+		else
+			call error("Called Disease.destroyDisease on invalid object.", "when calling error in ")
+		endif
+	endif
+	call destroyDisease(this, "when calling destroyDisease in nec_Zombie, line 53")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function HashMap_get takes integer this, integer key, string stackPos returns integer
+	local integer stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_Table_Table_Table_loadInt(this, key, "when calling loadInt in HashMap, line 20")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_HashMap_HashMap_HashMap_get takes integer this, integer key, string stackPos returns integer
+	local integer HashMap_HashMap_get_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashMap.HashMap_HashMap_get", "when calling error in ")
+		else
+			call error("Called HashMap.HashMap_HashMap_get on invalid object.", "when calling error in ")
+		endif
+	endif
+	set HashMap_HashMap_get_result = HashMap_get(this, key, "when calling get in HashMap, line 19")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashMap_HashMap_get_result
+endfunction
+
+function Table_hasInt takes integer this, integer parentKey returns boolean
+	return hashtable_hasInt(Table_ht, this, parentKey)
+endfunction
+
+function dispatch_Table_Table_Table_hasInt takes integer this, integer parentKey, string stackPos returns boolean
+	local boolean Table_Table_hasInt_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling Table.Table_Table_hasInt", "when calling error in ")
+		else
+			call error("Called Table.Table_Table_hasInt on invalid object.", "when calling error in ")
+		endif
+	endif
+	set Table_Table_hasInt_result = Table_hasInt(this, parentKey)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return Table_Table_hasInt_result
+endfunction
+
+function HashMap_has takes integer this, integer key, string stackPos returns boolean
+	local boolean stackTrace_tempReturn
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set stackTrace_tempReturn = dispatch_Table_Table_Table_hasInt(this, key, "when calling hasInt in HashMap, line 12")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return stackTrace_tempReturn
+endfunction
+
+function dispatch_HashMap_HashMap_HashMap_has takes integer this, integer key, string stackPos returns boolean
+	local boolean HashMap_HashMap_has_result
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling HashMap.HashMap_HashMap_has", "when calling error in ")
+		else
+			call error("Called HashMap.HashMap_HashMap_has on invalid object.", "when calling error in ")
+		endif
+	endif
+	set HashMap_HashMap_has_result = HashMap_has(this, key, "when calling has in HashMap, line 11")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return HashMap_HashMap_has_result
+endfunction
+
+function alloc_DiseaseCloud takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if DiseaseCloud_firstFree == 0 then
+		if DiseaseCloud_maxIndex < 32768 then
+			set DiseaseCloud_maxIndex = DiseaseCloud_maxIndex + 1
+			set this = DiseaseCloud_maxIndex
+		else
+			call error("Out of memory: Could not create DiseaseCloud.", "when calling error in ")
+			set this = 0
+		endif
+	else
+		set DiseaseCloud_firstFree = DiseaseCloud_firstFree - 1
+		set this = DiseaseCloud_nextFree[DiseaseCloud_firstFree]
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function construct_DiseaseCloud takes integer this, real pos_x, real pos_y, real damagePerSecond, real duration, real aoe returns nothing
+endfunction
+
+function new_DiseaseCloud takes real pos_x, real pos_y, real damagePerSecond, real duration, real aoe, string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this = alloc_DiseaseCloud("when calling DiseaseCloud in nec_Zombie, line 237")
+	call construct_DiseaseCloud(this, pos_x, pos_y, damagePerSecond, duration, aoe)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function unitToIndex takes unit object returns integer
+	return handle_getHandleId(object)
+endfunction
+
+function Disease_unitDies takes string stackPos returns boolean
+	local unit dyingUnit
+	local integer instance
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set dyingUnit = GetDyingUnit()
+	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(dyingUnit), "when calling has in nec_Zombie, line 163") then
+		set instance = dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(dyingUnit), "when calling get in nec_Zombie, line 165")
+		call new_DiseaseCloud(unit_getPos(dyingUnit), unit_getPos_return_y, Disease_cloudDamage[instance], Disease_cloudDuration[instance], Disease_cloudRange[instance], "when calling new_DiseaseCloud in nec_Zombie, line 166")
+		call dispatch_Disease_destroyDisease(instance, "when calling Disease in nec_Zombie, line 167")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set dyingUnit = null
+	return false
+endfunction
+
+function bridge_Disease_unitDies takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return Disease_unitDies("nec_Zombie, line 203")
+endfunction
+
+function Disease_unitIsRemoved takes string stackPos returns boolean
+	local unit removedUnit
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set removedUnit = GetLeavingUnit()
+	if dispatch_HashMap_HashMap_HashMap_has(Disease_instances, unitToIndex(removedUnit), "when calling has in nec_Zombie, line 176") then
+		call dispatch_Disease_destroyDisease(dispatch_HashMap_HashMap_HashMap_get(Disease_instances, unitToIndex(removedUnit), "when calling get in nec_Zombie, line 177"), "when calling Disease in nec_Zombie, line 177")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set removedUnit = null
+	return false
+endfunction
+
+function bridge_Disease_unitIsRemoved takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return Disease_unitIsRemoved("nec_Zombie, line 206")
+endfunction
+
 function DynamicSound_TimedLoop_stopTimedLoopAndDestroy takes integer this returns nothing
 	set DynamicSound_TimedLoop_mode[this] = 3
 endfunction
@@ -7675,7 +7995,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 		if FlameStrike_maxIndex < 32768 then
 			set FlameStrike_maxIndex = FlameStrike_maxIndex + 1
 			set this = FlameStrike_maxIndex
-			set FlameStrike_typeId[this] = 664
+			set FlameStrike_typeId[this] = 666
 		else
 			call error("Out of memory: Could not create FlameStrike.", "when calling error in ")
 			set this = 0
@@ -7683,7 +8003,7 @@ function alloc_FlameStrike takes string stackPos returns integer
 	else
 		set FlameStrike_firstFree = FlameStrike_firstFree - 1
 		set this = FlameStrike_nextFree[FlameStrike_firstFree]
-		set FlameStrike_typeId[this] = 664
+		set FlameStrike_typeId[this] = 666
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -7865,7 +8185,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 		if ExecutableEffect_maxIndex < 32768 then
 			set ExecutableEffect_maxIndex = ExecutableEffect_maxIndex + 1
 			set this = ExecutableEffect_maxIndex
-			set ExecutableEffect_typeId[this] = 662
+			set ExecutableEffect_typeId[this] = 664
 		else
 			call error("Out of memory: Could not create ExecutableEffect.", "when calling error in ")
 			set this = 0
@@ -7873,7 +8193,7 @@ function alloc_ExecutableEffect takes string stackPos returns integer
 	else
 		set ExecutableEffect_firstFree = ExecutableEffect_firstFree - 1
 		set this = ExecutableEffect_nextFree[ExecutableEffect_firstFree]
-		set ExecutableEffect_typeId[this] = 662
+		set ExecutableEffect_typeId[this] = 664
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -8058,76 +8378,6 @@ function new_Mechanic takes string name, real pos_x, real pos_y, string stackPos
 	return this
 endfunction
 
-function HashMap_get takes integer this, integer key, string stackPos returns integer
-	local integer stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_Table_Table_Table_loadInt(this, key, "when calling loadInt in HashMap, line 20")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_HashMap_HashMap_HashMap_get takes integer this, integer key, string stackPos returns integer
-	local integer HashMap_HashMap_get_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling HashMap.HashMap_HashMap_get", "when calling error in ")
-		else
-			call error("Called HashMap.HashMap_HashMap_get on invalid object.", "when calling error in ")
-		endif
-	endif
-	set HashMap_HashMap_get_result = HashMap_get(this, key, "when calling get in HashMap, line 19")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashMap_HashMap_get_result
-endfunction
-
-function Table_hasInt takes integer this, integer parentKey returns boolean
-	return hashtable_hasInt(Table_ht, this, parentKey)
-endfunction
-
-function dispatch_Table_Table_Table_hasInt takes integer this, integer parentKey, string stackPos returns boolean
-	local boolean Table_Table_hasInt_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling Table.Table_Table_hasInt", "when calling error in ")
-		else
-			call error("Called Table.Table_Table_hasInt on invalid object.", "when calling error in ")
-		endif
-	endif
-	set Table_Table_hasInt_result = Table_hasInt(this, parentKey)
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return Table_Table_hasInt_result
-endfunction
-
-function HashMap_has takes integer this, integer key, string stackPos returns boolean
-	local boolean stackTrace_tempReturn
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	set stackTrace_tempReturn = dispatch_Table_Table_Table_hasInt(this, key, "when calling hasInt in HashMap, line 12")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return stackTrace_tempReturn
-endfunction
-
-function dispatch_HashMap_HashMap_HashMap_has takes integer this, integer key, string stackPos returns boolean
-	local boolean HashMap_HashMap_has_result
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if Table_typeId[this] == 0 then
-		if this == 0 then
-			call error("Nullpointer exception when calling HashMap.HashMap_HashMap_has", "when calling error in ")
-		else
-			call error("Called HashMap.HashMap_HashMap_has on invalid object.", "when calling error in ")
-		endif
-	endif
-	set HashMap_HashMap_has_result = HashMap_has(this, key, "when calling has in HashMap, line 11")
-	set wurst_stack_depth = wurst_stack_depth - 1
-	return HashMap_HashMap_has_result
-endfunction
-
 function HashMap_put takes integer this, integer key, integer value, string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -8269,7 +8519,7 @@ function dispatch_HashMap_HashMap_HashMap_put takes integer this, integer key, i
 			call error("Called HashMap.HashMap_HashMap_put on invalid object.", "when calling error in ")
 		endif
 	endif
-	if Table_typeId[this] <= 718 then
+	if Table_typeId[this] <= 720 then
 		call HashMap_put(this, key, value, "when calling put in HashMap, line 15")
 	else
 		call IterableMap_put(this, key, value, "when calling put in HashMap, line 15")
@@ -8916,7 +9166,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 		if EffectDuration_maxIndex < 32768 then
 			set EffectDuration_maxIndex = EffectDuration_maxIndex + 1
 			set this = EffectDuration_maxIndex
-			set EffectDuration_typeId[this] = 660
+			set EffectDuration_typeId[this] = 662
 		else
 			call error("Out of memory: Could not create EffectDuration.", "when calling error in ")
 			set this = 0
@@ -8924,7 +9174,7 @@ function alloc_EffectDuration takes string stackPos returns integer
 	else
 		set EffectDuration_firstFree = EffectDuration_firstFree - 1
 		set this = EffectDuration_nextFree[EffectDuration_firstFree]
-		set EffectDuration_typeId[this] = 660
+		set EffectDuration_typeId[this] = 662
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9158,7 +9408,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 		if UnitLightning_maxIndex < 32768 then
 			set UnitLightning_maxIndex = UnitLightning_maxIndex + 1
 			set this = UnitLightning_maxIndex
-			set UnitLightning_typeId[this] = 730
+			set UnitLightning_typeId[this] = 732
 		else
 			call error("Out of memory: Could not create UnitLightning.", "when calling error in ")
 			set this = 0
@@ -9166,7 +9416,7 @@ function alloc_UnitLightning takes string stackPos returns integer
 	else
 		set UnitLightning_firstFree = UnitLightning_firstFree - 1
 		set this = UnitLightning_nextFree[UnitLightning_firstFree]
-		set UnitLightning_typeId[this] = 730
+		set UnitLightning_typeId[this] = 732
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -9906,7 +10156,7 @@ function alloc_Rock takes string stackPos returns integer
 		if Rock_maxIndex < 32768 then
 			set Rock_maxIndex = Rock_maxIndex + 1
 			set this = Rock_maxIndex
-			set Rock_typeId[this] = 700
+			set Rock_typeId[this] = 702
 		else
 			call error("Out of memory: Could not create Rock.", "when calling error in ")
 			set this = 0
@@ -9914,7 +10164,7 @@ function alloc_Rock takes string stackPos returns integer
 	else
 		set Rock_firstFree = Rock_firstFree - 1
 		set this = Rock_nextFree[Rock_firstFree]
-		set Rock_typeId[this] = 700
+		set Rock_typeId[this] = 702
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -10344,14 +10594,14 @@ function Zombie_activate takes string stackPos returns nothing
 	local integer receiver_4
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Zombie, line 36")
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Zombie_ID, Player(11), Zombie_HEALTH, Zombie_MANA, Zombie_DAMAGE, Zombie_ARMOR, Zombie_ATTACKSPEED, Zombie_MOVESPEED, "when calling setUnit in nec_Zombie, line 37")
+	set receiver = new_AddSpawner("when calling new_AddSpawner in nec_Zombie, line 39")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setUnit(receiver, Zombie_ID, Player(11), Zombie_HEALTH, Zombie_MANA, Zombie_DAMAGE, Zombie_ARMOR, Zombie_ATTACKSPEED, Zombie_MOVESPEED, "when calling setUnit in nec_Zombie, line 40")
 	set receiver_2 = receiver
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Zombie_spawnRect, Zombie_SPAWNFREQ, "when calling setSpawnRandom in nec_Zombie, line 38")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnRandom(receiver_2, Zombie_spawnRect, Zombie_SPAWNFREQ, "when calling setSpawnRandom in nec_Zombie, line 41")
 	set receiver_3 = receiver_2
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Zombie, line 39")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setTarget(receiver_3, General_hunter, "when calling setTarget in nec_Zombie, line 42")
 	set receiver_4 = receiver_3
-	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Zombie, line 40")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_setSpawnEffect(receiver_4, "Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", "when calling setSpawnEffect in nec_Zombie, line 43")
 	set Zombie_spawner = receiver_4
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
@@ -10359,7 +10609,7 @@ endfunction
 function Zombie_startSpawn takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
-	call dispatch_AddSpawner_BossAdd_AddSpawner_start(Zombie_spawner, "when calling start in nec_Zombie, line 33")
+	call dispatch_AddSpawner_BossAdd_AddSpawner_start(Zombie_spawner, "when calling start in nec_Zombie, line 36")
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
@@ -10448,7 +10698,7 @@ function alloc_LLIterator takes string stackPos returns integer
 		if LLIterator_maxIndex < 32768 then
 			set LLIterator_maxIndex = LLIterator_maxIndex + 1
 			set this = LLIterator_maxIndex
-			set LLIterator_typeId[this] = 683
+			set LLIterator_typeId[this] = 685
 		else
 			call error("Out of memory: Could not create LLIterator.", "when calling error in ")
 			set this = 0
@@ -10456,7 +10706,7 @@ function alloc_LLIterator takes string stackPos returns integer
 	else
 		set LLIterator_firstFree = LLIterator_firstFree - 1
 		set this = LLIterator_nextFree[LLIterator_firstFree]
-		set LLIterator_typeId[this] = 683
+		set LLIterator_typeId[this] = 685
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -10799,20 +11049,6 @@ function shouldIndex takes unit w_u returns boolean
 	return true
 endfunction
 
-function UnitIndexer_closure_impl takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	if shouldIndex(getEnterLeaveUnit()) then
-		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
-	endif
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_UnitIndexer_closure_impl takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl("UnitIndexer, line 179")
-endfunction
-
 function UnitIndex_onDestroy takes integer this returns nothing
 	call trigger_evaluate(UnitIndexer_onDeindexTrigger)
 	call unit_setUserData(UnitIndex__unit[this], 0)
@@ -10866,7 +11102,7 @@ function unit_deindex takes unit this, string stackPos returns boolean
 	endif
 endfunction
 
-function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
+function UnitIndexer_closure_impl takes string stackPos returns nothing
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	if shouldIndex(getEnterLeaveUnit()) then
@@ -10875,9 +11111,23 @@ function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
+function bridge_UnitIndexer_closure_impl takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call UnitIndexer_closure_impl("UnitIndexer, line 180")
+endfunction
+
+function UnitIndexer_closure_impl_2 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if shouldIndex(getEnterLeaveUnit()) then
+		call unit_toUnitIndex(getEnterLeaveUnit(), "when calling toUnitIndex in UnitIndexer, line 179")
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
 function bridge_UnitIndexer_closure_impl_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call UnitIndexer_closure_impl_2("UnitIndexer, line 180")
+	call UnitIndexer_closure_impl_2("UnitIndexer, line 179")
 endfunction
 
 function lightning_destr takes lightning this returns boolean
@@ -11209,15 +11459,44 @@ endfunction
 
 function bridge_clear takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 159")
+	call clear("tm_Main, line 132")
 endfunction
 
 function bridge_clear_2 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call clear("tm_Main, line 132")
+	call clear("tm_Main, line 159")
 endfunction
 
 function delayedInit takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_delayedInit takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit("ZoneTransition, line 13")
+endfunction
+
+function destructable_setAnimation takes destructable this, string anim returns nothing
+	call SetDestructableAnimation(this, anim)
+endfunction
+
+function delayedInit_2 takes string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in General, line 106")
+	call destructable_setAnimation(gg_dest_DTc2_2577, "death alternate")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function bridge_delayedInit_2 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit_2("General, line 102")
+endfunction
+
+function delayedInit_3 takes string stackPos returns nothing
 	local integer obj
 	local integer receiver
 	local integer receiver_2
@@ -11246,38 +11525,214 @@ function delayedInit takes string stackPos returns nothing
 	set wurst_stack_depth = wurst_stack_depth - 1
 endfunction
 
-function bridge_delayedInit takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit("tm_Main, line 69")
-endfunction
-
-function delayedInit_2 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in ZoneTransition, line 10")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
-function bridge_delayedInit_2 takes nothing returns nothing
-	set wurst_stack_depth = 0
-	call delayedInit_2("ZoneTransition, line 13")
-endfunction
-
-function destructable_setAnimation takes destructable this, string anim returns nothing
-	call SetDestructableAnimation(this, anim)
-endfunction
-
-function delayedInit_3 takes string stackPos returns nothing
-	set wurst_stack[wurst_stack_depth] = stackPos
-	set wurst_stack_depth = wurst_stack_depth + 1
-	call timer_release(GetExpiredTimer(), "when calling release in General, line 106")
-	call destructable_setAnimation(gg_dest_DTc2_2577, "death alternate")
-	set wurst_stack_depth = wurst_stack_depth - 1
-endfunction
-
 function bridge_delayedInit_3 takes nothing returns nothing
 	set wurst_stack_depth = 0
-	call delayedInit_3("General, line 102")
+	call delayedInit_3("tm_Main, line 69")
+endfunction
+
+function alloc_Disease takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Disease_firstFree == 0 then
+		if Disease_maxIndex < 32768 then
+			set Disease_maxIndex = Disease_maxIndex + 1
+			set this = Disease_maxIndex
+			set Disease_typeId[this] = 657
+		else
+			call error("Out of memory: Could not create Disease.", "when calling error in ")
+			set this = 0
+		endif
+	else
+		set Disease_firstFree = Disease_firstFree - 1
+		set this = Disease_nextFree[Disease_firstFree]
+		set Disease_typeId[this] = 657
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function alloc_IterableMap takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_firstFree == 0 then
+		if Table_maxIndex < 32768 then
+			set Table_maxIndex = Table_maxIndex + 1
+			set this = Table_maxIndex
+			set Table_typeId[this] = 721
+		else
+			call error("Out of memory: Could not create IterableMap.", "when calling error in ")
+			set this = 0
+		endif
+	else
+		set Table_firstFree = Table_firstFree - 1
+		set this = Table_nextFree[Table_firstFree]
+		set Table_typeId[this] = 721
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function construct_Table takes integer this returns nothing
+endfunction
+
+function construct_HashMap takes integer this returns nothing
+	call construct_Table(this)
+endfunction
+
+function alloc_HashList takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if HashList_firstFree == 0 then
+		if HashList_maxIndex < 32768 then
+			set HashList_maxIndex = HashList_maxIndex + 1
+			set this = HashList_maxIndex
+			set HashList_typeId[this] = 676
+		else
+			call error("Out of memory: Could not create HashList.", "when calling error in ")
+			set this = 0
+		endif
+	else
+		set HashList_firstFree = HashList_firstFree - 1
+		set this = HashList_nextFree[HashList_firstFree]
+		set HashList_typeId[this] = 676
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function construct_HashList takes integer this returns nothing
+	set HashList_size[this] = 0
+endfunction
+
+function new_HashList takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this = alloc_HashList("when calling HashList in HashList, line 96")
+	call construct_HashList(this)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function construct_IterableMap takes integer this, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call construct_HashMap(this)
+	set IterableMap_keys[this] = new_HashList("when calling new_HashList in HashMap, line 29")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function new_IterableMap takes string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this = alloc_IterableMap("when calling IterableMap in HashMap, line 84")
+	call construct_IterableMap(this, "when calling construct_IterableMap in HashMap, line 84")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function Disease_initialize takes string stackPos returns nothing
+	local trigger receiver
+	local trigger receiver_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if  not Disease_hasBeenInitialized then
+		set Disease_hasBeenInitialized = true
+		set Disease_instances = new_IterableMap("when calling new_IterableMap in nec_Zombie, line 200")
+		set receiver = CreateTrigger()
+		call trigger_addCondition(receiver, Condition(ref_function_bridge_Disease_unitDies))
+		set Disease_trg_UnitDies = receiver
+		set receiver_2 = CreateTrigger()
+		call trigger_addCondition(receiver_2, Condition(ref_function_bridge_Disease_unitIsRemoved))
+		set Disease_trg_UnitIsRemoved = receiver_2
+		if Disease_DISABLETRIGGERSONINIT then
+			call trigger_disable(Disease_trg_UnitDies)
+			call trigger_disable(Disease_trg_UnitIsRemoved)
+		endif
+	endif
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set receiver = null
+	set receiver_2 = null
+endfunction
+
+function dispatch_IterableMap_HashMap_IterableMap_put takes integer this, integer key, integer value, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if Table_typeId[this] == 0 then
+		if this == 0 then
+			call error("Nullpointer exception when calling IterableMap.HashMap_IterableMap_put", "when calling error in ")
+		else
+			call error("Called IterableMap.HashMap_IterableMap_put on invalid object.", "when calling error in ")
+		endif
+	endif
+	call IterableMap_put(this, key, value, "when calling put in HashMap, line 37")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function construct_Disease takes integer this, unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency, string stackPos returns nothing
+	local timer receiver
+	local timer receiver_2
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	if  not Disease_hasBeenInitialized then
+		call Disease_debugMsg("Initializing Disease Class")
+		call Disease_initialize("when calling initialize in nec_Zombie, line 87")
+	endif
+	call Disease_debugMsg("Adding Disease to " + unit_getName(whichUnit) + "...")
+	call dispatch_IterableMap_HashMap_IterableMap_put(Disease_instances, unitToIndex(whichUnit), this, "when calling put in nec_Zombie, line 90")
+	set Disease_unitWithAbility[this] = whichUnit
+	set Disease_diseaseDamage[this] = diseaseDamage
+	set Disease_cloudDamage[this] = cloudDamage
+	set Disease_cloudRange[this] = cloudRange
+	set Disease_diseaseRange[this] = diseaseRange
+	set Disease_cloudDuration[this] = cloudDuration
+	call widget_addEffect(Disease_unitWithAbility[this], "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl", "origin")
+	set receiver = getTimer("when calling getTimer in nec_Zombie, line 100")
+	call timer_setData(receiver, this, "when calling setData in nec_Zombie, line 101")
+	set receiver_2 = receiver
+	call timer_startPeriodic(receiver_2, damageFrequency, ref_function_bridge_Disease_damage)
+	call Disease_debugMsg("Finished adding Disease to unit")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set receiver = null
+	set receiver_2 = null
+endfunction
+
+function new_Disease takes unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency, string stackPos returns integer
+	local integer this
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set this = alloc_Disease("when calling Disease in nec_Zombie, line 84")
+	call construct_Disease(this, whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, damageFrequency, "when calling construct_Disease in nec_Zombie, line 84")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return this
+endfunction
+
+function Disease_addUnit takes unit whichUnit, real damage, real cloudDuration, real range, string stackPos returns nothing
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call Disease_debugMsg("Disease: addUnit() called")
+	call new_Disease(whichUnit, damage, damage, range, range, cloudDuration, 1., "when calling new_Disease in nec_Zombie, line 113")
+	set wurst_stack_depth = wurst_stack_depth - 1
+endfunction
+
+function delayedInit_4 takes string stackPos returns nothing
+	local unit u
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	call timer_release(GetExpiredTimer(), "when calling release in nec_Zombie, line 266")
+	set u = createUnit(Player(0), 1751543663, -13935., -14250., GetRandomAngle())
+	call Disease_addUnit(u, 50., 10., 300., "when calling addUnit in nec_Zombie, line 268")
+	set wurst_stack_depth = wurst_stack_depth - 1
+	set u = null
+endfunction
+
+function bridge_delayedInit_4 takes nothing returns nothing
+	set wurst_stack_depth = 0
+	call delayedInit_4("nec_Zombie, line 272")
 endfunction
 
 function initEvent takes string stackPos returns boolean
@@ -11332,7 +11787,7 @@ function alloc_Table takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 717
+			set Table_typeId[this] = 719
 		else
 			call error("Out of memory: Could not create Table.", "when calling error in ")
 			set this = 0
@@ -11340,13 +11795,10 @@ function alloc_Table takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 717
+		set Table_typeId[this] = 719
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
-endfunction
-
-function construct_Table takes integer this returns nothing
 endfunction
 
 function new_Table takes string stackPos returns integer
@@ -11570,7 +12022,7 @@ function init_General takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
 	set General_PRESETHERO = true
-	set General_LOCKCAMONINIT = true
+	set General_LOCKCAMONINIT = false
 	set General_doCheckCoordinates = false
 	call new_SoundDefinition(Sounds_questActivateWhat1, false, "when calling new_SoundDefinition in General, line 26")
 	set General_hunterIsDead = false
@@ -11718,7 +12170,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 		if InteractableObject_maxIndex < 32768 then
 			set InteractableObject_maxIndex = InteractableObject_maxIndex + 1
 			set this = InteractableObject_maxIndex
-			set InteractableObject_typeId[this] = 680
+			set InteractableObject_typeId[this] = 682
 		else
 			call error("Out of memory: Could not create InteractableObject.", "when calling error in ")
 			set this = 0
@@ -11726,7 +12178,7 @@ function alloc_InteractableObject takes string stackPos returns integer
 	else
 		set InteractableObject_firstFree = InteractableObject_firstFree - 1
 		set this = InteractableObject_nextFree[InteractableObject_firstFree]
-		set InteractableObject_typeId[this] = 680
+		set InteractableObject_typeId[this] = 682
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -12154,7 +12606,7 @@ function alloc_HashMap takes string stackPos returns integer
 		if Table_maxIndex < 32768 then
 			set Table_maxIndex = Table_maxIndex + 1
 			set this = Table_maxIndex
-			set Table_typeId[this] = 718
+			set Table_typeId[this] = 720
 		else
 			call error("Out of memory: Could not create HashMap.", "when calling error in ")
 			set this = 0
@@ -12162,14 +12614,10 @@ function alloc_HashMap takes string stackPos returns integer
 	else
 		set Table_firstFree = Table_firstFree - 1
 		set this = Table_nextFree[Table_firstFree]
-		set Table_typeId[this] = 718
+		set Table_typeId[this] = 720
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
-endfunction
-
-function construct_HashMap takes integer this returns nothing
-	call construct_Table(this)
 endfunction
 
 function new_HashMap takes string stackPos returns integer
@@ -12646,6 +13094,32 @@ function bridge_init_bear_Shockwave takes nothing returns boolean
 	return init_bear_Shockwave("bear_Shockwave, line 1")
 endfunction
 
+function init_nec_Zombie takes string stackPos returns boolean
+	set wurst_stack[wurst_stack_depth] = stackPos
+	set wurst_stack_depth = wurst_stack_depth + 1
+	set Zombie_DAMAGE = 10
+	set Zombie_ARMOR = 0.
+	set Zombie_HEALTH = 100
+	set Zombie_MANA = 100
+	set Zombie_MOVESPEED = 270.
+	set Zombie_ATTACKSPEED = 2.
+	set Zombie_SPAWNFREQ = 9.
+	set Zombie_ID = 1966092338
+	set Zombie_spawnRect = gg_rct_TheNec_MobSpawn
+	set Disease_DEBUG = true
+	set Disease_DISABLETRIGGERSONINIT = true
+	set Disease_hasBeenInitialized = false
+	call new_LinkedList("when calling new_LinkedList in nec_Zombie, line 218")
+	call timer_start(getTimer("when calling getTimer in nec_Zombie, line 272"), 1., ref_function_bridge_delayedInit_3)
+	set wurst_stack_depth = wurst_stack_depth - 1
+	return true
+endfunction
+
+function bridge_init_nec_Zombie takes nothing returns boolean
+	set wurst_stack_depth = 0
+	return init_nec_Zombie("nec_Zombie, line 1")
+endfunction
+
 function init_tm_ArcaneBeing takes string stackPos returns boolean
 	set wurst_stack[wurst_stack_depth] = stackPos
 	set wurst_stack_depth = wurst_stack_depth + 1
@@ -12820,7 +13294,7 @@ function init_tm_Main takes string stackPos returns boolean
 	call trigger_registerPlayerEvent(receiver_5, Player(0), EVENT_PLAYER_END_CINEMATIC)
 	set receiver_6 = receiver_5
 	call trigger_addCondition(receiver_6, Condition(ref_function_bridge_leaveEvent))
-	call timer_start(getTimer("when calling getTimer in tm_Main, line 69"), 0.1, ref_function_bridge_delayedInit_3)
+	call timer_start(getTimer("when calling getTimer in tm_Main, line 69"), 0.1, ref_function_bridge_delayedInit_4)
 	set wurst_stack_depth = wurst_stack_depth - 1
 	set receiver = null
 	set receiver_2 = null
@@ -12981,7 +13455,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 		if MagicCrystal_maxIndex < 32768 then
 			set MagicCrystal_maxIndex = MagicCrystal_maxIndex + 1
 			set this = MagicCrystal_maxIndex
-			set MagicCrystal_typeId[this] = 693
+			set MagicCrystal_typeId[this] = 695
 		else
 			call error("Out of memory: Could not create MagicCrystal.", "when calling error in ")
 			set this = 0
@@ -12989,7 +13463,7 @@ function alloc_MagicCrystal takes string stackPos returns integer
 	else
 		set MagicCrystal_firstFree = MagicCrystal_firstFree - 1
 		set this = MagicCrystal_nextFree[MagicCrystal_firstFree]
-		set MagicCrystal_typeId[this] = 693
+		set MagicCrystal_typeId[this] = 695
 	endif
 	set wurst_stack_depth = wurst_stack_depth - 1
 	return this
@@ -13273,10 +13747,6 @@ function group_enumUnitsSelected takes group this, player p, boolexpr filter ret
 	call GroupEnumUnitsSelected(this, p, filter)
 endfunction
 
-function unit_getName takes unit this returns string
-	return GetUnitName(this)
-endfunction
-
 function getUnitIndex takes nothing returns boolean
 	local group receiver = CreateGroup()
 	local group selectedUnits
@@ -13436,7 +13906,7 @@ function init_GameTimer takes nothing returns boolean
 endfunction
 
 function init_Group takes nothing returns boolean
-	call CreateGroup()
+	set Group_ENUM_GROUP = CreateGroup()
 	set Group_unitCounter = 0
 	set Group_randomCounter = 0
 	set Group_randomSelected = null
@@ -13891,19 +14361,6 @@ function init_nec_Main takes nothing returns boolean
 	return true
 endfunction
 
-function init_nec_Zombie takes nothing returns boolean
-	set Zombie_DAMAGE = 10
-	set Zombie_ARMOR = 0.
-	set Zombie_HEALTH = 100
-	set Zombie_MANA = 100
-	set Zombie_MOVESPEED = 270.
-	set Zombie_ATTACKSPEED = 2.
-	set Zombie_SPAWNFREQ = 9.
-	set Zombie_ID = 1966092338
-	set Zombie_spawnRect = gg_rct_TheNec_MobSpawn
-	return true
-endfunction
-
 function createItem takes integer itemId, real pos_x, real pos_y, real pos_z returns item
 	return CreateItem(itemId, pos_x, pos_y)
 endfunction
@@ -13984,6 +14441,7 @@ function initGlobals takes nothing returns nothing
 	set gg_rct_TM_Fog_Zone = null
 	set gg_rct_TheBear_CamBounds = null
 	set gg_rct_TheBear_Effect1 = null
+	set gg_rct_TheNec_MobSpawn = null
 	set gg_snd_Error = null
 	set gg_snd_BlizzardLoop1 = null
 	set gg_snd_Hint = null
@@ -14046,6 +14504,7 @@ function initGlobals takes nothing returns nothing
 	set gg_trg_Arcane_Barrage_End = null
 	set gg_trg_Unstable_Magic_Start = null
 	set gg_trg_Unstable_Magic_Stop = null
+	set gg_trg_Untitled_Trigger_008 = null
 	set gg_trg_Ghoul_Spawn = null
 	set gg_trg_Plague_Zombie_Spawn = null
 	set gg_trg_Skeletal_Mages = null
@@ -14053,7 +14512,6 @@ function initGlobals takes nothing returns nothing
 	set gg_trg_Lightning_Enhancement_Effect = null
 	set gg_trg_Earthquake = null
 	set gg_dest_DTc2_2577 = null
-	set gg_rct_TheNec_MobSpawn = null
 	set Add_firstFree = 0
 	set Add_maxIndex = 0
 	set AddSpawner_firstFree = 0
@@ -14071,6 +14529,8 @@ function initGlobals takes nothing returns nothing
 	set ExecutableEffect_maxIndex = 0
 	set Fade_firstFree = 0
 	set Fade_maxIndex = 0
+	set HashList_firstFree = 0
+	set HashList_maxIndex = 0
 	set Table_firstFree = 0
 	set Table_maxIndex = 0
 	set InteractableObject_firstFree = 0
@@ -14100,6 +14560,10 @@ function initGlobals takes nothing returns nothing
 	set UnitLightning_maxIndex = 0
 	set Rock_firstFree = 0
 	set Rock_maxIndex = 0
+	set Disease_firstFree = 0
+	set Disease_maxIndex = 0
+	set DiseaseCloud_firstFree = 0
+	set DiseaseCloud_maxIndex = 0
 	set ArcaneBeing_firstFree = 0
 	set ArcaneBeing_maxIndex = 0
 	set FlameStrike_firstFree = 0
@@ -14173,6 +14637,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_Trig_Unstable_Magic_Start_Conditions = function Trig_Unstable_Magic_Start_Conditions
 	set ref_function_Trig_Unstable_Magic_Start_Actions = function Trig_Unstable_Magic_Start_Actions
 	set ref_function_Trig_Unstable_Magic_Stop_Actions = function Trig_Unstable_Magic_Stop_Actions
+	set ref_function_Trig_Untitled_Trigger_008_Actions = function Trig_Untitled_Trigger_008_Actions
 	set ref_function_Trig_Ghoul_Spawn_Actions = function Trig_Ghoul_Spawn_Actions
 	set ref_function_Trig_Plague_Zombie_Spawn_Actions = function Trig_Plague_Zombie_Spawn_Actions
 	set ref_function_Trig_Skeletal_Mages_Actions = function Trig_Skeletal_Mages_Actions
@@ -14255,7 +14720,7 @@ function initGlobals takes nothing returns nothing
 	set ref_function_init_nec_Archer = function init_nec_Archer
 	set ref_function_init_nec_Ghoul = function init_nec_Ghoul
 	set ref_function_init_nec_Mage = function init_nec_Mage
-	set ref_function_init_nec_Zombie = function init_nec_Zombie
+	set ref_function_bridge_init_nec_Zombie = function bridge_init_nec_Zombie
 	set ref_function_init_nec_Main = function init_nec_Main
 	set ref_function_bridge_init_tm_MagicCrystal = function bridge_init_tm_MagicCrystal
 	set ref_function_bridge_init_tm_Main = function bridge_init_tm_Main
@@ -14289,17 +14754,18 @@ function initGlobals takes nothing returns nothing
 	set ref_function_checkCoordinates2 = function checkCoordinates2
 	set ref_function_pickup = function pickup
 	set ref_function_getUnitIndex = function getUnitIndex
-	set ref_function_bridge_delayedInit = function bridge_delayedInit_3
+	set ref_function_bridge_delayedInit = function bridge_delayedInit_2
 	set ref_function_selectionFilter = function selectionFilter
-	set ref_function_Group_closure_impl = function Group_closure_impl
-	set ref_function_Group_closure_impl_2 = function Group_closure_impl_2
+	set ref_function_Group_closure_impl = function Group_closure_impl_3
+	set ref_function_Group_closure_impl_2 = function Group_closure_impl
+	set ref_function_Group_closure_impl_3 = function Group_closure_impl_2
 	set ref_function_bridge_isOrdered = function bridge_isOrdered
 	set ref_function_InteractableObject_filter = function InteractableObject_filter
 	set ref_function_bridge_InteractableObject_checkDistance = function bridge_InteractableObject_checkDistance
 	set ref_function_replayMusic = function replayMusic
-	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_2
-	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl
-	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl_3
+	set ref_function_OnUnitEnterLeave_closure_impl = function OnUnitEnterLeave_closure_impl_3
+	set ref_function_OnUnitEnterLeave_closure_impl_2 = function OnUnitEnterLeave_closure_impl_2
+	set ref_function_OnUnitEnterLeave_closure_impl_3 = function OnUnitEnterLeave_closure_impl
 	set ref_function_bridge_RegisterEvents_closure_impl = function bridge_RegisterEvents_closure_impl
 	set ref_function_bridge_DynamicSound_TimedLoop_onExpire = function bridge_DynamicSound_TimedLoop_onExpire
 	set ref_function_bridge_SoundDefinition_playSound = function bridge_SoundDefinition_playSound
@@ -14307,11 +14773,11 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_SoundDefinition_playSound_2 = function bridge_SoundDefinition_playSound_2
 	set ref_function_Stats_train = function Stats_train
 	set ref_function_bridge_EffectDuration_destr = function bridge_EffectDuration_destr
-	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl
-	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl_2
+	set ref_function_bridge_UnitIndexer_closure_impl = function bridge_UnitIndexer_closure_impl_2
+	set ref_function_bridge_UnitIndexer_closure_impl_2 = function bridge_UnitIndexer_closure_impl
 	set ref_function_bridge_UnitLightning_update = function bridge_UnitLightning_update
 	set ref_function_bridge_UnitLightning_kill = function bridge_UnitLightning_kill
-	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit_2
+	set ref_function_bridge_delayedInit_2 = function bridge_delayedInit
 	set ref_function_bridge_Attack_onHit = function bridge_Attack_onHit
 	set ref_function_Attack_setUpdateMove = function Attack_setUpdateMove
 	set ref_function_Attack_cooldownFinished = function Attack_cooldownFinished
@@ -14349,6 +14815,10 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_TheNecromancer_phase1 = function bridge_TheNecromancer_phase1
 	set ref_function_bridge_TheNecromancer_onEventInit = function bridge_TheNecromancer_onEventInit
 	set ref_function_TheNecromancer_initFight = function TheNecromancer_initFight
+	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit_4
+	set ref_function_bridge_Disease_unitDies = function bridge_Disease_unitDies
+	set ref_function_bridge_Disease_unitIsRemoved = function bridge_Disease_unitIsRemoved
+	set ref_function_bridge_Disease_damage = function bridge_Disease_damage
 	set ref_function_bridge_ArcaneBeing_createBossInfo = function bridge_ArcaneBeing_createBossInfo
 	set ref_function_bridge_ArcaneBeing_spawn = function bridge_ArcaneBeing_spawn
 	set ref_function_bridge_ArcaneBeing_onDeathDelay = function bridge_ArcaneBeing_onDeathDelay
@@ -14379,13 +14849,13 @@ function initGlobals takes nothing returns nothing
 	set ref_function_bridge_initEvent = function bridge_initEvent
 	set ref_function_bridge_someoneDies = function bridge_someoneDies
 	set ref_function_bridge_leaveEvent = function bridge_leaveEvent
-	set ref_function_bridge_delayedInit_3 = function bridge_delayedInit
+	set ref_function_bridge_delayedInit_4 = function bridge_delayedInit_3
 	set ref_function_idle = function idle
 	set ref_function_bridge_onEventInit = function bridge_onEventInit
 	set ref_function_initFight = function initFight
 	set ref_function_ambient = function ambient
-	set ref_function_bridge_clear = function bridge_clear_2
-	set ref_function_bridge_clear_2 = function bridge_clear
+	set ref_function_bridge_clear = function bridge_clear
+	set ref_function_bridge_clear_2 = function bridge_clear_2
 	set ref_function_bridge_mainLoop = function bridge_mainLoop
 endfunction
 
@@ -14768,7 +15238,7 @@ function main takes nothing returns nothing
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Mage.")
 	endif
 	call TriggerClearConditions(initTrig)
-	call TriggerAddCondition(initTrig, Condition(ref_function_init_nec_Zombie))
+	call TriggerAddCondition(initTrig, Condition(ref_function_bridge_init_nec_Zombie))
 	if  not TriggerEvaluate(initTrig) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0., 0., 45., "Could not initialize package nec_Zombie.")
 	endif
