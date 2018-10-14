@@ -4,6 +4,7 @@ import BossAdd
 import General
 import LinkedList
 import TimerUtils
+import HashMap
  
 public class Zombie
 
@@ -41,22 +42,94 @@ public class Zombie
         ..setTarget(hunter)
         ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
 
+        Disease.activate()
+
     static function deactivate()
         destroy spawner
-        
+    
+    //TODO: Add code to launch to BossAdd
+    
 
 class Disease
     // The class that maintains the Disease Ability
     //----------------------------------------------
 
-    // Trigger: unit enters rect or unit learns ability
+    private static IterableMap<unit, thistype> instances = new IterableMap<unit, thistype>
 
-    // If unit exits rect - remove from list
+    private static trigger trg_UnitDies
+    private static trigger trg_UnitIsRemoved
+    private static constant boolean DISABLETRIGGERSONINIT = true 
 
-    // Check if disease should damage anyone
-
-    // If unit dies: do disease cloud stuff
     
+    real damageFrequency = 1
+    real diseaseDamage
+    real range
+    real cloudDamage
+    real cloudDuration
+    real cloudRange
+    unit unitWithAbility
+    effect sfx
+    timer timer_Damage
+
+    ondestroy
+
+    private construct( unit whichUnit, real diseaseDamage, real cloudDamage, real damageFrequency, real range )
+        instances.put(whichUnit, this)
+    
+    static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage)
+
+    static function addUnit(unit whichUnit, real damage, real damageFrequency, real range)
+
+    private static function damage()
+
+
+    private static function unitDies() returns boolean
+        unit dyingUnit = GetDyingUnit()
+        
+        if instances.has(dyingUnit)
+            // Do stuff when dying  
+            thistype instance = instances.get(dyingUnit)       
+            new DiseaseCloud(dyingUnit.getPos(), instance.cloudDamage, instance.cloudDuration, instance.cloudRange)
+            destroy instance
+
+        return false
+
+    private static function unitIsRemoved() returns boolean
+        // It's not tested if you leave the map rect when you get moved
+        // To another place in the map.
+        unit removedUnit = GetLeavingUnit()
+
+        if instances.has(removedUnit)
+            destroy instances.get(removedUnit)
+
+        return false
+
+
+    /** Activates Unit death and removal detection (the triggers)
+    */
+    static function activate()
+        trg_UnitDies.enable()
+        trg_UnitIsRemoved.disable()
+
+    /** Deactivates Unit death and removal detection (the triggers)
+    */
+    static function deactivate()
+        trg_UnitDies.disable()
+        trg_UnitIsRemoved.disable()
+        
+
+
+    static function initialize()
+        trg_UnitDies = CreateTrigger()
+        ..addCondition(Condition(function unitDies))
+
+        trg_UnitIsRemoved = CreateTrigger()
+        ..addCondition(Condition(function unitIsRemoved))
+
+        if( not DISABLETRIGGERSONINIT )
+            trg_UnitDies.disable()
+            trg_UnitIsRemoved.disable()
+
 
 class DiseaseCloud
     // The class that maintains the disease clouds after unit death
@@ -110,3 +183,4 @@ class DiseaseCloud
 
 init
     DiseaseCloud.setup()
+    Disease.initialize()
