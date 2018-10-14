@@ -59,26 +59,40 @@ class Disease
     private static trigger trg_UnitDies
     private static trigger trg_UnitIsRemoved
     private static constant boolean DISABLETRIGGERSONINIT = true 
-
     
-    real damageFrequency = 1
+    real damageFrequency
     real diseaseDamage
-    real range
+    real diseaseRange
     real cloudDamage
     real cloudDuration
     real cloudRange
+
     unit unitWithAbility
     effect sfx
     timer timer_Damage
 
     ondestroy
 
-    private construct( unit whichUnit, real diseaseDamage, real cloudDamage, real damageFrequency, real range )
+    private construct(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
         instances.put(whichUnit, this)
-    
-    static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage)
+        this.unitWithAbility = whichUnit
+        this.diseaseDamage = diseaseDamage
+        this.cloudDamage = cloudDamage
+        this.cloudRange = cloudRange
+        this.diseaseRange = diseaseRange
+        this.cloudDuration = cloudDuration
+        this.damageFrequency = damageFrequency
 
-    static function addUnit(unit whichUnit, real damage, real damageFrequency, real range)
+        sfx = unitWithAbility.addEffect("Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl", "chest")
+        timer_Damage = getTimer()
+
+    /** A simple addUnit. The parameters are for both the disease and the cloud. Damage frequency is 1 second. */
+    static function addUnit(unit whichUnit, real damage, real cloudDuration, real range)
+        new Disease(whichUnit, damage, damage, range, range, cloudDuration, 1)
+
+    /** A custom addUnit. Full control over the disease and the cloud.*/
+    static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
+        new Disease(whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, damageFrequency)
 
     private static function damage()
 
@@ -184,3 +198,6 @@ class DiseaseCloud
 init
     DiseaseCloud.setup()
     Disease.initialize()
+
+
+    //Units\Undead\PlagueCloud\PlagueCloudtarget.mdl
