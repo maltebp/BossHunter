@@ -1,6 +1,7 @@
 package nec_Cauldron
 import TimerUtils
 import TimerDialog
+import Music
 
 public class Cauldron
 
@@ -19,21 +20,93 @@ public class Cauldron
     private static unit mob
     private static timer timer_Countdown
     private static timerdialog timerDialog_Countdown
+    private static bool hasBeenInitialized = false
+    private static trigger trg_CauldronDies
 
-    private static function endCountDown()
+
+    private constant boolean    DEBUG       = true
+    private int debugMsgCount = 0
+    /** Print a debugMsg, that is toggleable
+        with the DEBUG variable*/
+    function debugMsg(string stringToPrint)
+            if DEBUG
+                debugMsgCount++
+                print("Cauldron "+debugMsgCount.toString()+": "+stringToPrint)
+
+
+    private static function stopCountdown()
+        timer_Countdown.pause()
         timerDialog_Countdown.display(false)
-        
 
+    // The Time runs out
+    private static function endCountDown()
+        stopCountdown()
+        mob.setInvulnerable(true)
+        summonAbom()
+    
     static function startCountdown()
         timer_Countdown.start(SUMMONTIME, function endCountDown)
         timerDialog_Countdown.display(true)
 
 
     static function activate()
+        if not hasBeenInitialized
+            initialize()
         timer_Countdown = getTimer()
         timerDialog_Countdown = timer_Countdown.createTimerDialog()
         timerDialog_Countdown.setTitle("Summoning")
-        
 
+        if not trg_CauldronDies.isEnabled()
+            trg_CauldronDies.enable()
+    
         mob = createUnit(Player(11), ID, POS, angle(0))
         ..setMaxHP(HP, true)
+
+    static function deactivate()
+        timer_Countdown.release()
+        timerDialog_Countdown.destr()
+        trg_CauldronDies.disable()
+
+    // Cauldron is dead
+    static function cauldronDies()
+        stopCountdown()
+        // Start Phase 2
+
+
+    // Checking if cauldron is dead
+    static function checkForCauldronDeath() returns boolean
+        unit dyingUnit = GetDyingUnit()
+        if dyingUnit == mob
+            cauldronDies()
+        return false
+
+    // Initialize
+    static function initialize()
+        if not hasBeenInitialized
+            hasBeenInitialized = true
+            trg_CauldronDies = CreateTrigger()
+            ..registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
+            ..addCondition( Condition( function checkForCauldronDeath ))
+        
+
+    // Summon Abom
+    private static function summonAbom()
+        stopMusic()
+
+    // Start Cam Shake and Animation
+    private static function summonAbom2()
+        // Animation
+        // Camera shake
+
+    // Spawm Abom
+    private static function summonAbom3()
+
+    // Play Abom Sound effect
+    private static function summonAbom4()
+
+    // Start Music (Doom) and order Ground Slam
+    private static function summonAbom5()
+
+    // Release Abom and Order attack
+    private static function summonAbom6()
+        

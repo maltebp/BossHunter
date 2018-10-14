@@ -6,7 +6,6 @@ string currentMusic
 real musicLength
 timer loopTimer = getTimer()
 
-
 function replayMusic()
     StopMusic(false)
     PlayMusic(currentMusic)
