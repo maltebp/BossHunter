@@ -50,10 +50,14 @@ public class Zombie
     //TODO: Add code to launch to BossAdd
     
 
+interface Filter
+    function isTarget() returns bool
+
 class Disease
     // The class that maintains the Disease Ability
     //----------------------------------------------
 
+    private static constant boolean DEBUGMSG = true
     private static constant boolean DISABLETRIGGERSONINIT = true
 
     private static IterableMap<unit, thistype> instances = new IterableMap<unit, thistype>
@@ -76,21 +80,31 @@ class Disease
 
     ondestroy
 
+    private static function print(string stringToPrint)
+        if DEBUGMSG
+            print(stringToPrint)
+
     private construct(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
-        instances.put(whichUnit, this)
-        this.unitWithAbility = whichUnit
-        this.diseaseDamage = diseaseDamage
-        this.cloudDamage = cloudDamage
-        this.cloudRange = cloudRange
-        this.diseaseRange = diseaseRange
-        this.cloudDuration = cloudDuration
-        this.damageFrequency = damageFrequency
+        if DEBUGMSG
+            print("Adding Disease to "+whichUnit.getName()+"...") 
+            instances.put(whichUnit, this)
+            this.unitWithAbility = whichUnit
+            this.diseaseDamage = diseaseDamage
+            this.cloudDamage = cloudDamage
+            this.cloudRange = cloudRange
+            this.diseaseRange = diseaseRange
+            this.cloudDuration = cloudDuration
+            this.damageFrequency = damageFrequency
 
-        sfx = unitWithAbility.addEffect("Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl", "chest")
-        timer_Damage = getTimer()
+            sfx = unitWithAbility.addEffect("Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl", "chest")
+            timer_Damage = getTimer()
+            ..setData(this castTo int)
+            ..startPeriodic(damageFrequency, function damage)
 
-        if not hasBeenInitialized 
-            initialize()
+            if not hasBeenInitialized 
+                initialize()
+
+            print("Finished adding Disease to unit")
             
 
 
@@ -108,8 +122,25 @@ class Disease
         if instances.has(unitToRemove)
             destroy instances.get(unitToRemove)
 
-    private static function damage()
+    private static function targetFilter()
 
+    
+
+    private static function damage()
+        thistype instance = GetExpiredTimer().getData() castTo thistype
+        group targets = ENUM_GROUP
+        
+        targets.enumUnitsInRange(instance.unitWithAbility.getPos(), instance.diseaseRange,
+         Filter( () -> GetFilterUnit().isAlive() ) )
+        
+        print("filtered units!")
+
+        int i = 0
+        for u from targets
+            print("Target "+i.toString()+": "+ u.getName() )
+
+
+        
 
     private static function unitDies() returns boolean
         unit dyingUnit = GetDyingUnit()
@@ -215,5 +246,7 @@ class DiseaseCloud
 init
     DiseaseCloud.setup()
 
+    unit u = createUnit(Player(0), 'hfoo', vec2(-13935,-14250), GetRandomAngle())
+    Disease.addUnit(u, 2, 10, 300)
 
     //Units\Undead\PlagueCloud\PlagueCloudtarget.mdl
