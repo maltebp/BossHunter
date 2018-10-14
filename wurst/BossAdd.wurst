@@ -3,8 +3,9 @@ import General
 import TimerUtils
 import LinkedList
 
-public interface Predicate<T>
-    function handleMob(T t)
+public interface RemoteFunction<T>
+    function run(T t)
+    
     
 
 
@@ -26,7 +27,7 @@ public class AddSpawner
     rect spawnRect
     string spawnSfx
     unit target
-    Predicate<unit> funcOnSpawn
+    RemoteFunction<unit> funcOnSpawn
     
     construct()
         timer_Spawn = getTimer()
@@ -47,7 +48,7 @@ public class AddSpawner
     function setTarget(unit target)
         this.target = target
         
-    function setOnSpawnFunc(Predicate<unit> whatFunc)
+    function setOnSpawnFunc(RemoteFunction<unit> whatFunc)
         funcOnSpawn = whatFunc
     
     function setSpawnRandom( rect spawnRect, real spawnFreq )
@@ -68,7 +69,7 @@ public class AddSpawner
               spawner.attackSpeed)
 
         if(spawner.funcOnSpawn != null)
-            spawner.funcOnSpawn.handleMob(add.mob)
+            spawner.funcOnSpawn.run(add.mob)
     
         spawner.adds.add(add)
 

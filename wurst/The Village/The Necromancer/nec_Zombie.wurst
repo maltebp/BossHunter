@@ -10,16 +10,16 @@ public class Zombie
 //========================================================================================================================================
 
     // Unit Stats
-    private static int  DAMAGE = 10
-    private static real ARMOR = 0
-    private static int HEALTH = 100
-    private static int MANA   = 100
-    private static real MOVESPEED = 270
-    private static real ATTACKSPEED = 2
+    private constant static int  DAMAGE      = 10
+    private constant static real ATTACKSPEED = 2
+    private constant static int  HEALTH      = 100
+    private constant static real ARMOR       = 0
+    private constant static real MOVESPEED   = 270
     
-    private static real SPAWNFREQ = 9
+    private constant static real SPAWNFREQ = 9
 
-    private static constant DEBUGMSG = true
+    private constant static boolean DEBUGMSG = true
+    private constant static boolean ENABLED = true 
 
 //========================================================================================================================================
 
@@ -35,14 +35,14 @@ public class Zombie
         spawner.start()
 
     static function activate()
-        Predicate<unit> pred = (unit mob) -> Disease.addUnit(mob, 100, 10, 150)
+        RemoteFunction<unit> func = (unit mob) -> Disease.addUnit(mob, 100, 10, 150)
 
         spawner = new AddSpawner()
-        ..setUnit(ID, Player(11), HEALTH, MANA, DAMAGE, ARMOR, ATTACKSPEED, MOVESPEED)
+        ..setUnit(ID, Player(11), HEALTH, 0, DAMAGE, ARMOR, ATTACKSPEED, MOVESPEED)
         ..setSpawnRandom(spawnRect, SPAWNFREQ)
         ..setTarget(hunter)
         ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
-        ..setOnSpawnFunc(pred)
+        ..setOnSpawnFunc(func)
 
         //Disease.activate()
 
