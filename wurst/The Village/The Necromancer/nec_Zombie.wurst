@@ -86,6 +86,7 @@ class Disease
         sfx = unitWithAbility.addEffect("Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl", "chest")
         timer_Damage = getTimer()
 
+
     /** A simple addUnit. The parameters are for both the disease and the cloud. Damage frequency is 1 second. */
     static function addUnit(unit whichUnit, real damage, real cloudDuration, real range)
         new Disease(whichUnit, damage, damage, range, range, cloudDuration, 1)
@@ -93,6 +94,10 @@ class Disease
     /** A custom addUnit. Full control over the disease and the cloud.*/
     static function addUnit(unit whichUnit, real diseaseDamage, real cloudDamage, real diseaseRange, real cloudRange, real cloudDuration, real damageFrequency)
         new Disease(whichUnit, diseaseDamage, cloudDamage, diseaseRange, cloudRange, cloudDuration, damageFrequency)
+
+    static function removeUnit(unit unitToRemove)
+        if instances.has(unitToRemove)
+            destroy instances.get(unitToRemove)
 
     private static function damage()
 
