@@ -236,6 +236,12 @@ import ObjEditingNatives
 	..setInt("uhpm", 200)
 	..setInt("udef", 15)
 	..setUnreal("uacq", 500.0)
+	..setString("uabi", "A02J")
+	..setInt("uclg", 200)
+	..setInt("uclr", 200)
+	..setInt("uclb", 225)
+	..setInt("utco", 20)
+	..setString("ua1m", "Abilities\\Weapons\\ZigguratFrostMissile\\ZigguratFrostMissile.mdl")
 
 
 @compiletime function create_w3u_u003()

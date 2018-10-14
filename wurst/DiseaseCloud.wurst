@@ -357,26 +357,6 @@ function removeFromHitTargets()
     timer t = GetExpiredTimer()
     hitTargets[GetExpiredTimer().getData()] = null
     t.release()
-
-
-
-
-
-
-function delayedInit()
-    GetExpiredTimer().release()
-    unit u = createUnit(Player(0), 'hpea', vec2(-13935,-14250), angle(0))
-    Disease.addUnit(u, 50, 10, 300)
-
-
-
-init
-    unit u = createUnit(Player(0), 'hfoo', vec2(-13935,-14250), angle(0))
-    Disease.addUnit(u, 50, 10, 300)
-    getTimer().start(0.75, function delayedInit )
-
-    // Testing LinkedList Index
-    LinkedList<unit> testList = new LinkedList<unit>
     
 
     

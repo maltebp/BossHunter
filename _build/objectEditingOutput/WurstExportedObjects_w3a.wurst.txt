@@ -1625,6 +1625,23 @@ import ObjEditingNatives
 	..setLvlDataInt("abpx", 0, 0, 0)
 
 
+@compiletime function create_w3a_A02J()
+	let def = createObjectDefinition("w3a", 'A02J', 'Aspo')
+	..setLvlDataString("atp1", 1, 0, "Slow Attack")
+	..setLvlDataString("ansf", 0, 0, "(The Nec - Mage)")
+	..setLvlDataString("anam", 0, 0, "Slow Attack")
+	..setLvlDataString("aub1", 1, 0, "Slows the target on attack.")
+	..setLvlDataUnreal("Spo1", 1, 1, 0.0)
+	..setLvlDataUnreal("Spo3", 1, 3, 0.0)
+	..setLvlDataUnreal("adur", 1, 0, 3.0)
+	..setLvlDataUnreal("ahdu", 1, 0, 3.0)
+	..setLvlDataString("arac", 0, 0, "undead")
+	..setLvlDataInt("Spo4", 1, 4, 0)
+	..setLvlDataInt("abpx", 0, 0, 0)
+	..setLvlDataString("aart", 0, 0, "ReplaceableTextures\\PassiveButtons\\PASBTNFrost.blp")
+	..setLvlDataString("abuf", 1, 0, "B000,B003")
+
+
 @compiletime function create_w3a_AM01()
 	let def = createObjectDefinition("w3a", 'AM01', 'Adef')
 	..setLvlDataInt("wurs", 0, 0, 42)

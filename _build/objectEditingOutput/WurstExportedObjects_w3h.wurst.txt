@@ -224,6 +224,14 @@ import ObjEditingNatives
 	..setString("fart", "ReplaceableTextures\\CommandButtons\\BTNPlagueCloud.blp")
 
 
+@compiletime function create_w3h_B00N()
+	let def = createObjectDefinition("w3h", 'B00N', 'Bssd')
+	..setString("frac", "undead")
+	..setString("ftip", "Slow Attack")
+	..setString("ftat", "Abilities\\Spells\\Undead\\FrostArmor\\FrostArmorDamage.mdl")
+	..setString("fnsf", "(The Nec - Mage)")
+
+
 // Original Table (contains all modified default objects)
 // Wurst does not support modifying default objects
 // but you can copy these functions and replace 'xxxx' with a new, custom id.

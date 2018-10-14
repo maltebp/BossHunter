@@ -29,6 +29,8 @@ public class AddSpawner
     unit target
     RemoteFunction<unit> funcOnSpawn
     
+    
+
     construct()
         timer_Spawn = getTimer()
         ..setData(this castTo int)
@@ -95,6 +97,7 @@ public class AddSpawner
     ondestroy
         removeAll()
         destroy adds
+        destroy funcOnSpawn
         timer_Spawn.release()
 
 
