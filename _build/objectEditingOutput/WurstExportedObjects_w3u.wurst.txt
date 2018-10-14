@@ -213,7 +213,7 @@ import ObjEditingNatives
 	..setInt("ucam", 0)
 	..setInt("ufle", 0)
 	..setString("unam", "Plague Zombie")
-	..setString("uabi", "A005")
+	..setString("uabi", "")
 	..setReal("usca", 1.8)
 	..setInt("uclg", 255)
 	..setInt("uclr", 200)

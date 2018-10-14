@@ -3,6 +3,7 @@ package nec_Zombie
 import BossAdd
 import General
 import DiseaseCloud
+import TimerUtils
  
 public class Zombie
 
@@ -23,9 +24,9 @@ public class Zombie
 //========================================================================================================================================
 
     // Constants
-    static integer ID = 'u002'
+    static integer ID = 'n001'
     static AddSpawner spawner
-    static rect spawnRect = gg_rct_TheNec_MobSpawn 
+    static rect spawnRect = gg_rct_TheNec_MobSpawn
 
     static function stopSpawn()
         spawner.stop()
@@ -34,11 +35,14 @@ public class Zombie
         spawner.start()
 
     static function activate()
+        Predicate<unit> pred = (unit mob) -> Disease.addUnit(mob, 100, 10, 150)
+
         spawner = new AddSpawner()
         ..setUnit(ID, Player(11), HEALTH, MANA, DAMAGE, ARMOR, ATTACKSPEED, MOVESPEED)
         ..setSpawnRandom(spawnRect, SPAWNFREQ)
         ..setTarget(hunter)
         ..setSpawnEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl")
+        ..setOnSpawnFunc(pred)
 
         //Disease.activate()
 
