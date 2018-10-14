@@ -11,6 +11,7 @@ import LinkedList
 
 constant boolean DEBUG = true
 constant real DAMAGEFREQ = 2
+constant boolean STACKDAMAGE = false
 constant string SFX = "Abilities\\Spells\\Undead\\PlagueCloud\\PlagueCloudCaster.mdl"
 
 // ===============================================================================================
@@ -62,11 +63,10 @@ function damage( unit source, real damage, real range )
         if( u == source or
             not u.isAlive() or
             u.getOwner().isAllyOf(source.getOwner()) or
-            u.isHit() 
+            (not STACKDAMAGE and u.isHit()) 
             )
 
             targets.removeUnit(u)
-            //debugMsg("Removed "+u.getName())
 
 
     debugMsg("Filtered units!")
